@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Capstone.DAO;
 using Capstone.Security;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 
 namespace Capstone
 {
@@ -63,11 +65,44 @@ namespace Capstone
             services.AddSingleton<ITokenGenerator>(tk => new JwtGenerator(Configuration["JwtSecret"]));
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
+
+            services.AddSwaggerGen(s => {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = Configuration["APIVersion"],
+                    Title = "Capstone Starter API",
+                    Description = "For TE Capstone"
+                });
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Description = "Bearer token is required for access.",
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT"
+                });
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement() {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            },
+                        },new List<string>()
+                    }
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -78,6 +113,12 @@ namespace Capstone
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Capstone Starter API");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseCors();
 
