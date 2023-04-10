@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jlBBLvN6OeTvSK/KdtYICJZdEbKWD48l0oFPcEhTP7tn9Sxmorwtz4KnkVXssjg1Gk4EtZDOknYWDZ5DXZjc0Q==",
+  "dgSpecHash": "R5T3t/9PKFvfd+jAj1pWI9iTZz20EIQZU/2MRsWpUFJYkxq4q6rNonnuZ80HkuOvLdOA8j9GB4wXuwih3gYivw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Student\\workspace\\tom-anderson-student-code\\CapstoneStarter\\dotnet\\Capstone\\Capstone.csproj",
+  "projectFilePath": "C:\\Users\\Student\\workspace\\capstones\\c-sharp-finalcapstone-team0\\dotnet\\Capstone\\Capstone.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.9\\microsoft.aspnetcore.authentication.jwtbearer.3.1.9.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
@@ -71,7 +71,7 @@
     "C:\\Users\\Student\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\Student\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.32\\microsoft.netcore.app.host.win-x64.3.1.32.nupkg.sha512"
+    "C:\\Users\\Student\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.31\\microsoft.netcore.app.host.win-x64.3.1.31.nupkg.sha512"
   ],
   "logs": []
 }
