@@ -1,7 +1,12 @@
-﻿namespace Capstone.DAO
+﻿using Capstone.Models;
+using Capstone.Models.IncomingDTOs;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Capstone.DAO
 {
-    public class ForumSqlDal
+    public class ForumSqlDao
     {
-        
+
+     
     }
 }
