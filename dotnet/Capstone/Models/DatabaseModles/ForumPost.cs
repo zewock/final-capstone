@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Capstone.Models
+namespace Capstone.Models.DatabaseModles
 {
     public class ForumPost
     {
         public int postId { get; set; }
         public string content { get; set; }
         public string image { get; set; }
-        public DateTime createDate { get; set; } 
+        public DateTime createDate { get; set; }
         public int userId { get; set; }
         public int forumId { get; set; }
         public bool isVisible { get; set; }

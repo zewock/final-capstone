@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Capstone.Models;
+using Capstone.Models.DatabaseModles;
 using Capstone.Security;
 using Capstone.Security.Models;
 

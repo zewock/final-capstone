@@ -1,4 +1,4 @@
-﻿using Capstone.Models;
+﻿using Capstone.Models.DatabaseModles;
 
 namespace Capstone.DAO
 {

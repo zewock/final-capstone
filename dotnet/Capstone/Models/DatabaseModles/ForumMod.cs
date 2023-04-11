@@ -1,4 +1,4 @@
-﻿namespace Capstone.Models
+﻿namespace Capstone.Models.DatabaseModles
 {
     public class ForumMod
     {

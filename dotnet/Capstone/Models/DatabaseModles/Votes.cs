@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration.UserSecrets;
 using System;
 
-namespace Capstone.Models
+namespace Capstone.Models.DatabaseModles
 {
     public class Votes
     {
@@ -12,18 +12,18 @@ namespace Capstone.Models
         public bool isDownVoted { get; set; }
         public DateTime createdDate { get; set; }
 
-        public Votes ()
+        public Votes()
         {
 
         }
-        public Votes(int forumId, int postId, int userId , bool isUpVoted, bool isDownVoted, DateTime createDate)
+        public Votes(int forumId, int postId, int userId, bool isUpVoted, bool isDownVoted, DateTime createDate)
         {
             this.forumId = forumId;
             this.postId = postId;
             this.userId = userId;
             this.isUpVoted = isUpVoted;
             this.isDownVoted = isDownVoted;
-            this.createdDate = createdDate;
+            createdDate = createdDate;
         }
     }
 }
