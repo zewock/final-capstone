@@ -1,10 +1,6 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "NGqeANc/hGkeGSzl6D25FovjZfcSYxqCUiP3VsE+W14SZQ7S+TZdrf/cG8NhEWM/CbfgW7m/rEp+7F3diaZrHA==",
-=======
   "dgSpecHash": "R5T3t/9PKFvfd+jAj1pWI9iTZz20EIQZU/2MRsWpUFJYkxq4q6rNonnuZ80HkuOvLdOA8j9GB4wXuwih3gYivw==",
->>>>>>> e28ea676a110544f8eab60e76249021976c3453e
   "success": true,
   "projectFilePath": "C:\\Users\\Student\\workspace\\capstones\\c-sharp-finalcapstone-team0\\dotnet\\Capstone\\Capstone.csproj",
   "expectedPackageFiles": [
@@ -77,5 +73,12 @@
     "C:\\Users\\Student\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.31\\microsoft.netcore.app.host.win-x64.3.1.31.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\Student\\workspace\\capstones\\c-sharp-finalcapstone-team0\\dotnet\\Capstone\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
