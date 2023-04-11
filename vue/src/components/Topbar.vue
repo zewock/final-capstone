@@ -1,8 +1,8 @@
 <template>
-  <section class="nav">
-     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+  <section class="nav-item">
+     <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item, logo">
+    <a class="navbar-item, logo pl-5">
       <img src="https://image.similarpng.com/very-thumbnail/2020/12/Lorem-ipsum-logo-isolated-clipart-PNG.png" width="112" height="28">
     </a>
 
@@ -14,7 +14,7 @@
   </div>
 
   <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-start">
+    <div class="navbar-start pl-2">
       <a class="navbar-item">
          <router-link v-bind:to="{ name: 'topbar' }">Home</router-link>
       </a>
@@ -51,7 +51,7 @@
 
     </div>
 
-    <div class="navbar-end">
+    <div class="navbar-end pr-2">
       <div class="navbar-item">
         <div class="buttons">
           <a class="button is-primary">
@@ -81,7 +81,7 @@ data() {
 </script>
 
 <style>
-.navbar {
+.nav-item {
   grid-area: nav;
 }
 </style>
