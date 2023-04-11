@@ -1,35 +1,37 @@
 <template>
-  <div class="home">
-    
-    <section class="container">
-      <h1>Logo</h1>
-      <input type="text" name="search bar" placeholder="Search bar">
-      <button>Login Button</button>
-    </section>    
+
+  <div >
+    <topbar class="container"/>
+     
     
   </div>
 </template>
 
 <script>
+import Topbar from '../components/Topbar.vue';
 export default {
   name: "home",
-  data() {
-  return {
-    loginButtonMessage: 'Login',
-    searchBarMessage: 'Search bar'
-  }
+  components: {
+    Topbar
+
   }
 };
 </script>
 
 <style>
 .container {
-  color: white;
+  color: grey;
   display: grid;
   grid-template-columns: 200px 4fr 200px;
   grid-template-areas: 
-  "logo searchbar searchbar login"
-  "sidebar main main ad"
-  "sidebar main main pm"
+  "nav nav nav"
+  "sidebar main ad"
+  "sidebar main pm"
+  
 }
+/* {
+  border: 1px solid red;
+  align-content: center;
+}*/
+
 </style>
