@@ -19,6 +19,8 @@ namespace Capstone.Models.OutgoingDTOs
 
         public bool IsModerator { get; set; }
 
+        public string UserRole { get; set; }
+
         public int TotalNumUpvotes { get; set; }
 
         public int TotalNumDownvotes { get; set; }
@@ -37,7 +39,7 @@ namespace Capstone.Models.OutgoingDTOs
         public ForumPostsDTO(int forumID, string topic, DateAndTime createDate, int ownerID,
             string ownerUsername, bool isFavoritedForum, bool isModerator, int totalNumUpvotes,
             int totalNumDownvotes, int upvotesLast24Hours, int downvotesLast24Hours,
-            List<PostsArray> forumPostsList)
+            List<PostsArray> forumPostsList, string userRole)
         {
             ForumID = forumID;
             Topic = topic;
@@ -50,7 +52,9 @@ namespace Capstone.Models.OutgoingDTOs
             TotalNumDownvotes = totalNumDownvotes;
             UpvotesLast24Hours = upvotesLast24Hours;
             DownvotesLast24Hours = downvotesLast24Hours;
+            UserRole = userRole;
             PostsArray = forumPostsList.ToArray();
+            
         }
     }
 }
