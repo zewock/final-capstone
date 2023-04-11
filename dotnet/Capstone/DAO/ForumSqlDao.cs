@@ -1,6 +1,7 @@
 ﻿namespace Capstone.DAO
 {
-    public class Class
+    public class ForumSqlDal
     {
+        
     }
 }
