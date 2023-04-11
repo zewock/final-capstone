@@ -7,3 +7,10 @@
     <router-view />
   </div>
 </template>
+
+<style>
+.background {
+  background-color: black;
+  height: 100%;
+}
+</style>
