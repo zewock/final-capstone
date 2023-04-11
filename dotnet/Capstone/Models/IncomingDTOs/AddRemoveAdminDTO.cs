@@ -1,15 +1,15 @@
 ﻿namespace Capstone.Models.IncomingDTOs
 {
-    public class AddRemoveAdmin
+    public class AddRemoveAdminDTO
     {
         public string Username { get; set; }
         
-        public AddRemoveAdmin()
+        public AddRemoveAdminDTO()
         {
 
         }
 
-        public AddRemoveAdmin(string username)
+        public AddRemoveAdminDTO(string username)
         {
             Username = username;
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Capstone.Models
+namespace Capstone.Models.DatabaseModles
 {
     public class PrivateMessage
     {  // Model to return specific private message
@@ -22,7 +22,7 @@ namespace Capstone.Models
             this.toUserId = toUserId;
             this.message = message;
             this.createdDate = createdDate;
-            this.isVisible = isVisible; 
+            this.isVisible = isVisible;
         }
     }
 

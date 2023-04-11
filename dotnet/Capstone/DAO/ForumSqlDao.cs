@@ -1,10 +1,9 @@
-﻿
-using Capstone.Models;
-using Capstone.Models.IncomingDTOs;
+﻿using Capstone.Models.IncomingDTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.Xml;
 using System;
 using System.Data.SqlClient;
+using Capstone.Models.DatabaseModles;
 
 namespace Capstone.DAO
 {

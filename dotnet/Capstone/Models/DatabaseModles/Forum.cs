@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Capstone.Models
+namespace Capstone.Models.DatabaseModles
 {
     public class Forum
     {   // Model to return forum data

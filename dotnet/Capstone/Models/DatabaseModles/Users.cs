@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Security.Permissions;
 
-namespace Capstone.Models
+namespace Capstone.Models.DatabaseModles
 {
     public class Users
     {
