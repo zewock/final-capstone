@@ -33,6 +33,7 @@ data() {
   float: right;
   vertical-align: text-bottom;
   overflow-y: auto;
+  position: sticky;
 }
 
 </style>

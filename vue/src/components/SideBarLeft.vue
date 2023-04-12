@@ -37,7 +37,7 @@ data() {
 .menu {
   grid-area: menu;
   background-color:lavender;
-  position: fixed;
+  position: sticky;
   display: inline-block;
   vertical-align: text-bottom;
   overflow-y: visible;

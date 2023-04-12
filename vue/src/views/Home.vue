@@ -3,10 +3,11 @@
   <div >
     <section class="container is-fullscreen">
     <topbar />
+     <main-body />
     <sidebarLeft/>
-    <main-component />
     <sidebar-right />
     </section>
+    
      
     
   </div>
@@ -15,15 +16,15 @@
 <script>
 import Topbar from '../components/Topbar.vue';
 import sidebarLeft from '../components/SideBarLeft.vue';
-import MainComponent from '../components/main.vue';
+import MainBody from '../components/mainBody.vue';
 import sidebarRight from '../components/SidebarRight.vue'
 export default {
   name: "home",
   components: {
     Topbar,
     sidebarLeft,
-    MainComponent,
-    sidebarRight
+    sidebarRight,
+    MainBody,
   }
 };
 </script>
@@ -37,7 +38,18 @@ export default {
   column-gap: 20px;
   grid-template-areas: 
   "nav nav nav"
-  "menu main ad"
-  "menu main pm";
+  "menu mainBody ad"
+  "menu mainBody pm";
 }
+/*.containerMain {
+   color: grey;
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  row-gap: 10px;
+  column-gap: 20px;
+  grid-template-areas: 
+  ". . ."
+  ". mainBody ."
+  ". mainBody .";
+}*/
 </style>

@@ -83,6 +83,6 @@ data() {
 <style>
 .nav-item {
   grid-area: nav;
-  position: fixed;
+  position: sticky;
 }
 </style>
