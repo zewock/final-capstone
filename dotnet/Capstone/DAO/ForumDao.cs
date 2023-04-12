@@ -8,16 +8,19 @@ using System.Data.SqlClient;
 using Capstone.Models.DatabaseModles;
 using System.Collections.Generic;
 using Capstone.Models.OutgoingDTOs;
+using System.Linq;
 
 namespace Capstone.DAO
 {
-    public class ForumDao : IForumDao
+    public class ForumDao : IForumDao, IUserDao
     {
         private readonly string connectionString;
         public ForumDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
+
+        public 
 
         public int CreateForum(Forum forum)
         {
@@ -39,8 +42,9 @@ namespace Capstone.DAO
         
 
        // GetAllForums() - Retrieves all forums.
-        public ActionResult getAllForums(ForumListDTO forumListDto, int userId = 0)
-        {   
+        public ActionResult<ForumListDTO> getAllForums(int userId = 0, string userName)
+        {
+            ForumListDTO forumListDto = new ForumListDTO();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -57,6 +61,18 @@ namespace Capstone.DAO
                                                 "WHERE forums.is_visible = 1 OR Forums.user_id = @user_id " +
                                                 "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible;", conn);
                 cmd.Parameters.AddWithValue("@user_id", userId);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if(reader.Read())
+                {
+                    List<ForumsArray> forumsList = new List<ForumsArray>();
+                    ForumsArray forumsArray = new ForumsArray();
+                    forumsArray.ForumID = Convert.ToInt32(reader["forums.forum_id"]);
+                    forumsArray.Topic = Convert.ToString(reader["forums.topic"]);
+                    forumsArray.CreateDate = Convert.ToDateTime(reader["forums.create_date"]);
+                    forumsArray.OwnerID = Convert.ToInt32(reader["forums.user_id"]);
+                    
+
+                }
 
             }
             
