@@ -3,10 +3,10 @@
   <div >
     <section class="container is-fullscreen">
     <topbar />
-     <main-body />
+    <main-body />
     <sidebarLeft/>
     <sidebar-right />
-    <pm-button />
+    <logo />
     </section>
     
      
@@ -19,7 +19,7 @@ import Topbar from '../components/Topbar.vue';
 import sidebarLeft from '../components/SideBarLeft.vue';
 import MainBody from '../components/mainBody.vue';
 import sidebarRight from '../components/SidebarRight.vue'
-import PmButton from '../components/PmButton.vue';
+import logo from '../components/logo.vue'
 export default {
   name: "home",
   components: {
@@ -27,8 +27,7 @@ export default {
     sidebarLeft,
     sidebarRight,
     MainBody,
-    PmButton,
-    
+    logo
   }
 };
 </script>
@@ -40,9 +39,10 @@ export default {
   row-gap: 10px;
   column-gap: 20px;
   grid-template-areas: 
-  "nav nav nav"
+  "logo nav nav"
   "menu mainBody ad"
-  "menu mainBody pm";
+  "menu mainBody ad";
+  height: 100vh;
 }
 /*.containerMain {
    color: grey;
