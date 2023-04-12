@@ -1,5 +1,5 @@
 <template>
-<section class="main">
+<body class="mainBody">
     <div class="card">
   <header class="card-header">
     <p class="card-header-title">
@@ -25,12 +25,12 @@
     <a href="#" class="card-footer-item">Save</a>
   </footer>
 </div>
-</section>
+</body>
 </template>
 
 <script>
 export default {
-  name: 'main',
+  name: 'mainBody',
 data() {
   return {
     
@@ -40,8 +40,10 @@ data() {
 </script>
 
 <style>
-.main {
-  grid-area: main;
-  padding-top: 150px;
+.mainBody {
+  grid-area: mainBody;
+  position: sticky;
+  overflow: auto;
+  height: 100vh;
 }
 </style>
