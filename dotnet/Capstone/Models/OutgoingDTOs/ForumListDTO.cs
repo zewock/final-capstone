@@ -6,16 +6,16 @@ namespace Capstone.Models.OutgoingDTOs
     {        
         public FormsArray[] ForumArray { get; set; }
         
-        public string userRole { get; set; }
+        public string UserRole { get; set; }
 
         public ForumListDTO()
         {
 
         }
 
-        public ForumListDTO (List<FormsArray> forumsList, string isAdmin)
+        public ForumListDTO (List<FormsArray> forumsList, string userRole)
         {
-            userRole = isAdmin;
+            UserRole = userRole;
             ForumArray = forumsList.ToArray();
         }
     }

@@ -7,10 +7,11 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Capstone.DAO;
 using Capstone.Security;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using Capstone.DAO;
+
 
 namespace Capstone
 {
@@ -65,7 +66,11 @@ namespace Capstone
             services.AddSingleton<ITokenGenerator>(tk => new JwtGenerator(Configuration["JwtSecret"]));
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
-            
+            services.AddTransient<IForumDao>(sp => new ForumDao(connectionString));
+            services.AddTransient<IPostDao>(sp => new PostDao(connectionString));
+            services.AddTransient<IPrivateMessageDao>(sp => new PrivateMessageDao(connectionString));
+
+
 
             services.AddSwaggerGen(s => {
                 s.SwaggerDoc("v1", new OpenApiInfo

@@ -5,13 +5,15 @@ using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
-    public class PostDao
+    public class PostDao : IPostDao
     {
         private readonly string connectionString;
         public PostDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
+        
+        /*
         //GetPostById(int postId) - Retrieves a post by ID.
         public ActionResult<ForumPost> getPostById(int postId)
         {
@@ -37,5 +39,6 @@ namespace Capstone.DAO
         {
 
         }
+        */
     }
 }

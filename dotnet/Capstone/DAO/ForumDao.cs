@@ -10,14 +10,22 @@ using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
-    public class ForumSqlDao
+    public class ForumDao : IForumDao
     {
         private readonly string connectionString; 
-        public ForumSqlDao(string dbConnectionString)
+        public ForumDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
 
+        public int CreateForum(Forum forum)
+        {
+            return 1;
+        }
+
+
+
+        /*
         public Forum getForumById(int userId)
         {   Forum forum = new Forum();
 
@@ -27,6 +35,7 @@ namespace Capstone.DAO
             }
         }
         
+
         //GetAllForums() - Retrieves all forums.
         public List<Forum> getAllForums()
         {
@@ -52,7 +61,7 @@ namespace Capstone.DAO
         {
 
         }
-        
+        */
 
         public Forum GetTransferFromReader(SqlDataReader reader)
         {
