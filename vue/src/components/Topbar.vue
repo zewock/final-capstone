@@ -2,10 +2,6 @@
   <section class="nav-item">
      <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item, logo pl-5">
-      <img src="https://image.similarpng.com/very-thumbnail/2020/12/Lorem-ipsum-logo-isolated-clipart-PNG.png" width="112" height="28">
-    </a>
-
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
@@ -54,10 +50,10 @@
     <div class="navbar-end pr-2">
       <div class="navbar-item">
         <div class="buttons">
-          <a class="button is-primary">
+          <a class="button">
             <router-link v-bind:to="{ name: 'register'}"> <strong>Sign up</strong> </router-link>  
           </a>
-          <a class="button is-light">
+          <a class="button">
             <router-link v-bind:to="{ name: 'login'}"> Log in </router-link>
           </a>
         </div>
@@ -87,6 +83,12 @@ data() {
   
 }
 .navbar{
-  background-color:#000000;
+  background-color:#FF9F29;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.buttons{
+  
+  color:#FF9F29;
 }
 </style>

@@ -126,10 +126,18 @@ data() {
   height: 80vh;
   background-color: #FAF3E3;
   padding: 15px;
-  
+  border-radius:10px;
+}
+.card-header-title{
+  color:#1A4D2E;
 }
 .card{
   background-color: #FF9F29;
   padding: 15px;
+  margin-bottom: 10px;
+  color: #000000;
+}
+body::-webkit-scrollbar {
+  width: 0px;               /* width of the entire scrollbar */
 }
 </style>
