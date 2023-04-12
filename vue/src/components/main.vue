@@ -20,9 +20,9 @@
     </div>
   </div>
   <footer class="card-footer">
+    <a href="#" class="card-footer-item">Like</a>
+    <a href="#" class="card-footer-item">Dislike</a>
     <a href="#" class="card-footer-item">Save</a>
-    <a href="#" class="card-footer-item">Edit</a>
-    <a href="#" class="card-footer-item">Delete</a>
   </footer>
 </div>
 </section>
@@ -42,5 +42,6 @@ data() {
 <style>
 .main {
   grid-area: main;
+  padding-top: 150px;
 }
 </style>

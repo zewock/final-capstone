@@ -16,7 +16,7 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start pl-2">
       <a class="navbar-item">
-         <router-link v-bind:to="{ name: 'topbar' }">Home</router-link>
+         <router-link v-bind:to="{ name: 'home' }">Home</router-link>
       </a>
 
       <a class="navbar-item">
@@ -55,10 +55,10 @@
       <div class="navbar-item">
         <div class="buttons">
           <a class="button is-primary">
-            <strong>Sign up</strong>
+            <router-link v-bind:to="{ name: 'register'}"> <strong>Sign up</strong> </router-link>  
           </a>
           <a class="button is-light">
-            Log in
+            <router-link v-bind:to="{ name: 'login'}"> Log in </router-link>
           </a>
         </div>
       </div>
@@ -83,5 +83,6 @@ data() {
 <style>
 .nav-item {
   grid-area: nav;
+  position: fixed;
 }
 </style>

@@ -5,6 +5,7 @@
     <topbar />
     <sidebarLeft/>
     <main-component />
+    <sidebar-right />
     </section>
      
     
@@ -15,12 +16,14 @@
 import Topbar from '../components/Topbar.vue';
 import sidebarLeft from '../components/SideBarLeft.vue';
 import MainComponent from '../components/main.vue';
+import sidebarRight from '../components/SidebarRight.vue'
 export default {
   name: "home",
   components: {
     Topbar,
     sidebarLeft,
-    MainComponent
+    MainComponent,
+    sidebarRight
   }
 };
 </script>
