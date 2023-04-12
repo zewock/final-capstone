@@ -20,8 +20,6 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public 
-
         public int CreateForum(Forum forum)
         {
                 

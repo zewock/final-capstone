@@ -2,7 +2,6 @@
 using Capstone.DAO;
 using Capstone.Security;
 using Capstone.Models.DatabaseModles;
-
 namespace Capstone.Controllers
 {
     [Route("[controller]")]

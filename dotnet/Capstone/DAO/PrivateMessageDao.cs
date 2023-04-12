@@ -17,15 +17,6 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public PrivateMessageDao(ITransferDao _transferDao)
-        {
-            transferDao = _transferDao;
-            accountDao = _accountDao;
-            userDao = _userDao;
-            logService = _logService;
-        }
-
-
         /*
         public Forum getForumById(int userId)
         {   Forum forum = new Forum();
