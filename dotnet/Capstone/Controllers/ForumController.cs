@@ -31,11 +31,15 @@ namespace Capstone.Controllers
         {   
                 int tokenUserId;
             string tokenUserName;
+            string tokenUserRole;
+            
             try
             {
                 tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
                 tokenUserName = userDao.GetUser(User.Identity.Name).Username;
-                ActionResult<ForumListDTO> forumListDto = forumDao.getAllForums(tokenUserId, tokenUserName);
+                tokenUserRole = userDao.GetUser(User.Identity.Name).Role;
+               ActionResult<ForumListDTO> forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
+                return Ok(forumListDTO);
             }
             catch (Exception)
             {
