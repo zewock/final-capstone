@@ -118,11 +118,18 @@ data() {
 };
 </script>
 
-<style>
+<style scoped>
 .mainBody {
   grid-area: mainBody;
   position: sticky;
   overflow: auto;
   height: 80vh;
+  background-color: #FAF3E3;
+  padding: 15px;
+  
+}
+.card{
+  background-color: #FF9F29;
+  padding: 15px;
 }
 </style>

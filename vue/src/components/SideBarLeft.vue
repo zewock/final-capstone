@@ -33,7 +33,7 @@ data() {
 };
 </script>
 
-<style>
+<style scoped>
 .menu {
   grid-area: menu;
   position: sticky;
@@ -41,6 +41,12 @@ data() {
   vertical-align: text-bottom;
   overflow-y: visible;
   top: 150px;
+}
+.menu-label{
+  color: #FF9F29;
+}
+.menu-list li a{
+  color: #FAF3E3;
 }
 
 </style>

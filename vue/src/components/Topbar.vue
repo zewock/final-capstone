@@ -80,10 +80,13 @@ data() {
 };
 </script>
 
-<style>
+<style scoped>
 .nav-item {
   grid-area: nav;
   position: sticky;
-  background-color:lavender;
+  
+}
+.navbar{
+  background-color:#000000;
 }
 </style>
