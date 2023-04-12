@@ -8,7 +8,7 @@ namespace Capstone.Models.DatabaseModles
         public string topic { get; set; }
         public int ownerId { get; set; }
         public DateTime createdDate { get; set; }
-        public bool isVisible { get; set; }
+        public bool isVisible { get; set; } = true;
 
         public Forum()
         {

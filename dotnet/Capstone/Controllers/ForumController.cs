@@ -5,34 +5,58 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using TEbucksServer.DAO;
 using Capstone.Models;
-using TEBucksServer.DAO;
-using TEBucksServer.Security;
+using Capstone.DAO;
+using Capstone.Security;
 using Capstone.Models.IncomingDTOs;
+using System.Reflection;
+using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace Capstone.Controllers
 {
-    [Route("")]
+    [Route("[controller]")]
     [ApiController]
-    public class ForumController
+    public class ForumController : ControllerBase
     { 
         private readonly ITokenGenerator tokenGenerator;
         private readonly IPasswordHasher passwordHasher;
         private readonly IUserDao userDao;
         private readonly IForumDao forumDao;
 
-        public LoginController(ITokenGenerator _tokenGenerator, IPasswordHasher _passwordHasher, IUserDao _userDao)
-        {
-            tokenGenerator = _tokenGenerator;
-            passwordHasher = _passwordHasher;
-            userDao = _userDao;
-        }
 
-        [HttpPost("CreateForum")]
+        [HttpPost("/CreateForum")]
         public ActionResult CreateForum(CreateForumDTO createForumDTO)
         {
-            return new HttpStatusCodeResult(200);
+            int tokenUserId;
+            try 
+            { 
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId; 
+            }
+            catch(Exception)
+            {
+                return StatusCode(401, "You need to be logged in to create a forum");
+            }
+            
+            //Check to see of the user is banned
+            if(false)
+            {
+                return StatusCode(401, "This account is banned");
+            }
+
+            //Check to see of the user exists 
+            if(false)
+            {
+                return StatusCode(401, "This account is banned");
+            }
+
+            //Data valid?
+
+            Forum forum = new Forum();
+            forum.ownerId = tokenUserId;
+
+
+            return StatusCode(200, "blah blah");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Capstone.DAO
 {
     public class ForumDao : IForumDao
     {
-        private readonly string connectionString; 
+        private readonly string connectionString;
         public ForumDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
@@ -20,6 +20,7 @@ namespace Capstone.DAO
 
         public int CreateForum(Forum forum)
         {
+                
             return 1;
         }
 
