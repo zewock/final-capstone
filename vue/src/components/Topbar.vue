@@ -84,5 +84,6 @@ data() {
 .nav-item {
   grid-area: nav;
   position: sticky;
+  background-color:lavender;
 }
 </style>
