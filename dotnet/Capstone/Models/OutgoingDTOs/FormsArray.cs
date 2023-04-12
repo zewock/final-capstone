@@ -48,7 +48,4 @@ namespace Capstone.Models.OutgoingDTOs
             IsFavoriteForum = isFavoriteForum;
         }
     }
-
-     
-
 }

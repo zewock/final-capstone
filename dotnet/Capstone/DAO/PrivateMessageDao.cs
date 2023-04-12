@@ -1,5 +1,4 @@
-﻿
-using Capstone.Models;
+﻿using Capstone.Models;
 using Capstone.Models.IncomingDTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.Xml;
@@ -10,14 +9,18 @@ using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
-    public class ForumSqlDao
+    public class PrivateMessageDao : IPrivateMessageDao
     {
-        private readonly string connectionString; 
-        public ForumSqlDao(string dbConnectionString)
+        private readonly string connectionString;
+        public PrivateMessageDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
 
+
+
+
+        /*
         public Forum getForumById(int userId)
         {   Forum forum = new Forum();
 
@@ -27,6 +30,7 @@ namespace Capstone.DAO
             }
         }
         
+
         //GetAllForums() - Retrieves all forums.
         public List<Forum> getAllForums()
         {
@@ -52,11 +56,11 @@ namespace Capstone.DAO
         {
 
         }
-        
+        */
 
         public Forum GetTransferFromReader(SqlDataReader reader)
         {
-            Forum forum = new Forum(); 
+            Forum forum = new Forum();
 
             forum.forumId = Convert.ToInt32(reader["forum_id"]);
             forum.topic = Convert.ToString(reader["topic"]);
@@ -68,6 +72,3 @@ namespace Capstone.DAO
         }
     }
 }
-
-        
-    
