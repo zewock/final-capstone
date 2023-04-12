@@ -26,7 +26,7 @@ data() {
 };
 </script>
 
-<style>
+<style scoped>
 .ad {
   grid-area: ad;
   float: right;
@@ -34,5 +34,4 @@ data() {
   overflow-y: auto;
   position: sticky;
 }
-
-</style>
+</style>>

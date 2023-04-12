@@ -15,9 +15,9 @@ data() {
 };
 </script>
 
-<style>
+<style scoped>
 .box {
-     background-color:lavender;
+     background-color: #1A4D2E;
      position: fixed bottom;
      grid-area: pm;
      height: 150px;
