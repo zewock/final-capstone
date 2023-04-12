@@ -6,6 +6,7 @@
      <main-body />
     <sidebarLeft/>
     <sidebar-right />
+    <pm-button />
     </section>
     
      
@@ -18,6 +19,7 @@ import Topbar from '../components/Topbar.vue';
 import sidebarLeft from '../components/SideBarLeft.vue';
 import MainBody from '../components/mainBody.vue';
 import sidebarRight from '../components/SidebarRight.vue'
+import PmButton from '../components/PmButton.vue';
 export default {
   name: "home",
   components: {
@@ -25,13 +27,14 @@ export default {
     sidebarLeft,
     sidebarRight,
     MainBody,
+    PmButton,
+    
   }
 };
 </script>
 
 <style>
 .container {
-  color: grey;
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   row-gap: 10px;
