@@ -1,5 +1,5 @@
 <template>
-<section class="main">
+<body class="mainBody">
     <div class="card">
   <header class="card-header">
     <p class="card-header-title">
@@ -20,17 +20,17 @@
     </div>
   </div>
   <footer class="card-footer">
+    <a href="#" class="card-footer-item">Like</a>
+    <a href="#" class="card-footer-item">Dislike</a>
     <a href="#" class="card-footer-item">Save</a>
-    <a href="#" class="card-footer-item">Edit</a>
-    <a href="#" class="card-footer-item">Delete</a>
   </footer>
 </div>
-</section>
+</body>
 </template>
 
 <script>
 export default {
-  name: 'main',
+  name: 'mainBody',
 data() {
   return {
     
@@ -40,7 +40,10 @@ data() {
 </script>
 
 <style>
-.main {
-  grid-area: main;
+.mainBody {
+  grid-area: mainBody;
+  position: sticky;
+  overflow: auto;
+  height: 100vh;
 }
 </style>

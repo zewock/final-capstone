@@ -6,16 +6,16 @@ namespace Capstone.Models.OutgoingDTOs
     {
         public PrivateMessagesArray[] PrivateMessagesArray { get; set; }
 
-        public bool IsAdmin { get; set; }
+        public string UserRole { get; set; }
 
         public PrivateMessagesDTO()
         {
 
         }
 
-        public PrivateMessagesDTO(bool isAdmin, List<PrivateMessagesArray> privateMessageslist)
+        public PrivateMessagesDTO(string userRole, List<PrivateMessagesArray> privateMessageslist)
         {
-            IsAdmin = isAdmin;
+            UserRole = userRole;
             PrivateMessagesArray = privateMessageslist.ToArray();
         }
     }
