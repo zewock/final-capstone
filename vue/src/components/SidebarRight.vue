@@ -29,7 +29,6 @@ data() {
 <style>
 .ad {
   grid-area: ad;
-  background-color:lavender;
   float: right;
   vertical-align: text-bottom;
   overflow-y: auto;

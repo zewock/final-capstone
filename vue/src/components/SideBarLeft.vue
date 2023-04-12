@@ -36,7 +36,6 @@ data() {
 <style>
 .menu {
   grid-area: menu;
-  background-color:lavender;
   position: sticky;
   display: inline-block;
   vertical-align: text-bottom;
