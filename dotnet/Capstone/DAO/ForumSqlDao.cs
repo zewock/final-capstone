@@ -1,9 +1,12 @@
-﻿using Capstone.Models.IncomingDTOs;
+﻿
+using Capstone.Models;
+using Capstone.Models.IncomingDTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.Xml;
 using System;
 using System.Data.SqlClient;
 using Capstone.Models.DatabaseModles;
+using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
@@ -15,7 +18,7 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Forum getForumById()
+        public Forum getForumById(int userId)
         {   Forum forum = new Forum();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -23,13 +26,33 @@ namespace Capstone.DAO
 
             }
         }
-        public Forum createNewForum()
+        
+        //GetAllForums() - Retrieves all forums.
+        public List<Forum> getAllForums()
         {
 
         }
-        public Forum deleteForum()
+        //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
+        public List<Forum> getFavoritedForumsByUserId(int userID)
         {
+
         }
+        //CreateForum(Forum forum) - Creates a new forum.
+        public ActionResult<Forum> createForum()
+        {
+
+        }
+        //UpdateForum(Forum forum) - Updates an existing forum.
+        public ActionResult<Forum> updateForum(int forumId)
+        {
+
+        }
+        //DeleteForum(int forumId) - Deletes a forum by ID.
+        public ActionResult deleteForum(int forumId)
+        {
+
+        }
+        
 
         public Forum GetTransferFromReader(SqlDataReader reader)
         {
@@ -47,5 +70,4 @@ namespace Capstone.DAO
 }
 
         
-    }
-}
+    
