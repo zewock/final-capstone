@@ -7,6 +7,6 @@ namespace Capstone.DAO
     public interface IForumDao
     {
         public int CreateForum(Forum forum);
-        public ActionResult getAllForums(ForumListDTO forumListDto, int userId = 0);
+        public ActionResult<ForumListDTO> getAllForums(int userId = 0, string userName);
     }
 }

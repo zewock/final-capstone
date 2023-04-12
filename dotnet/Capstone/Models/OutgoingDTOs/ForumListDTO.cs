@@ -4,7 +4,7 @@ namespace Capstone.Models.OutgoingDTOs
 {
     public class ForumListDTO
     {        
-        public FormsArray[] ForumArray { get; set; }
+        public ForumsArray[] ForumArray { get; set; }
         
         public string UserRole { get; set; }
 
@@ -13,7 +13,7 @@ namespace Capstone.Models.OutgoingDTOs
 
         }
 
-        public ForumListDTO (List<FormsArray> forumsList, string userRole)
+        public ForumListDTO (List<ForumsArray> forumsList, string userRole)
         {
             UserRole = userRole;
             ForumArray = forumsList.ToArray();

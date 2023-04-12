@@ -1,14 +1,17 @@
-﻿using Microsoft.VisualBasic;
+﻿
+
+
+using System;
 
 namespace Capstone.Models.OutgoingDTOs
 {
-    public class FormsArray
+    public class ForumsArray
     {
         public int ForumID { get; set; }
 
         public string Topic { get; set; }
 
-        public DateAndTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public int OwnerID { get; set; }
 
@@ -26,12 +29,12 @@ namespace Capstone.Models.OutgoingDTOs
 
         public bool IsFavoriteForum { get; set; }
 
-        public FormsArray()
+        public ForumsArray()
         {
 
         }
 
-        public FormsArray(int forumID, string topic, DateAndTime createDate, int ownerID,
+        public ForumsArray(int forumID, string topic, DateTime createDate, int ownerID,
             string ownerUsername, int totalNumUpvotes, int totalNumDownvotes, int upvotesLast24Hours,
             bool isModerator, bool isFavoriteForum)
         {

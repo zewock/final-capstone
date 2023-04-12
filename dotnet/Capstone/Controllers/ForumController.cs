@@ -12,6 +12,7 @@ using Capstone.Models.IncomingDTOs;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using System.Net;
+using Capstone.Models.OutgoingDTOs;
 
 namespace Capstone.Controllers
 {
@@ -24,6 +25,24 @@ namespace Capstone.Controllers
         private readonly IUserDao userDao;
         private readonly IForumDao forumDao;
 
+        [HttpGet("/ForumsList")]
+
+        public ActionResult<ForumListDTO> getForums()
+        {   
+                int tokenUserId;
+            string tokenUserName;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+                tokenUserName = userDao.GetUser(User.Identity.Name).Username;
+                ActionResult<ForumListDTO> forumListDto = forumDao.getAllForums(tokenUserId, tokenUserName);
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to create a forum");
+            }
+
+        }
 
         [HttpPost("/CreateForum")]
         public ActionResult CreateForum(CreateForumDTO createForumDTO)
@@ -58,5 +77,6 @@ namespace Capstone.Controllers
 
             return StatusCode(200, "blah blah");
         }
+
     }
 }
