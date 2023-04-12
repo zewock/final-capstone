@@ -25,6 +25,11 @@ namespace Capstone.Controllers
         private readonly IUserDao userDao;
         private readonly IForumDao forumDao;
 
+        public ForumController(IForumDao _forumDao)
+        {
+            this.forumDao = _forumDao;
+        }
+
         [HttpGet("/ForumsList")]
 
         public ActionResult<ForumListDTO> getForums()
@@ -33,15 +38,26 @@ namespace Capstone.Controllers
             string tokenUserName;
             string tokenUserRole;
             
+
             try
             {
                 tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
                 tokenUserName = userDao.GetUser(User.Identity.Name).Username;
                 tokenUserRole = userDao.GetUser(User.Identity.Name).Role;
-               ActionResult<ForumListDTO> forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
-                return Ok(forumListDTO);
             }
             catch (Exception)
+            {
+                tokenUserId = 0;
+                tokenUserName = "";
+                tokenUserRole = "";
+            }
+            try
+            {
+                ActionResult<ForumListDTO> forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
+                return Ok(forumListDTO);
+
+            }
+            catch
             {
                 return StatusCode(401, "You need to be logged in to create a forum");
             }

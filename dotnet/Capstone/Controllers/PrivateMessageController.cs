@@ -30,7 +30,7 @@ namespace Capstone.Controllers
             privateMessageDao = _privateMessageDao;
         }
 
-        [HttpGet("/ForumsList")]
+        [HttpGet("/")]
         public ActionResult GetForums()
         {
             
