@@ -32,7 +32,7 @@ namespace Capstone.Controllers
         [HttpPost("CreateForum")]
         public ActionResult CreateForum(CreateForumDTO createForumDTO)
         {
-
+            return new HttpStatusCodeResult(200);
         }
     }
 }
