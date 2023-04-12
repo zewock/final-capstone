@@ -1,5 +1,5 @@
 <template>
-  <div class="boxStyle box" >
+  <div class="box" >
       <button class="button">PMs</button>
   </div>
 </template>
@@ -16,12 +16,10 @@ data() {
 </script>
 
 <style>
-.boxStyle {
+.box {
      background-color:lavender;
+     position: fixed bottom;
      grid-area: pm;
      height: 150px;
-}
-.buttonStyle {
-
 }
 </style>
