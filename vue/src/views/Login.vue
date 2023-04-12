@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div id="login" class="hero has-text-centered is-fullheight">
     <form @submit.prevent="login">
       <h1 >Please Sign In</h1>
       <div role="alert" v-if="invalidCredentials">
@@ -16,7 +16,8 @@
         <label for="password">Password</label>
         <input type="password" id="password" v-model="user.password" required />
       </div>
-      <button type="submit">Sign in</button>
+      <button class="button is-primary is-focused mx-4"  type="submit">Sign in</button>
+      <router-link class="button is-primary" v-bind:to="{ name: 'home' }">Back</router-link>
       <p>
       <router-link :to="{ name: 'register' }">Need an account? Sign up.</router-link></p>
     </form>
@@ -67,5 +68,8 @@ export default {
 }
 label {
   margin-right: 0.5rem;
+}
+#login{
+  justify-content: center;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="register" class="text-center">
+  <div id="register" class="hero is-fullheight has-text-centered">
     <form @submit.prevent="register">
       <h1>Create Account</h1>
       <div role="alert" v-if="registrationErrors">
@@ -17,7 +17,8 @@
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
       </div>
-      <button type="submit">Create Account</button>
+      <button class="button is-primary is-focused mx-4" type="submit">Create Account</button>
+      <router-link class="button is-primary" v-bind:to="{ name: 'home' }">Back</router-link>
       <p><router-link :to="{ name: 'login' }">Already have an account? Log in.</router-link></p>
     </form>
   </div>
@@ -79,5 +80,8 @@ export default {
 }
 label {
   margin-right: 0.5rem;
+}
+#register{
+  justify-content: center;
 }
 </style>

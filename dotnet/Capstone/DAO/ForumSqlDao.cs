@@ -21,8 +21,8 @@ namespace Capstone.DAO
         public Forum getForumById(int userId)
         {   Forum forum = new Forum();
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
 
             }
         }
