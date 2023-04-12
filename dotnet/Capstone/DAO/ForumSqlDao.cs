@@ -15,21 +15,21 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Forum getForumById()
-        {   Forum forum = new Forum();
+        //public Forum getForumById()
+        //{   Forum forum = new Forum();
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
 
-            }
-        }
-        public Forum createNewForum()
-        {
+        //    }
+        //}
+        //public Forum createNewForum()
+        //{
 
-        }
-        public Forum deleteForum()
-        {
-        }
+        //}
+        //public Forum deleteForum()
+        //{
+        //}
 
         public Forum GetTransferFromReader(SqlDataReader reader)
         {
@@ -47,5 +47,4 @@ namespace Capstone.DAO
 }
 
         
-    }
-}
+ 
