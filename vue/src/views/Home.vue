@@ -46,17 +46,7 @@ export default {
 body::-webkit-scrollbar {
   width: 0px;               /* width of the entire scrollbar */
 }
-/*.containerMain {
-   color: grey;
-  display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
-  row-gap: 10px;
-  column-gap: 20px;
-  grid-template-areas: 
-  ". . ."
-  ". mainBody ."
-  ". mainBody .";
-}*/
+
 @media screen and (min-width: 1408px) {
 .container:not(.is-max-desktop):not(.is-max-widescreen) {
     max-width: 100%;
