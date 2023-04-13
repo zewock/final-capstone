@@ -19,7 +19,7 @@ namespace Capstone.Controllers
             userDao = _userDao;
         }
 
-        [HttpPost]
+        [HttpPost("/Login")]
         public IActionResult Authenticate(LoginUser userParam)
         {
             // Default to bad username/password message
@@ -49,13 +49,13 @@ namespace Capstone.Controllers
         public IActionResult Register(RegisterUser userParam)
         {
             IActionResult result;
-
+            /*
             User existingUser = userDao.GetUser(userParam.Username);
             if (existingUser != null)
             {
                 return Conflict(new { message = "Username already taken. Please choose a different username." });
             }
-
+            */
             User user = userDao.AddUser(userParam.Username, userParam.Password, userParam.Role);
             if (user != null)
             {
