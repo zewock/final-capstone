@@ -1,6 +1,6 @@
 <template>
   <section class="container is-fullscreen">
-    <topbar />
+    <topbar class="topbar"/>
     <sidebarLeft/>
     <forum-list />
     <sidebar-right />
@@ -37,6 +37,9 @@ export default {
   "menu mainBody ad"
   "menu mainBody ad";
   height: 100vh;
+}
+.topbar{
+  z-index: 1;
 }
 @media screen and (min-width: 1408px) {
 .container:not(.is-max-desktop):not(.is-max-widescreen) {

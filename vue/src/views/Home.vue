@@ -1,7 +1,7 @@
 <template>
   <div >
     <section class="container is-fullscreen">
-    <topbar />
+    <topbar class="topbar" />
     <main-body />
     <sidebarLeft/>
     <sidebar-right />
@@ -39,6 +39,9 @@ export default {
   "menu mainBody ad"
   "menu mainBody ad";
   height: 100vh;
+}
+.topbar{
+  z-index: 1;
 }
 body::-webkit-scrollbar {
   width: 0px;               /* width of the entire scrollbar */
