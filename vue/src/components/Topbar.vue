@@ -109,14 +109,16 @@ data() {
 }
 .navbar-dropdown{
   background-color: #FF9F29;
+  border-color:#FAF3E3;
 }
 .navbar-dropdown a:hover{
   background-color: #FF9F29;
-}
-.navbar-link:hover{
-  background-color: #FF9F29;
+  color: #FAF3E3;
 }
 .navbar-link:not(.is-arrowless)::after {
     border-color: black;
+}
+.navbar-divider{
+  background-color: #FAF3E3;
 }
 </style>
