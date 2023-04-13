@@ -49,11 +49,17 @@
     <div class="navbar-end pr-2">
       <div class="navbar-item">
         <div class="buttons">
-          <a class="button">
+          <a class="button" v-if="$store.state.token == ''">
             <router-link v-bind:to="{ name: 'register'}"> <strong>Sign up</strong> </router-link>  
           </a>
-          <a class="button">
+          <a class="button" v-if="$store.state.token == ''">
             <router-link v-bind:to="{ name: 'login'}"> <strong>Log in</strong> </router-link>
+          </a>
+          <a class="button" v-if="$store.state.token != ''" >
+            <router-link v-bind:to="{ name: ''}" > <strong>Account</strong> </router-link>  
+          </a>
+          <a class="button" v-if="$store.state.token != ''" >
+            <router-link v-bind:to="{ name: 'logout'}" > <strong>Log Out</strong> </router-link>
           </a>
         </div>
       </div>
@@ -84,7 +90,6 @@ data() {
   background-color:#FF9F29;
   border-radius: 10px;
   margin-top: 10px;  
-  max-width: 78.5%;
 }
 .buttons a{
   

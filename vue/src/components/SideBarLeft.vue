@@ -4,8 +4,7 @@
                 <strong>Feeds</strong>
             </p>
         <ul class="menu-list">
-            <li><a>Home</a></li>
-            <li><router-link v-bind:to="{ name: 'forum' }">Forum</router-link></li>
+            <li><router-link v-bind:to="{ name: 'forum' }">Forums</router-link></li>
             <li><a>Popular</a></li>
         </ul>
         <p class="menu-label">
