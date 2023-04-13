@@ -79,12 +79,12 @@ data() {
 .nav-item {
   grid-area: nav;
   position: sticky;
-  
 }
 .navbar{
   background-color:#FF9F29;
   border-radius: 10px;
   margin-top: 10px;  
+  max-width: 78.5%;
 }
 .buttons a{
   
@@ -98,9 +98,6 @@ data() {
 .navbar-item:hover{
   background-color: #FF9F29;
   color: #FAF3E3;
-}
-.fa-magnifying-glass{
-  margin-left: 10px;
 }
 .navbar-link{
   color:black;
