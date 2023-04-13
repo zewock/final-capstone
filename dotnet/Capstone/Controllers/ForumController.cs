@@ -13,6 +13,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using Capstone.Models.OutgoingDTOs;
+using Newtonsoft.Json;
 
 namespace Capstone.Controllers
 {
@@ -33,7 +34,7 @@ namespace Capstone.Controllers
 
         [HttpGet("/ForumsList")]
 
-        public ActionResult<ForumListDTO> getForums()
+        public ActionResult<string> getForums()
         {   
                 int tokenUserId;
             string tokenUserName;
@@ -54,8 +55,9 @@ namespace Capstone.Controllers
             }
             try
             {
-                ActionResult<ForumListDTO> forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
-                return Ok(forumListDTO);
+                ForumListDTO forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
+                 ActionResult<string> json = JsonConvert.SerializeObject(forumListDTO);
+                return Ok(json);
 
             }
             catch
