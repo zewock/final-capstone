@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using System;
 
 namespace Capstone.Models.OutgoingDTOs
 {
@@ -6,17 +7,26 @@ namespace Capstone.Models.OutgoingDTOs
     {
         public int MessageID { get; set; }
 
-        public int OtherUserID { get; set; }
+        public int FromUserID { get; set; }
 
-        public string OtherUsername { get; set; }
+        public string FromUsername { get; set; }
+
+        public string FromUserRole { get; set; }
+
+        public int ToUserID { get; set; }
+
+        public string ToUsername { get; set; }
+
+        public string ToUserRole { get; set; }
 
         public string Message { get; set; }
 
         public bool IsUserSender { get; set; }
 
-        public DateAndTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public bool IsOtherUserAdmin { get; set; }
+
         public bool IsUserAdmin { get; set; }
 
         public PrivateMessagesArray()
@@ -24,13 +34,15 @@ namespace Capstone.Models.OutgoingDTOs
 
         }
 
-        public PrivateMessagesArray(int messageID, int otherUserID, string otherUsername,
-            string message, bool isUserSender, DateAndTime createDate, bool isOtherUserAdmin,
-            bool isUserAdmin)
+        public PrivateMessagesArray(int messageID, int fromUserID, string fromUsername, string fromUserRole, int toUserID, string toUsername, string toUserRole, string message, bool isUserSender, DateTime createDate, bool isOtherUserAdmin, bool isUserAdmin)
         {
             MessageID = messageID;
-            OtherUserID = otherUserID;
-            OtherUsername = otherUsername;
+            FromUserID = fromUserID;
+            FromUsername = fromUsername;
+            FromUserRole = fromUserRole;
+            ToUserID = toUserID;
+            ToUsername = toUsername;
+            ToUserRole = toUserRole;
             Message = message;
             IsUserSender = isUserSender;
             CreateDate = createDate;

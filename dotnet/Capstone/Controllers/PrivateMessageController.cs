@@ -25,16 +25,43 @@ namespace Capstone.Controllers
         private readonly IForumDao forumDao;
         private readonly IPrivateMessageDao privateMessageDao;
 
-        public PrivateMessageController(IPrivateMessageDao _privateMessageDao)
+        public PrivateMessageController(IPrivateMessageDao _privateMessageDao, IUserDao _userDao)
         {
             privateMessageDao = _privateMessageDao;
+            userDao = _userDao;
         }
 
-        [HttpGet("/")]
-        public ActionResult GetForums()
+        [HttpGet("/PrivateMessages")]
+        public ActionResult<PrivateMessagesDTO> GetPrivateMessages()
         {
-            
-        return StatusCode(401, "You need to be logged in to create a forum");
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to create a forum");
+            }
+
+            //Check to see of the user exists 
+            if (false)
+            {
+                return StatusCode(401, "This account does not exist");
+            }
+
+            //Check to see of the user is banned
+            if (false)
+            {
+                return StatusCode(401, "This account is banned");
+            }
+
+            //Data valid?
+
+            PrivateMessagesDTO privateMessagesDTO = privateMessageDao.GetPrivateMessages(tokenUserId);
+            return privateMessagesDTO;
+
+            return StatusCode(200, "blah blah");
 
 
         }
