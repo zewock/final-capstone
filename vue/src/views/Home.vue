@@ -35,7 +35,7 @@ export default {
 <style>
 .container {
   display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-columns: 1fr 6fr 1fr;
   row-gap: 10px;
   column-gap: 20px;
   grid-template-areas: 
@@ -43,6 +43,9 @@ export default {
   "menu mainBody ad"
   "menu mainBody ad";
   height: 100vh;
+}
+body::-webkit-scrollbar {
+  width: 0px;               /* width of the entire scrollbar */
 }
 /*.containerMain {
    color: grey;
