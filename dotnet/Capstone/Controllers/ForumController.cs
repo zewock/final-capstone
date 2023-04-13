@@ -25,9 +25,10 @@ namespace Capstone.Controllers
         private readonly IUserDao userDao;
         private readonly IForumDao forumDao;
 
-        public ForumController(IForumDao _forumDao)
+        public ForumController(IForumDao _forumDao, IUserDao _userDoa)
         {
-            this.forumDao = _forumDao;
+            forumDao = _forumDao;
+            userDao = _userDoa;
         }
 
         [HttpGet("/ForumsList")]
@@ -76,15 +77,15 @@ namespace Capstone.Controllers
             {
                 return StatusCode(401, "You need to be logged in to create a forum");
             }
-            
-            //Check to see of the user is banned
-            if(false)
-            {
-                return StatusCode(401, "This account is banned");
-            }
 
             //Check to see of the user exists 
-            if(false)
+            if (false)
+            {
+                return StatusCode(401, "This account does not exist");
+            }
+
+            //Check to see of the user is banned
+            if (false)
             {
                 return StatusCode(401, "This account is banned");
             }
@@ -93,7 +94,11 @@ namespace Capstone.Controllers
 
             Forum forum = new Forum();
             forum.ownerId = tokenUserId;
+            forum.title = createForumDTO.Title;
+            forum.topic = createForumDTO.Topic;
+            forum.isVisible = true;
 
+            forumDao.CreateForum(forum);
 
             return StatusCode(200, "blah blah");
         }
