@@ -1,14 +1,14 @@
 <template>
         <aside class="menu">
             <p class="menu-label">
-                Feeds
+                <strong>Feeds</strong>
             </p>
         <ul class="menu-list">
             <li><a>Home</a></li>
             <li><a>Popular</a></li>
         </ul>
         <p class="menu-label">
-            Topics
+            <strong>Topics</strong>
         </p>
         <ul class="menu-list">
             <li><a>Gaming</a></li>
@@ -42,9 +42,13 @@ data() {
   overflow-y: visible;
   top: 150px;
   position:fixed;
+  padding-left: 10px;
 }
 .menu-label{
-  color: #FF9F29;
+  color: black;
+  background-color: #FF9F29;
+  border-radius: 10px;
+  padding-left: 7px;
 }
 .menu-list li a{
   color: #FAF3E3;
@@ -55,6 +59,10 @@ data() {
   color: #FAF3E3;
   background-color: #FF9F29;
   border-color: #FAF3E3;
+}
+.menu-list li a:hover{
+  background-color: #1A4D2E;
+  color: #FF9F29;
 }
 
 </style>

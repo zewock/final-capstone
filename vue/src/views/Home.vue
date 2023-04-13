@@ -35,10 +35,10 @@ export default {
 .container {
   display: grid;
   grid-template-columns: 1fr 6fr 1fr;
-  row-gap: 10px;
+  row-gap: 5px;
   column-gap: 20px;
   grid-template-areas: 
-  "logo nav nav"
+  "logo nav ."
   "menu mainBody ad"
   "menu mainBody ad";
   height: 100vh;
