@@ -1,5 +1,4 @@
 <template>
-
   <div >
     <section class="container is-fullscreen">
     <topbar />
@@ -32,7 +31,7 @@ export default {
 };
 </script>
 
-<style>
+<style scope>
 .container {
   display: grid;
   grid-template-columns: 1fr 6fr 1fr;
@@ -58,4 +57,20 @@ body::-webkit-scrollbar {
   ". mainBody ."
   ". mainBody .";
 }*/
+@media screen and (min-width: 1408px) {
+.container:not(.is-max-desktop):not(.is-max-widescreen) {
+    max-width: 100%;
+    }
+}
+@media screen and (min-width: 1216px) {
+.container:not(.is-max-desktop) {
+    max-width: 100%;
+    }
+}
+@media screen and (min-width: 1024px) {
+.container {
+    max-width: 100%;
+    }
+}
+
 </style>
