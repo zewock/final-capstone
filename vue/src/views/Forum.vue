@@ -2,6 +2,7 @@
   <section class="container is-fullscreen">
     <topbar />
     <sidebarLeft/>
+    <forum-list />
     <sidebar-right />
     <logo />
     </section>
@@ -12,13 +13,15 @@ import Topbar from '../components/Topbar.vue';
 import sidebarLeft from '../components/SideBarLeft.vue';
 import sidebarRight from '../components/SidebarRight.vue'
 import logo from '../components/logo.vue'
+import ForumList from '../components/ForumList.vue';
 export default {
     name: "forum",
  components: {
     Topbar,
     sidebarLeft,
     sidebarRight,
-    logo
+    logo,
+    ForumList
   }
 }
 </script>
