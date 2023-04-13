@@ -1,9 +1,67 @@
 <template>
   <body class="mainBody">
+      <section class="box" v-bind:key="form" v-show="form" >
+          <h1 style="">New Forum Form</h1>
+
+<div class="field">
+  <label class="label">Username</label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input is-success" type="text" placeholder="Text input" value="bulma">
+    <span class="icon is-small is-left">
+      <i class="fas fa-user"></i>
+    </span>
+    <span class="icon is-small is-right">
+      <i class="fas fa-check"></i>
+    </span>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">Forum Name</label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input is-success" type="text" placeholder="Text input" value="bulma">
+    <span class="icon is-small is-left">
+      <i class="fa-sharp fa-light fa-input-text"></i>
+    </span>
+    <span class="icon is-small is-right">
+      <i class="fas fa-check"></i>
+    </span>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">Topic</label>
+  <div class="control">
+    <div class="select">
+      <select>
+        <option>Select dropdown</option>
+        <option>With options</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">Description</label>
+  <div class="control">
+    <textarea class="textarea" placeholder="Textarea"></textarea>
+  </div>
+</div>
+
+<div class="field is-grouped">
+  <div class="control">
+    <button class="button" v-bind="form" @click="form = false" >Submit</button>
+  </div>
+  <div class="control">
+    <button class="button" v-bind="form" @click="form = false" >Cancel</button>
+  </div>
+</div>
+      </section>
+      
         <div class="card">
   <header class="card-header">
     <section class="card-header-title">
-       <a class="button">New Forum</a>
+       <button class="button" v-bind="form" @click="form = true">New Forum</button>
        <div class="dropdown is-hoverable">
   <div class="dropdown-trigger">
     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
@@ -46,6 +104,7 @@ export default {
 data() {
   return {
     forums: [],
+    form: false,
   }
 }
 };
@@ -85,6 +144,12 @@ body::-webkit-scrollbar {
     padding-top: 4px;
     position: absolute;
     top: 100%;
+    z-index: 20;
+}
+
+.box {
+    height: 100%;
+    background-color: #FF9F29;
     z-index: 20;
 }
 </style>
