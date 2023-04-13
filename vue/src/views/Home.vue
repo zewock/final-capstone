@@ -14,8 +14,8 @@
 import Topbar from '../components/Topbar.vue';
 import sidebarLeft from '../components/SideBarLeft.vue';
 import MainBody from '../components/mainBody.vue';
-import sidebarRight from '../components/SidebarRight.vue'
-import logo from '../components/logo.vue'
+import sidebarRight from '../components/SidebarRight.vue';
+import logo from '../components/logo.vue';
 export default {
   name: "home",
   components: {

@@ -8,4 +8,5 @@ export default {
     getForumId(id){
       return axios.get(`/ForumsList/${id}`)      
     }
+    get
   }

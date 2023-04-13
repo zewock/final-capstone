@@ -86,9 +86,9 @@
   </header>
 </div>
     <div class="card">
-  <header class="card-header">
-    <p class="card-header-title" v-for="forum in forums" :key="forum.forumID">
-      {{forum.topic}}
+  <header class="card-header" v-for="forum in forums" :key="forum.ForumID">
+    <p class="card-header-title"  >
+      {{forum.Topic}}
     </p>
     <button class="card-header-icon" aria-label="more options">
      <span><time>{{createDate}}</time></span>
@@ -116,19 +116,10 @@ export default {
   },
   created() {
     ForumService.getForums().then((response) => {
-       this.forums = response.data.forumArray
+       let parsedResponse = JSON.parse(response.data.value);
+       const forumArray = parsedResponse.ForumArray;
+       this.forums.push(...forumArray);
     });
-  },
-  computed: {
-    planned() {
-      return this.forum.filter(card => card.status === 'Planned');
-    },
-    inProgress() {
-      return this.forum.filter(card => card.status === 'In Progress');
-    },
-    completed() {
-      return this.forum.filter(card => card.status === 'Completed');
-    }
   }
 };
 </script>
