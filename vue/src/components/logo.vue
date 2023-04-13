@@ -18,5 +18,6 @@ data() {
     width: 120px;
     position: fixed;
     margin-top: 20px;
+    margin-left: 15px;
 }
 </style>

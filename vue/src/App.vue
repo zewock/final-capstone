@@ -1,9 +1,5 @@
 <template>
   <div id="app" class="background">
-    <div id="nav">
-     
-      <router-link v-bind:to="{ name: 'logout' }" v-if="$store.state.token != ''">Logout</router-link>
-    </div>
     <router-view />
   </div>
 </template>
@@ -13,4 +9,5 @@
   height: 100%;
   background-color: #1A4D2E;
 }
+
 </style>
