@@ -32,15 +32,16 @@ namespace Capstone.Models.OutgoingDTOs
 
         public int DownvotesLast24Hours { get;set; }
 
-        public PostsArray ()
-        {
+        public bool IsAdminPost { get; set; }
 
-        }
+        public bool IsOwnerPost { get; set; }
 
-        public PostsArray(int postID, string content, string image, DateAndTime createDate,
-            int userID, string userName, int forumID, string path, bool didUserUpvote,
-            bool didUserDownvote, int totalNumUpvotes, int totalNumDownvotes,
-            int upvotesLast24Hours, int downvotesLast24Hours)
+        public bool IsModPost { get; set; }
+
+        public PostsArray(int postID, string content, string image, DateAndTime createDate, 
+            int userID, string userName, int forumID, string path, bool didUserUpvote, 
+            bool didUserDownvote, int totalNumUpvotes, int totalNumDownvotes, int upvotesLast24Hours, 
+            int downvotesLast24Hours, bool isAdminPost, bool isOwnerPost, bool isModPost)
         {
             PostID = postID;
             Content = content;
@@ -56,6 +57,9 @@ namespace Capstone.Models.OutgoingDTOs
             TotalNumDownvotes = totalNumDownvotes;
             UpvotesLast24Hours = upvotesLast24Hours;
             DownvotesLast24Hours = downvotesLast24Hours;
+            IsAdminPost = isAdminPost;
+            IsOwnerPost = isOwnerPost;
+            IsModPost = isModPost;
         }
     }
 }
