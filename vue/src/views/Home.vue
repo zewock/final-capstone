@@ -7,9 +7,6 @@
     <sidebar-right />
     <logo />
     </section>
-    
-     
-    
   </div>
 </template>
 
@@ -51,16 +48,25 @@ body::-webkit-scrollbar {
 .container:not(.is-max-desktop):not(.is-max-widescreen) {
     max-width: 100%;
     }
+body::-webkit-scrollbar {
+  width: 0px;               /* width of the entire scrollbar */
+}
 }
 @media screen and (min-width: 1216px) {
 .container:not(.is-max-desktop) {
     max-width: 100%;
     }
+body::-webkit-scrollbar {
+  width: 0px;               /* width of the entire scrollbar */
+}
 }
 @media screen and (min-width: 1024px) {
 .container {
     max-width: 100%;
     }
+body::-webkit-scrollbar {
+  width: 0px;               /* width of the entire scrollbar */
+}
 }
 
 </style>
