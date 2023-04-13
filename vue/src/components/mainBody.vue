@@ -123,7 +123,7 @@ data() {
   grid-area: mainBody;
   position: sticky;
   overflow: auto;
-  height: 80vh;
+  height: 87vh;
   background-color: #FAF3E3;
   padding: 15px;
   border-radius:10px;

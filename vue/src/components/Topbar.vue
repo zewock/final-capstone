@@ -12,7 +12,7 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start pl-2">
       <a class="navbar-item">
-         <router-link v-bind:to="{ name: 'home' }">Home</router-link>
+         <router-link class="navbar-item" v-bind:to="{ name: 'home' }">Home</router-link>
       </a>
 
       <a class="navbar-item">
@@ -43,8 +43,7 @@
     </div>
     
     <div class="navbar-item is-expanded">
-      <input class="input is-rounded" type="text" placeholder="Search Bar">
-
+      <input class="input is-rounded" type="text" placeholder="Search">
     </div>
 
     <div class="navbar-end pr-2">
@@ -54,7 +53,7 @@
             <router-link v-bind:to="{ name: 'register'}"> <strong>Sign up</strong> </router-link>  
           </a>
           <a class="button">
-            <router-link v-bind:to="{ name: 'login'}"> Log in </router-link>
+            <router-link v-bind:to="{ name: 'login'}"> <strong>Log in</strong> </router-link>
           </a>
         </div>
       </div>
@@ -85,10 +84,37 @@ data() {
 .navbar{
   background-color:#FF9F29;
   border-radius: 10px;
-  margin-top: 10px;
+  margin-top: 10px;  
 }
-.buttons{
+.buttons a{
   
-  color:#FF9F29;
+  background-color:#1A4D2E;
+  color: #FAF3E3;
+  border-color: white;
+}
+.navbar-item{
+  color:black;
+}
+.navbar-item:hover{
+  background-color: #FF9F29;
+  color: #FAF3E3;
+}
+.fa-magnifying-glass{
+  margin-left: 10px;
+}
+.navbar-link{
+  color:black;
+}
+.navbar-dropdown{
+  background-color: #FF9F29;
+}
+.navbar-dropdown a:hover{
+  background-color: #FF9F29;
+}
+.navbar-link:hover{
+  background-color: #FF9F29;
+}
+.navbar-link:not(.is-arrowless)::after {
+    border-color: black;
 }
 </style>
