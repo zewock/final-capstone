@@ -33,7 +33,7 @@ export default {
   row-gap: 10px;
   column-gap: 20px;
   grid-template-areas: 
-  "logo nav nav"
+  "logo nav ."
   "menu mainBody ad"
   "menu mainBody ad";
   height: 100vh;
