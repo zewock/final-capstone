@@ -2,10 +2,10 @@ import axios from 'axios';
 
 export default {
 
-    ForumList() {
-      return axios.post('/forum')
+    getForums() {
+      return axios.get('/ForumsList')
     },
-    getFourms(){
-      return axios.get('/forums')
+    getForumId(id){
+      return axios.get(`/ForumsList/${id}`)      
     }
   }

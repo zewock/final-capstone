@@ -87,11 +87,11 @@
 </div>
     <div class="card">
   <header class="card-header">
-    <p class="card-header-title">
-      Post 1
+    <p class="card-header-title" v-for="forum in forums" :key="forum.forumID">
+      {{forum.topic}}
     </p>
     <button class="card-header-icon" aria-label="more options">
-     <span><time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time></span>
+     <span><time>{{createDate}}</time></span>
     </button>
   </header>
 </div>
@@ -99,14 +99,37 @@
 </template>
 
 <script>
+import ForumService from '../services/ForumService';
+
 export default {
   name: 'forumList',
-data() {
-  return {
-    forums: [],
-    form: false,
+  data() {
+    return {
+        forums: []
+    };
+  },
+  methods:{
+    ViewForum(id){
+      this.$router.push(`/forum/${id}`)
+    },
+    
+  },
+  created() {
+    ForumService.getForums().then((response) => {
+       this.forums = response.data.forumArray
+    });
+  },
+  computed: {
+    planned() {
+      return this.forum.filter(card => card.status === 'Planned');
+    },
+    inProgress() {
+      return this.forum.filter(card => card.status === 'In Progress');
+    },
+    completed() {
+      return this.forum.filter(card => card.status === 'Completed');
+    }
   }
-}
 };
 </script>
 
