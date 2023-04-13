@@ -8,16 +8,19 @@
 
         public string Topic { get; set; }
 
+        public string Title { get; set; }
+
         public CreateForumDTO()
         {
 
         }
 
-        public CreateForumDTO(string content, string image, string topic)
+        public CreateForumDTO(string content, string image, string topic, string title)
         {
             Content = content;
             Image = image;
             Topic = topic;
+            Title = title;
         }
     }
 }

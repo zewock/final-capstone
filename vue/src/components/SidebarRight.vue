@@ -32,5 +32,6 @@ data() {
   vertical-align: text-bottom;
   overflow-y: auto;
   position: sticky;
+  padding-right: 10px;
 }
 </style>>
