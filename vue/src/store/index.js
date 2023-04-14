@@ -12,16 +12,16 @@ Vue.use(Vuex)
 /* this is for if we have already logged in */
 let currentToken = localStorage.getItem('token')
 let currentUser = '';
-try{
+try {
   currentUser = JSON.parse(localStorage.getItem('user'));
-} catch(e) {
+} catch (e) {
   currentToken = '';
   localStorage.removeItem('token');
   localStorage.removeItem('user');
 }
 
 
-if(currentToken != null) {
+if (currentToken != null) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${currentToken}`;
 }
 
@@ -42,7 +42,7 @@ export default new Vuex.Store({
     SET_USER(state, user) {
       /* for when we log in through the front end. Saving the data */
       state.user = user;
-      localStorage.setItem('user',JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user));
     },
     LOGOUT(state) {
       localStorage.removeItem('token');
