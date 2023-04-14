@@ -27,15 +27,16 @@ namespace Capstone.DAO
             {
                 connection.Open();
 
-                string sql = "insert into Forums (topic, title, user_id) " +
+                string sql = "insert into Forums (topic, title, user_id, description) " +
                                 "OUTPUT INSERTED.forum_id " +
-                                "values (@topic, @title, @user_id);";
+                                "values (@topic, @title, @user_id, @description);";
 
                 SqlCommand cmd = new SqlCommand(sql, connection);
 
                 cmd.Parameters.AddWithValue("@topic", forum.topic);
                 cmd.Parameters.AddWithValue("@title", forum.title);
                 cmd.Parameters.AddWithValue("@user_id", forum.ownerId);
+                cmd.Parameters.AddWithValue("@description", forum.description);
 
                 newForumID = Convert.ToInt32(cmd.ExecuteScalar());
             }

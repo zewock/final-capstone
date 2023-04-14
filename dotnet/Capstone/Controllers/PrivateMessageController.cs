@@ -59,10 +59,10 @@ namespace Capstone.Controllers
             //Data valid?
 
             PrivateMessagesDTO privateMessagesDTO = privateMessageDao.GetPrivateMessages(tokenUserId);
-            if(privateMessagesDTO.PrivateMessagesArray.Length >= 1)
+            if (privateMessagesDTO.PrivateMessagesArray.Length >= 1)
             {
                 privateMessagesDTO.IsUserAdmin = privateMessagesDTO.PrivateMessagesArray[0].IsUserAdmin;
-                if (privateMessagesDTO.PrivateMessagesArray[0].IsUserSender) 
+                if (privateMessagesDTO.PrivateMessagesArray[0].IsUserSender)
                 {
                     privateMessagesDTO.UserRole = privateMessagesDTO.PrivateMessagesArray[0].FromUserRole;
                 }
@@ -88,7 +88,27 @@ namespace Capstone.Controllers
 
             return StatusCode(200, "blah blah");
 
+        }
 
+        [HttpPost("/CreatePrivateMessage")]
+        public ActionResult CreatePrivateMessages(CreatePrivateMessageDTO createPrivateMessageDTO)
+        {
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to send a private message");
+            }
+
+            //Data valid?
+
+            //privateMessageDao.CreatePrivateMessage(createPrivateMessageDTO, tokenUserId);
+
+
+            return StatusCode(200, "blah blah");
         }
     }
 }
