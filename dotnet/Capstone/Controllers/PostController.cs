@@ -1,6 +1,6 @@
 ﻿using Capstone.DAO;
-using Capstone.Models.DatabaseModles;
 using Capstone.Models.IncomingDTOs;
+using Capstone.Models.IntermediaryModles;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,12 +22,22 @@ namespace Capstone.Controllers
 
         [HttpGet("/ForumPosts/{id}")]
 
-        public List<ForumPost> GetPostsByForumId(int id)
+        public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostsByForumId(int id)
         {
-            return postDao.GetPostsByForumId(id);
+            try
+            {
+                List<ForumPostWithVotesAndUserName> posts =  postDao.GetPostsByForumId(id);
+                return posts;
+            }
+            catch(Exception)
+            {
+                return StatusCode(404, "not found");
+            }
         }
         
-        [HttpPost("/PostToForum")]
+       /* [HttpPost("/PostToForum")]
+
+       
         public IActionResult PostToForum(PostToForumDTO PostToForumDTO)
         {
             int tokenUserId;
@@ -49,6 +59,6 @@ namespace Capstone.Controllers
 
 
             return StatusCode(201, "Forum post successfully added to database ");
-        }
+        }*/
     }
 }

@@ -11,12 +11,13 @@ namespace Capstone.Models.OutgoingDTOs
         public int ForumID { get; set; }
 
         public string Topic { get; set; }
+        public string Description { get; set; }
+        public string Title { get; set; }
 
         public DateTime CreateDate { get; set; }
+        public string OwnerUsername { get; set; }
 
         public int OwnerID { get; set; }
-
-        public string OwnerUsername { get; set; }
 
         public int TotalNumUpvotes { get; set; }
 

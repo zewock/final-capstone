@@ -50,7 +50,7 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT forums.forum_id, forums.topic, forums.user_id, forums.create_date, users.username, " +
+                SqlCommand cmd = new SqlCommand("SELECT forums.forum_id, forums.topic, forums.user_id, forums.create_date, users.username, forums.title, forums.description, " +
                                                 "(CASE WHEN forum_favorites.user_id = forums.user_id THEN 1 ELSE 0 END) AS is_favorite, " +
                                                 "MAX(CASE WHEN Forum_Mods.user_id = @user_id THEN 1 ELSE 0 END) AS is_moderator, " +
                                                 "(SELECT COUNT(*) FROM Post_Upvotes_Downvotes p WHERE p.forum_id = forums.forum_id AND p.create_date > DATEADD(day, -1, GETDATE()) AND p.is_upvoted = 1) AS upvoteswithin24hours, " +
@@ -61,13 +61,16 @@ namespace Capstone.DAO
                                                 "LEFT JOIN users ON Forums.user_id = users.user_id " +
                                                 "LEFT JOIN forum_favorites ON forums.forum_id = forum_favorites.forum_id AND forum_favorites.user_id = @user_id " +
                                                 "WHERE forums.is_visible = 1 OR forums.user_id = @user_id " +
-                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id;", conn);
+                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id, forums.title, forums.description;", conn);
                 cmd.Parameters.AddWithValue("@user_id", userId);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while(reader.Read())
                 {
                     ForumsArray forumsArray = new ForumsArray();
+                    
                     forumsArray.ForumID = Convert.ToInt32(reader["forum_id"]);
+                    forumsArray.Title = Convert.ToString(reader["title"]);
+                    forumsArray.Description = Convert.ToString(reader["description"]);
                     forumsArray.Topic = Convert.ToString(reader["topic"]);
                     forumsArray.CreateDate = Convert.ToDateTime(reader["create_date"]);
                     forumsArray.OwnerID = Convert.ToInt32(reader["user_id"]);
