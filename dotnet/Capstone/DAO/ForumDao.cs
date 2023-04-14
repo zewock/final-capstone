@@ -70,7 +70,10 @@ namespace Capstone.DAO
                 while(reader.Read())
                 {
                     ForumsArray forumsArray = new ForumsArray();
+                    
                     forumsArray.ForumID = Convert.ToInt32(reader["forum_id"]);
+                    forumsArray.Title = Convert.ToString(reader["title"]);
+                    forumsArray.Description = Convert.ToString(reader["description"]);
                     forumsArray.Topic = Convert.ToString(reader["topic"]);
                     forumsArray.CreateDate = Convert.ToDateTime(reader["create_date"]);
                     forumsArray.OwnerID = Convert.ToInt32(reader["user_id"]);
