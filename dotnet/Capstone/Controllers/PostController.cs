@@ -42,7 +42,6 @@ namespace Capstone.Controllers
 
             ForumPost forumPost = new ForumPost();
             forumPost.isVisible = true;
-            forumPost.path = PostToForumDTO.Path;
             forumPost.image = PostToForumDTO.Image;
             forumPost.content = PostToForumDTO.Content;
             forumPost.forumId = PostToForumDTO.ForumID;

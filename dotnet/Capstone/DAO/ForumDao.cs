@@ -42,20 +42,6 @@ namespace Capstone.DAO
             return newForumID;
         }
 
-
-
-
-        /*public Forum getForumById(int userId)
-        {   Forum forum = new Forum();
-
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-
-            }
-        }*/
-
-
-        // GetAllForums() - Retrieves all forums.
         public ForumListDTO getAllForums(string userName, string tokenUserRole, int userId)
         {
             List<ForumsArray> forumsList = new List<ForumsArray>();

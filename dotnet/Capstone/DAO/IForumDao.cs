@@ -8,5 +8,7 @@ namespace Capstone.DAO
     {
         public int CreateForum(Forum forum);
         public ForumListDTO getAllForums(string userName, string tokenUserRole, int userId);
+       
     }
+
 }
