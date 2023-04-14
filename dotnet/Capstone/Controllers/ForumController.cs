@@ -98,6 +98,7 @@ namespace Capstone.Controllers
             forum.ownerId = tokenUserId;
             forum.title = createForumDTO.Title;
             forum.topic = createForumDTO.Topic;
+            forum.description = createForumDTO.Description;
             forum.isVisible = true;
 
             forumDao.CreateForum(forum);

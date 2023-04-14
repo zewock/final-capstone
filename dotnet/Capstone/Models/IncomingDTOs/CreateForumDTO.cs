@@ -10,17 +10,20 @@
 
         public string Title { get; set; }
 
+        public string Description { get; set; }
+
         public CreateForumDTO()
         {
 
         }
 
-        public CreateForumDTO(string content, string image, string topic, string title)
+        public CreateForumDTO(string content, string image, string topic, string title, string description)
         {
             Content = content;
             Image = image;
             Topic = topic;
             Title = title;
+            Description = description;
         }
     }
 }

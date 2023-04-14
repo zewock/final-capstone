@@ -1,4 +1,5 @@
-﻿using Capstone.Models.OutgoingDTOs;
+﻿using Capstone.Models.IncomingDTOs;
+using Capstone.Models.OutgoingDTOs;
 
 namespace Capstone.DAO
 {
@@ -6,6 +7,8 @@ namespace Capstone.DAO
     {
         public PrivateMessagesDTO GetPrivateMessages(int userID);
 
-        public string GetUserRoleFromID(int userId);
+        public string GetUserRoleFromID(int userID);
+
+        public void CreatePrivateMessage(CreatePrivateMessageDTO CreatePrivateMessageDTO, int senderUserID);
     }
 }
