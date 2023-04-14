@@ -20,7 +20,7 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public PrivateMessagesDTO GetPrivateMessages(int userID)
+        public PrivateMessagesDTO GetAllUsersPrivateMessages(int userID)
         {
             PrivateMessagesDTO privateMessagesDTO = new PrivateMessagesDTO();
             List<PrivateMessagesArray> privateMessagesArray = new List<PrivateMessagesArray>();
@@ -92,10 +92,59 @@ namespace Capstone.DAO
             return userRole;
         }
 
-        public void CreatePrivateMessage (CreatePrivateMessageDTO CreatePrivateMessageDTO, int senderUserID) 
+        public void CreatePrivateMessage(PrivateMessage privateMessage)
         {
-            
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand("insert into Private_Messages (from_user, to_user, message) " +
+                    "values (@from_user, @to_user, @message);", connection);
+
+                cmd.Parameters.AddWithValue("@from_user", privateMessage.fromUserId);
+                cmd.Parameters.AddWithValue("@to_user", privateMessage.toUserId);
+                cmd.Parameters.AddWithValue("@message", privateMessage.message);
+                cmd.ExecuteNonQuery();
+            }
         }
+
+        public PrivateMessage GetPrivateMessage (int messageID) 
+        {
+            PrivateMessage privateMessage = new PrivateMessage();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select  message_id, from_user, to_user, message, create_date, Is_visable " +
+                    "from Private_Messages where message_id = @message_id", conn);
+                cmd.Parameters.AddWithValue("@message_id", messageID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    privateMessage.messageId = Convert.ToInt32(reader["message_id"]);
+                    privateMessage.toUserId = Convert.ToInt32(reader["to_user"]);
+                    privateMessage.fromUserId = Convert.ToInt32(reader["from_user"]);
+                    privateMessage.message = Convert.ToString(reader["message"]);
+                    privateMessage.createdDate = Convert.ToDateTime(reader["create_date"]);
+                    privateMessage.isVisible = Convert.ToBoolean(reader["Is_visable"]);
+                }
+            }
+                    return privateMessage;
+        }
+
+        public void DeletePrivateMessage(int messageID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Private_Messages " +
+                    "set Is_visable = 0 " +
+                    "where message_id = @message_id", conn);
+                cmd.Parameters.AddWithValue("@message_id", messageID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         /*
         public Forum getForumById(int userId)
         {   Forum forum = new Forum();
