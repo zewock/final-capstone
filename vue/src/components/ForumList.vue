@@ -1,25 +1,7 @@
 <template>
   <body class="mainBody">
-    <section class="box" v-bind="form" v-show="form">
+    <section class="box" v-show="form">
       <h1 style="">New Forum Form</h1>
-      <div class="field">
-        <label class="label">Username</label>
-        <div class="control has-icons-left has-icons-right">
-          <input
-            class="input is-success"
-            type="text"
-            placeholder="Text input"
-            value="bulma"
-            v-model="newForum.OwnerUsername"
-          />
-          <span class="icon is-small is-left">
-            <i class="fas fa-user"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-check"></i>
-          </span>
-        </div>
-      </div>
       <div class="field">
         <label class="label">Forum Name</label>
         <div class="control has-icons-left has-icons-right">
@@ -28,9 +10,10 @@
             type="text"
             placeholder="Text input"
             value="bulma"
+            v-model="newForum.title"
           />
           <span class="icon is-small is-left">
-            <i class="fa-sharp fa-light fa-input-text"></i>
+            <i class="fas fa-font"></i>
           </span>
           <span class="icon is-small is-right">
             <i class="fas fa-check"></i>
@@ -41,7 +24,7 @@
         <label class="label">Topic</label>
         <div class="control">
           <div class="select">
-            <select>
+            <select v-model="newForum.Topic">
               <option>Select dropdown</option>
               <option>With options</option>
             </select>
@@ -52,7 +35,7 @@
       <div class="field">
         <label class="label">Description</label>
         <div class="control">
-          <textarea class="textarea" placeholder="Textarea"></textarea>
+          <textarea class="textarea" placeholder="Textarea" v-model="newForum.description"></textarea>
         </div>
       </div>
 
@@ -60,19 +43,13 @@
         <div class="control">
           <button
             class="button"
-            v-bind="form"
-            @click="form = false && saveForum()"
+            @click="form = false; SaveForum()"
           >
             Submit
           </button>
         </div>
         <div class="control">
-          <button class="button" v-bind="form" @click="form = false">
-            Submit
-          </button>
-        </div>
-        <div class="control">
-          <button class="button" v-bind="form" @click="form = false">
+          <button class="button"  @click="form = false">
             Cancel
           </button>
         </div>
@@ -82,7 +59,7 @@
       <div class="card">
         <header class="card-header">
           <section class="card-header-title">
-            <button class="button" v-bind="form" @click="form = true">
+            <button class="button" :disabled="form" @click="form = true">
               New Forum
             </button>
             <div class="dropdown is-hoverable">
@@ -97,8 +74,7 @@
                     <i class="fas fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-              </div>
-            </div>
+             
             <div class="dropdown-menu" id="dropdown-menu4" role="menu">
               <div class="dropdown-content">
                 <div class="dropdown-item">
@@ -107,6 +83,8 @@
                   <button class="button">Delete</button>
                 </div>
               </div>
+            </div>
+             </div>
             </div>
           </section>
         </header>
@@ -139,21 +117,11 @@ export default {
       forums: [],
       form: false,
       newForum: {
-        CreateDate: " ",
-        DownvotesLast24Hours: 0,
-        ForumID: 0,
-        Forums_FavoritesArrays: null,
-        Forums_ModsArrays: null,
-        IsAnAdminForum: false,
-        IsFavoriteForum: false,
-        IsModerator: false,
-        IsOwner: false,
-        OwnerID: 0,
-        OwnerUsername: " ",
-        Topic: " ",
-        TotalNumDownvotes: 0,
-        TotalNumUpvotes: 0,
-        UpvotesLast24Hours: 0,
+       content: "",
+       image: "",
+       Topic: "",
+       title: "",
+       description: ""
       },
     };
   },
@@ -172,6 +140,8 @@ export default {
       ForumService.create(this.newForum).then((response) => {
         if (response.status === 201) {
           alert("Forum Created");
+          this.forums.push(response.data);
+          this.form = false;
         }
       });
     },
