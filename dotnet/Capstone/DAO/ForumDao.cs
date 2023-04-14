@@ -50,9 +50,10 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT forums.forum_id, forums.topic, forums.user_id, forums.create_date, users.username, " +
+                SqlCommand cmd = new SqlCommand("SELECT forums.forum_id, forums.topic, forums.user_id, forums.create_date, users.username, forums.title, forums.description, " +
                                                 "(CASE WHEN forum_favorites.user_id = forums.user_id THEN 1 ELSE 0 END) AS is_favorite, " +
                                                 "MAX(CASE WHEN Forum_Mods.user_id = @user_id THEN 1 ELSE 0 END) AS is_moderator, " +
+                                                "MAX(CASE WHEN Forums.user_id = 1 THEN 1 ELSE 0 END) AS is_owner, " +
                                                 "(SELECT COUNT(*) FROM Post_Upvotes_Downvotes p WHERE p.forum_id = forums.forum_id AND p.create_date > DATEADD(day, -1, GETDATE()) AND p.is_upvoted = 1) AS upvoteswithin24hours, " +
                                                 "(SELECT COUNT(*) FROM Post_Upvotes_Downvotes p WHERE p.forum_id = forums.forum_id AND p.create_date > DATEADD(day, -1, GETDATE()) AND p.is_downvoted = 1) AS downvoteswithin24hours, " +
                                                 "(SELECT COUNT(*) FROM Post_Upvotes_Downvotes p WHERE p.forum_id = forums.forum_id AND p.is_upvoted = 1) AS totalupvotes, " +
@@ -61,7 +62,7 @@ namespace Capstone.DAO
                                                 "LEFT JOIN users ON Forums.user_id = users.user_id " +
                                                 "LEFT JOIN forum_favorites ON forums.forum_id = forum_favorites.forum_id AND forum_favorites.user_id = @user_id " +
                                                 "WHERE forums.is_visible = 1 OR forums.user_id = @user_id " +
-                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id;", conn);
+                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id, forums.title, forums.description;", conn);
                 cmd.Parameters.AddWithValue("@user_id", userId);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while(reader.Read())
@@ -78,12 +79,22 @@ namespace Capstone.DAO
                     forumsArray.DownvotesLast24Hours = Convert.ToInt32(reader["downvoteswithin24hours"]);
                     forumsArray.IsModerator = Convert.ToBoolean(reader["is_moderator"]);
                     forumsArray.IsFavoriteForum = Convert.ToBoolean(reader["is_favorite"]);
+                    forumsArray.Title = Convert.ToString(reader["title"]);
+                    forumsArray.Description = Convert.ToString(reader["description"]);
+                    forumsArray.IsOwner = Convert.ToBoolean(reader["is_owner"]);
                     forumsList.Add(forumsArray);
                 }
             }
             ForumListDTO forumListDto = new ForumListDTO(forumsList, tokenUserRole);
             return forumListDto;
         }
+
+        public List<ForumMod> GetAllForumMods()
+        {
+            List<ForumMod> forumMods = new List<ForumMod>();
+            return forumMods;
+        }
+
 
        /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
         public List<Forum> getFavoritedForumsByUserId(int userID)
