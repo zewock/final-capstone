@@ -59,6 +59,31 @@ namespace Capstone.Controllers
             //Data valid?
 
             PrivateMessagesDTO privateMessagesDTO = privateMessageDao.GetPrivateMessages(tokenUserId);
+            if(privateMessagesDTO.PrivateMessagesArray.Length >= 1)
+            {
+                privateMessagesDTO.IsUserAdmin = privateMessagesDTO.PrivateMessagesArray[0].IsUserAdmin;
+                if (privateMessagesDTO.PrivateMessagesArray[0].IsUserSender) 
+                {
+                    privateMessagesDTO.UserRole = privateMessagesDTO.PrivateMessagesArray[0].FromUserRole;
+                }
+                else
+                {
+                    privateMessagesDTO.UserRole = privateMessagesDTO.PrivateMessagesArray[0].ToUserRole;
+                }
+            }
+            else
+            {
+                privateMessagesDTO.UserRole = privateMessageDao.GetUserRoleFromID(tokenUserId);
+                if (privateMessagesDTO.UserRole == "admin")
+                {
+                    privateMessagesDTO.IsUserAdmin = true;
+                }
+                else
+                {
+                    privateMessagesDTO.IsUserAdmin = false;
+                }
+            }
+
             return privateMessagesDTO;
 
             return StatusCode(200, "blah blah");
