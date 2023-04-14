@@ -1,15 +1,15 @@
 ﻿namespace Capstone.Models.IncomingDTOs
 {
-    public class DeleteMessageDTO
+    public class DeletePrivateMessageDTO
     {
         public int MessageID { get; set; }
 
-        public DeleteMessageDTO() 
+        public DeletePrivateMessageDTO() 
         { 
 
         }
 
-        public DeleteMessageDTO(int messageID)
+        public DeletePrivateMessageDTO(int messageID)
         {
             MessageID = messageID;
         }
