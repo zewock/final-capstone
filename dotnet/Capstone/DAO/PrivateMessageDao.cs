@@ -91,6 +91,11 @@ namespace Capstone.DAO
             }
             return userRole;
         }
+
+        public void CreatePrivateMessage (CreatePrivateMessageDTO CreatePrivateMessageDTO, int senderUserID) 
+        {
+            
+        }
         /*
         public Forum getForumById(int userId)
         {   Forum forum = new Forum();

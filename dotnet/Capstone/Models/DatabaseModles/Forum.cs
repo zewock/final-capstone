@@ -12,11 +12,13 @@ namespace Capstone.Models.DatabaseModles
         public DateTime createdDate { get; set; }
         public bool isVisible { get; set; } = true;
 
+        public string description { get; set; }
+
         public Forum()
         {
 
         }
-        public Forum(int forumId, string topic, int ownerId, DateTime createdDate, bool isVisible, string title)
+        public Forum(int forumId, string topic, int ownerId, DateTime createdDate, bool isVisible, string title, string description)
         {
             this.forumId = forumId;
             this.topic = topic;
@@ -24,6 +26,7 @@ namespace Capstone.Models.DatabaseModles
             this.createdDate = createdDate;
             this.isVisible = isVisible;
             this.title = title;
+            this.description = description;
         }
     }
 }
