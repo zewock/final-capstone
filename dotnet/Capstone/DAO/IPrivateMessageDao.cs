@@ -1,6 +1,9 @@
-﻿namespace Capstone.DAO
+﻿using Capstone.Models.OutgoingDTOs;
+
+namespace Capstone.DAO
 {
-    public class IPrivateMessageDao
+    public interface IPrivateMessageDao
     {
+        public PrivateMessagesDTO GetPrivateMessages(int userID);
     }
 }
