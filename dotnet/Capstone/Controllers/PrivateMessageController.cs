@@ -25,16 +25,68 @@ namespace Capstone.Controllers
         private readonly IForumDao forumDao;
         private readonly IPrivateMessageDao privateMessageDao;
 
-        public PrivateMessageController(IPrivateMessageDao _privateMessageDao)
+        public PrivateMessageController(IPrivateMessageDao _privateMessageDao, IUserDao _userDao)
         {
             privateMessageDao = _privateMessageDao;
+            userDao = _userDao;
         }
 
-        [HttpGet("/")]
-        public ActionResult GetForums()
+        [HttpGet("/PrivateMessages")]
+        public ActionResult<PrivateMessagesDTO> GetPrivateMessages()
         {
-            
-        return StatusCode(401, "You need to be logged in to create a forum");
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to create a forum");
+            }
+
+            //Check to see of the user exists 
+            if (false)
+            {
+                return StatusCode(401, "This account does not exist");
+            }
+
+            //Check to see of the user is banned
+            if (false)
+            {
+                return StatusCode(401, "This account is banned");
+            }
+
+            //Data valid?
+
+            PrivateMessagesDTO privateMessagesDTO = privateMessageDao.GetPrivateMessages(tokenUserId);
+            if(privateMessagesDTO.PrivateMessagesArray.Length >= 1)
+            {
+                privateMessagesDTO.IsUserAdmin = privateMessagesDTO.PrivateMessagesArray[0].IsUserAdmin;
+                if (privateMessagesDTO.PrivateMessagesArray[0].IsUserSender) 
+                {
+                    privateMessagesDTO.UserRole = privateMessagesDTO.PrivateMessagesArray[0].FromUserRole;
+                }
+                else
+                {
+                    privateMessagesDTO.UserRole = privateMessagesDTO.PrivateMessagesArray[0].ToUserRole;
+                }
+            }
+            else
+            {
+                privateMessagesDTO.UserRole = privateMessageDao.GetUserRoleFromID(tokenUserId);
+                if (privateMessagesDTO.UserRole == "admin")
+                {
+                    privateMessagesDTO.IsUserAdmin = true;
+                }
+                else
+                {
+                    privateMessagesDTO.IsUserAdmin = false;
+                }
+            }
+
+            return privateMessagesDTO;
+
+            return StatusCode(200, "blah blah");
 
 
         }

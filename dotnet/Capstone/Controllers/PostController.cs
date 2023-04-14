@@ -3,6 +3,7 @@ using Capstone.Models.DatabaseModles;
 using Capstone.Models.IncomingDTOs;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace Capstone.Controllers
 {
@@ -12,12 +13,20 @@ namespace Capstone.Controllers
     {
         private readonly IUserDao userDao;
         private readonly IPostDao postDao;
+       
 
         public PostController(IPostDao _postDao)
         {
             postDao = _postDao;
         }
 
+        [HttpGet("/ForumPosts/{id}")]
+
+        public List<ForumPost> GetPostsByForumId(int id)
+        {
+            return postDao.GetPostsByForumId(id);
+        }
+        
         [HttpPost("/PostToForum")]
         public IActionResult PostToForum(PostToForumDTO PostToForumDTO)
         {
@@ -33,7 +42,6 @@ namespace Capstone.Controllers
 
             ForumPost forumPost = new ForumPost();
             forumPost.isVisible = true;
-            forumPost.path = PostToForumDTO.Path;
             forumPost.image = PostToForumDTO.Image;
             forumPost.content = PostToForumDTO.Content;
             forumPost.forumId = PostToForumDTO.ForumID;

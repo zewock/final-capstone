@@ -11,8 +11,8 @@
 <script>
 import Topbar from '../components/Topbar.vue';
 import sidebarLeft from '../components/SideBarLeft.vue';
-import sidebarRight from '../components/SidebarRight.vue'
-import logo from '../components/logo.vue'
+import sidebarRight from '../components/SidebarRight.vue';
+import logo from '../components/logo.vue';
 import ForumList from '../components/ForumList.vue';
 export default {
     name: "forum",
