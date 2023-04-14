@@ -1,10 +1,10 @@
-﻿using Capstone.Models.DatabaseModles;
+﻿using Capstone.Models.IntermediaryModles;
 using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
     public interface IPostDao
     {
-        public List<ForumPost> GetPostsByForumId(int forumId);
+        public List<ForumPostWithVotesAndUserName> GetPostsByForumId(int forumId);
     }
 }

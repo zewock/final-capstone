@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Capstone.Models.DatabaseModles
+namespace Capstone.Models.IntermediaryModles
 {
-    public class ForumPost
+    public class ForumPostWithVotesAndUserName
+
     {
         public long? parentPostId { get; set; }
         public int postId { get; set; }
@@ -17,16 +18,18 @@ namespace Capstone.Models.DatabaseModles
         public int forumId { get; set; }
         public int upVotes { get; set; }
         public int downVotes { get; set; }
+        public int upvotesLast24Hours { get; set; }
+        public int downvotesLast24Hours { get; set; }
         public bool isVisible { get; set; }
         public int depth { get; set; }
 
-        public List<ForumPost> replies { get; set; }
+        public List<ForumPostWithVotesAndUserName> replies { get; set; }
 
-        public ForumPost()
+        public ForumPostWithVotesAndUserName()
         {
-            replies = new List<ForumPost>();
+            replies = new List<ForumPostWithVotesAndUserName>();
         }
-        public ForumPost(long? parentPostId, int postId, string content, string title, string image, DateTime createDate, int userId, string authorUserName, int forumId, int upVotes, int downVotes, bool isVisible, int depth)
+        public ForumPostWithVotesAndUserName(long? parentPostId, int postId, string content, string title, string image, DateTime createDate, int userId, string authorUserName, int forumId, int upVotes, int downVotes, bool isVisible, int depth)
         {
             this.parentPostId = parentPostId;
             this.postId = postId;
@@ -38,7 +41,7 @@ namespace Capstone.Models.DatabaseModles
             this.authorUserName = authorUserName;
             this.forumId = forumId;
             this.upVotes = upVotes;
-            this.downVotes = downVotes; 
+            this.downVotes = downVotes;
             this.isVisible = isVisible;
             this.depth = depth;
         }
