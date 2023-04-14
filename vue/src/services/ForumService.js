@@ -3,9 +3,7 @@ import axios from 'axios';
 export default {
 
     ForumList() {
-      return axios.post('/forum')
+      return axios.get('/forum')
     },
-    getFourms(){
-      return axios.get('/forums')
-    }
+   
   }
