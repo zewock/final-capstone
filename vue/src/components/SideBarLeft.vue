@@ -17,7 +17,7 @@
             <li><a>Television</a></li>
             <li><a>Spongebob</a></li>
         </ul>
-        <button class="button">Private Messages</button>
+        <button class="button" v-if="$store.state.token != ''">Private Messages</button>
         </aside>
 </template>
 
@@ -43,6 +43,7 @@ data() {
   top: 150px;
   position:fixed;
   padding-left: 10px;
+  min-width: 15%;
 }
 .menu-label{
   color: black;
