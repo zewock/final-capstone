@@ -1,6 +1,6 @@
 <template>
   <body class="mainBody">
-    <section class="box" v-bind:key="form" v-show="form">
+    <section class="box" v-bind="form" v-show="form">
       <h1 style="">New Forum Form</h1>
       <div class="field">
         <label class="label">Username</label>
@@ -10,6 +10,7 @@
             type="text"
             placeholder="Text input"
             value="bulma"
+            v-model="newForum.OwnerUsername"
           />
           <span class="icon is-small is-left">
             <i class="fas fa-user"></i>
@@ -56,6 +57,15 @@
       </div>
 
       <div class="field is-grouped">
+        <div class="control">
+          <button
+            class="button"
+            v-bind="form"
+            @click="form = false && saveForum()"
+          >
+            Submit
+          </button>
+        </div>
         <div class="control">
           <button class="button" v-bind="form" @click="form = false">
             Submit
@@ -128,6 +138,23 @@ export default {
     return {
       forums: [],
       form: false,
+      newForum: {
+        CreateDate: " ",
+        DownvotesLast24Hours: 0,
+        ForumID: 0,
+        Forums_FavoritesArrays: null,
+        Forums_ModsArrays: null,
+        IsAnAdminForum: false,
+        IsFavoriteForum: false,
+        IsModerator: false,
+        IsOwner: false,
+        OwnerID: 0,
+        OwnerUsername: " ",
+        Topic: " ",
+        TotalNumDownvotes: 0,
+        TotalNumUpvotes: 0,
+        UpvotesLast24Hours: 0,
+      },
     };
   },
   methods: {
@@ -139,7 +166,14 @@ export default {
       const year = date.getFullYear();
       const month = ("0" + (date.getMonth() + 1)).slice(-2);
       const day = ("0" + date.getDate()).slice(-2);
-      return `${month}-${day}-${year}`;
+      return `${year}-${month}-${day}`;
+    },
+    SaveForum() {
+      ForumService.create(this.newForum).then((response) => {
+        if (response.status === 201) {
+          alert("Forum Created");
+        }
+      });
     },
   },
   created() {
