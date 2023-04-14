@@ -25,8 +25,11 @@
         <div class="control">
           <div class="select">
             <select v-model="newForum.Topic">
-              <option>Select dropdown</option>
-              <option>With options</option>
+              <option>Gaming</option>
+              <option>Sports</option>
+              <option>Tech</option>
+              <option>Television</option>
+              <option>Spongebob</option>
             </select>
           </div>
         </div>
@@ -43,7 +46,7 @@
         <div class="control">
           <button
             class="button"
-            @click="form = false; SaveForum()"
+            @click="form = false; SaveForum(); refreshForum()"
           >
             Submit
           </button>
@@ -56,7 +59,7 @@
       </div>
     </section>
     <div class="cards-container">
-      <div class="card">
+      <div class="card"  v-if="$store.state.token != ''">
         <header class="card-header">
           <section class="card-header-title">
             <button class="button" :disabled="form" @click="form = true">
@@ -89,14 +92,28 @@
           </section>
         </header>
       </div>
-      <div class="card">
+      <div class="card" v-if="posts == false" @click="posts = true">
         <header
-          class="card-header"
+          class="card-header input"
           v-for="forum in formattedForums"
           :key="forum.ForumID"
         >
           <section class="card-header-title">
-            {{ forum.Topic }}
+            {{ forum.Title }}
+            <span
+              ><time>{{ forum.FormattedCreateDate }} </time></span
+            >
+          </section>
+        </header>
+      </div>
+      <div class="card" v-if="posts == true">
+        <header
+          class="card-header input"
+          v-for="forum in formattedForums"
+          :key="forum.ForumID"
+        >
+          <section class="card-header-title">
+            {{ forum.Title }}
             <span
               ><time>{{ forum.FormattedCreateDate }} </time></span
             >
@@ -109,6 +126,7 @@
 
 <script>
 import ForumService from "../services/ForumService";
+//import PostService from "../services/PostService";
 
 export default {
   name: "forumList",
@@ -117,12 +135,12 @@ export default {
       forums: [],
       form: false,
       newForum: {
-       content: "",
        image: "",
        Topic: "",
        title: "",
-       description: ""
+       description: "",
       },
+      posts: false
     };
   },
   methods: {
@@ -145,12 +163,16 @@ export default {
         }
       });
     },
+    refreshForum() {
+    this.$nextTick(() => {
+      this.$router.go();
+    });
+  },
   },
   created() {
     ForumService.getForums().then((response) => {
-      let parsedResponse = JSON.parse(response.data.value);
-      const forumArray = parsedResponse.ForumArray;
-      this.forums.push(...forumArray);
+      const myArr = JSON.parse(response);
+      this.forums.push(...myArr);
     });
   },
   computed: {
