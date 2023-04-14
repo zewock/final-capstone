@@ -77,7 +77,6 @@
           <button class="button">Moderators</button>
           <button class="button">Users</button>
           <button class="button">Delete</button>
-          
       </div>
     </div>
   </div>
@@ -87,12 +86,29 @@
 </div>
     <div class="card">
   <header class="card-header" v-for="forum in forums" :key="forum.ForumID">
-    <p class="card-header-title"  >
+    <section class="card-header-title"  >
       {{forum.Topic}}
-    </p>
-    <button class="card-header-icon" aria-label="more options">
-     <span><time>{{createDate}}</time></span>
+     <span><time>{{forum.CreateDate}} </time></span>
+     <div class="dropdown is-hoverable">
+  <div class="dropdown-trigger">
+     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+      <span>Options</span>
+      <span class="icon is-small">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
     </button>
+     <div class="dropdown-menu" id="dropdown-menu5" role="menu">
+    <div class="dropdown-content">
+      <div class="dropdown-item">
+          <button class="button">Moderators</button>
+          <button class="button">Users</button>
+          <button class="button">Delete</button>
+      </div>
+    </div>
+  </div>
+   </div>
+  </div>
+  </section>
   </header>
 </div>
 </body>
@@ -105,7 +121,8 @@ export default {
   name: 'forumList',
   data() {
     return {
-        forums: []
+        forums: [],
+        form: false
     };
   },
   methods:{
