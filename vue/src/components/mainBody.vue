@@ -1,10 +1,11 @@
 <template>
   <body class="mainBody">
     <div class="body-container">
-      <div class="card">
+      <div class="card" v-for="post in posts"
+          :key="post.postID">
         <header class="card-header">
           <p class="card-header-title">
-            {{ header }}
+            {{ post.Header }}
           </p>
           <button class="card-header-icon" aria-label="more options">
             <span class="icon">
@@ -15,9 +16,9 @@
         <div class="card-content">
           <div class="content">
             <p>@{{ ownerUsername }}</p>
-            {{ body }}
+            {{ post.Content }}
             <br />
-            <time datetime>{{ createDate }}</time>
+            <time>{{ post.CreateDate }}</time>
           </div>
         </div>
         <footer class="card-footer">
@@ -35,7 +36,9 @@
 export default {
   name: "mainBody",
   data() {
-    return {};
+    return{
+      posts: []
+    }
   },
 };
 </script>

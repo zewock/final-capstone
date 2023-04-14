@@ -17,7 +17,7 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start pl-2">
-          <router-link class="navbar-item" v-bind:to="{ name: 'home' }">
+          <router-link class="navbar-item" v-bind:to="{ name: 'home' }" @click.native="refreshHome">
             Home
           </router-link>
 
@@ -80,6 +80,13 @@ export default {
       searchBarMessage: "Search bar",
     };
   },
+  methods: {
+    refreshHome() {
+      if (this.$route.name === 'home') {
+        location.reload();
+      }
+    },
+  }
 };
 </script>
 
