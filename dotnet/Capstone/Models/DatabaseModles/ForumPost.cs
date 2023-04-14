@@ -6,7 +6,8 @@ namespace Capstone.Models.DatabaseModles
     public class ForumPost
     {
         public long? parentPostId { get; set; }
-        public int postId { get; set; } 
+        public int postId { get; set; }
+        public string username { get; set; }
         public string content { get; set; }
         public string title { get; set; }
         public string image { get; set; }

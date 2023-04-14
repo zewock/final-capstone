@@ -23,13 +23,13 @@ namespace Capstone.DAO
 
 
             string query = @"WITH PostHierarchy AS (
-                SELECT posts_id, forum_id, parent_post_id, post_content, header, create_date, is_visible, user_id, 1 as depth
+                SELECT posts_id, forum_id, author_username, parent_post_id, post_content, header, create_date, is_visible, user_id, 1 as depth
                 FROM Forum_Posts 
                 WHERE parent_post_id IS NULL AND forum_id = @forumId
 
                 UNION ALL
 
-                SELECT p.posts_id, p.forum_id, p.parent_post_id, p.post_content, p.header, p.create_date, p.is_visible, p.user_id, ph.depth + 1 as depth
+                SELECT p.posts_id, p.forum_id, p.author_username, p.parent_post_id, p.post_content, p.header, p.create_date, p.is_visible, p.user_id, ph.depth + 1 as depth
                 FROM Forum_Posts p
                 JOIN PostHierarchy ph ON p.parent_post_id = ph.posts_id
                 )
@@ -40,7 +40,7 @@ namespace Capstone.DAO
                 FROM PostHierarchy ph
                 LEFT JOIN Post_Upvotes_Downvotes pud ON ph.posts_id = pud.post_id
                 GROUP BY 
-                    ph.posts_id, ph.forum_id, ph.parent_post_id, ph.post_content, ph.header, ph.create_date, ph.is_visible, ph.user_id, ph.depth
+                    ph.posts_id, ph.forum_id, ph.author_username, ph.parent_post_id, ph.post_content, ph.header, ph.create_date, ph.is_visible, ph.user_id, ph.depth
                 ORDER BY ph.depth, ph.create_date";
 
 
@@ -62,6 +62,7 @@ namespace Capstone.DAO
 
                         post.postId = Convert.ToInt32(reader["posts_id"]);
                         post.forumId = Convert.ToInt32(reader["forum_id"]);
+                        post.username = Convert.ToString(reader["username"]);
                         post.parentPostId = reader["parent_post_id"] == DBNull.Value ? (long?)null : (long)reader["parent_post_id"];
                         post.content = Convert.ToString(reader["post_content"]);
                         post.title = Convert.ToString(reader["header"]);
