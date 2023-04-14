@@ -2,7 +2,7 @@
   <section class="container is-fullscreen">
     <topbar class="topbar" />
     <sidebarLeft />
-    <forum-list />
+    <forum-list/>
     <sidebar-right />
     <logo />
   </section>

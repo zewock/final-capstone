@@ -97,14 +97,15 @@
                     <i class="fas fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-              </div>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-              <div class="dropdown-content">
-                <div class="dropdown-item">
-                  <button class="button">Moderators</button>
-                  <button class="button">Users</button>
-                  <button class="button">Delete</button>
+
+                <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                  <div class="dropdown-content">
+                    <div class="dropdown-item">
+                      <button class="button">Moderators</button>
+                      <button class="button">Users</button>
+                      <button class="button">Delete</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -166,7 +167,7 @@ export default {
       const year = date.getFullYear();
       const month = ("0" + (date.getMonth() + 1)).slice(-2);
       const day = ("0" + date.getDate()).slice(-2);
-      return `${year}-${month}-${day}`;
+      return `${month}-${day}-${year}`;
     },
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
