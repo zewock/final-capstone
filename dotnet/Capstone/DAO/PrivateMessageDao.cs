@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using Capstone.Models.DatabaseModles;
 using Capstone.Models.OutgoingDTOs;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 
 
 namespace Capstone.DAO
@@ -74,6 +75,22 @@ namespace Capstone.DAO
                 return privateMessagesDTO;
         }
 
+        public string GetUserRoleFromID(int userID)
+        {
+            string userRole = "";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select user_role from Users where user_id = @user_id", conn);
+                cmd.Parameters.AddWithValue("@user_id", userID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    userRole = Convert.ToString(reader["user_role"]);
+                }
+            }
+            return userRole;
+        }
         /*
         public Forum getForumById(int userId)
         {   Forum forum = new Forum();
