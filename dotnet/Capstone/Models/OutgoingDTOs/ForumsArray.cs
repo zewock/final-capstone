@@ -10,9 +10,13 @@ namespace Capstone.Models.OutgoingDTOs
     {
         public int ForumID { get; set; }
 
+        public string Title { get; set; }
+
         public string Topic { get; set; }
         public string Description { get; set; }
         public string Title { get; set; }
+
+        public string Description { get; set; }
 
         public DateTime CreateDate { get; set; }
         public string OwnerUsername { get; set; }
@@ -47,7 +51,7 @@ namespace Capstone.Models.OutgoingDTOs
         public ForumsArray(int forumID, string topic, DateTime createDate, int ownerID,
             string ownerUsername, int totalNumUpvotes, int totalNumDownvotes, int upvotesLast24Hours,
             bool isModerator, bool isFavoriteForum, bool isOwner, List<Forums_FavoritesArray> forums_FavoritesArrays,
-            List<Forum_ModsArray> forums_ModsArrays, bool isAnAdminForum)
+            List<Forum_ModsArray> forums_ModsArrays, bool isAnAdminForum, string title, string description)
         {
             ForumID = forumID;
             Topic = topic;
@@ -61,10 +65,12 @@ namespace Capstone.Models.OutgoingDTOs
             IsModerator = isModerator;
             IsFavoriteForum = isFavoriteForum;
             IsOwner = isOwner;
-            IsAnAdminForum= isAnAdminForum;
+            IsAnAdminForum = isAnAdminForum;
             Forums_FavoritesArrays = forums_FavoritesArrays.ToArray();
             Forums_ModsArrays = forums_ModsArrays.ToArray();
             IsAnAdminForum = isAnAdminForum;
+            Title = title;
+            Description = description;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Capstone.Controllers
 
             //Data valid?
 
-            PrivateMessagesDTO privateMessagesDTO = privateMessageDao.GetPrivateMessages(tokenUserId);
+            PrivateMessagesDTO privateMessagesDTO = privateMessageDao.GetAllUsersPrivateMessages(tokenUserId);
             if (privateMessagesDTO.PrivateMessagesArray.Length >= 1)
             {
                 privateMessagesDTO.IsUserAdmin = privateMessagesDTO.PrivateMessagesArray[0].IsUserAdmin;
@@ -105,10 +105,50 @@ namespace Capstone.Controllers
 
             //Data valid?
 
-            //privateMessageDao.CreatePrivateMessage(createPrivateMessageDTO, tokenUserId);
+            PrivateMessage privateMessage = new PrivateMessage();
+            privateMessage.isVisible = true;
+            privateMessage.message = createPrivateMessageDTO.Message;
+            privateMessage.fromUserId = tokenUserId;
+            privateMessage.toUserId = createPrivateMessageDTO.OtherUserID;
 
-
-            return StatusCode(200, "blah blah");
+            try
+            {
+                privateMessageDao.CreatePrivateMessage(privateMessage);
+                return StatusCode(201, "Private message sucussfuly created");
+            }
+            catch (Exception) 
+            {
+                return StatusCode(500, "Unable to make private message");
+            }
         }
+
+        [HttpPut("/DeletePrivateMessage")]
+        public ActionResult DeletePrivateMessages(DeletePrivateMessageDTO deletePrivateMessageDTO)
+        {
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to delete a private message");
+            }
+
+            PrivateMessage privateMessage = privateMessageDao.GetPrivateMessage(deletePrivateMessageDTO.MessageID);
+
+            if (privateMessage.messageId == 0)
+            {
+                return StatusCode(400, "No such private message exists");
+            }
+            if(privateMessage.fromUserId != tokenUserId)
+            {
+                return StatusCode(401, "Only the sender can delete a private message");
+            }
+
+            privateMessageDao.DeletePrivateMessage(deletePrivateMessageDTO.MessageID);
+            return StatusCode(201, "Private message sucussfuly deleted");
+        }
+
     }
 }

@@ -56,13 +56,19 @@ namespace Capstone.Controllers
             try
             {
                 ForumListDTO forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
-                 ActionResult<string> json = JsonConvert.SerializeObject(forumListDTO);
-                return Ok(json);
+                List<ForumMod> forumMods = new List<ForumMod>();
+
+
+
+
+                ActionResult<string> json = JsonConvert.SerializeObject(forumListDTO);
+                //return Ok(json);
+                return Ok(forumListDTO);
 
             }
             catch
             {
-                return StatusCode(401, "You need to be logged in to create a forum");
+                return StatusCode(500, "Unable to get forums");
             }
 
         }
