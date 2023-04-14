@@ -7,7 +7,6 @@
 <style>
 .background {
   height: 100%;
-  background-color: #1A4D2E;
+  background-color: #1a4d2e;
 }
-
 </style>

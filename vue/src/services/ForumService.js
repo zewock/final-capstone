@@ -7,5 +7,8 @@ export default {
     },
     getForumId(id){
       return axios.get(`/ForumsList/${id}`)      
+    },
+    create(newForum) {
+      return axios.post(`/CreateForum`, newForum)
     }
   }
