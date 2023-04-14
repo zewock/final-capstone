@@ -1,11 +1,11 @@
 <template>
   <body class="mainBody">
-    <section class="box" v-bind:key="form" v-show="form" >
+    <section class="box" v-bind="form" v-show="form" >
         <h1 style="">New Forum Form</h1>
         <div class="field">
         <label class="label">Username</label>
           <div class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="text" placeholder="Text input" value="bulma">
+            <input class="input is-success" type="text" placeholder="Text input" value="bulma" v-model="newForum.OwnerUsername">
             <span class="icon is-small is-left">
               <i class="fas fa-user"></i>
             </span>
@@ -47,7 +47,7 @@
 
         <div class="field is-grouped">
           <div class="control">
-            <button class="button" v-bind="form" @click="form = false" >Submit</button>
+            <button class="button" v-bind="form" @click="form = false && saveForum()" >Submit</button>
           </div>
         <div class="control">
           <button class="button" v-bind="form" @click="form = false" >Cancel</button>
@@ -67,14 +67,16 @@
         <i class="fas fa-angle-down" aria-hidden="true"></i>
       </span>
     </button>
-  </div>
   <div class="dropdown-menu" id="dropdown-menu4" role="menu">
     <div class="dropdown-content">
       <div class="dropdown-item">
           <button class="button">Moderators</button>
           <button class="button">Users</button>
-          <button class="button">Delete</button>
+        </div>
       </div>
+    </div>
+    </div>
+    </div>
     </section>
   </header>
 </div>
@@ -94,8 +96,7 @@
      <div class="dropdown-menu" id="dropdown-menu5" role="menu">
     <div class="dropdown-content">
       <div class="dropdown-item">
-          <button class="button">Moderators</button>
-          <button class="button">Users</button>
+          <button class="button">Favorite</button>
           <button class="button">Delete</button>
       </div>
     </div>
@@ -116,7 +117,26 @@ export default {
   data() {
     return {
         forums: [],
-        form: false
+        form: false,
+        newForum: {
+          CreateDate:" ",
+          DownvotesLast24Hours:0,
+          ForumID:0,
+          Forums_FavoritesArrays:null,
+          Forums_ModsArrays:null,
+          IsAnAdminForum:false,
+          IsFavoriteForum:false,
+          IsModerator:false,
+          IsOwner:false,
+          OwnerID:0,
+          OwnerUsername:" ",
+          Topic:" ",
+          TotalNumDownvotes:0,
+          TotalNumUpvotes:0,
+          UpvotesLast24Hours:0,
+
+
+        }
     };
   },
   methods:{
@@ -130,6 +150,15 @@ export default {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   },
+  SaveForum() {
+    ForumService
+    .create(this.newForum)
+    .then((response) => {
+      if (response.status === 201) {
+        alert('Forum Created')
+      }
+    })
+  }
     
   },
   created() {
