@@ -9,6 +9,7 @@ using Capstone.Models.DatabaseModles;
 using System.Collections.Generic;
 using Capstone.Models.OutgoingDTOs;
 using System.Linq;
+using Capstone.Models.IntermediaryModles;
 
 namespace Capstone.DAO
 {
@@ -62,7 +63,8 @@ namespace Capstone.DAO
                                                 "LEFT JOIN users ON Forums.user_id = users.user_id " +
                                                 "LEFT JOIN forum_favorites ON forums.forum_id = forum_favorites.forum_id AND forum_favorites.user_id = @user_id " +
                                                 "WHERE forums.is_visible = 1 OR forums.user_id = @user_id " +
-                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id, forums.title, forums.description;", conn);
+                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id, forums.title, forums.description " +
+                                                "order by forum_id;", conn);
                 cmd.Parameters.AddWithValue("@user_id", userId);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while(reader.Read())
@@ -92,34 +94,72 @@ namespace Capstone.DAO
             return forumListDto;
         }
 
-        public List<ForumMod> GetAllForumMods()
+        public List<ForumModAndUsername> GetAllForumMods()
         {
-            List<ForumMod> forumMods = new List<ForumMod>();
-            return forumMods;
+            List<ForumModAndUsername> forumModAndUsernameList = new List<ForumModAndUsername>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select forum_id, forum_mods.user_id as user_id, username from Forum_mods " +
+                    "join users on Forum_mods.user_id = users.user_id " +
+                    "order by forum_id;", conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read()) 
+                {
+                    ForumModAndUsername forumModAndUsername = new ForumModAndUsername();
+                    forumModAndUsername.username = Convert.ToString(reader["username"]);
+                    forumModAndUsername.userId = Convert.ToInt32(reader["user_id"]);
+                    forumModAndUsername.forumId = Convert.ToInt32(reader["forum_id"]);
+                    forumModAndUsernameList.Add(forumModAndUsername);
+                }
+            }
+            return forumModAndUsernameList;
+        }
+
+        public List<ForumFavoriteAndUsername> GetAllForumFavorites()
+        {
+            List<ForumFavoriteAndUsername> forumFavoriteAndUsernameList = new List<ForumFavoriteAndUsername>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select forum_id, Forum_Favorites.user_id as user_id, username from Forum_Favorites " +
+                    "join users on Forum_Favorites.user_id = users.user_id " +
+                    "order by forum_id;", conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    ForumFavoriteAndUsername forumFavoriteAndUsername = new ForumFavoriteAndUsername();
+                    forumFavoriteAndUsername.username = Convert.ToString(reader["username"]);
+                    forumFavoriteAndUsername.userId = Convert.ToInt32(reader["user_id"]);
+                    forumFavoriteAndUsername.forumId = Convert.ToInt32(reader["forum_id"]);
+                    forumFavoriteAndUsernameList.Add(forumFavoriteAndUsername);
+                }
+            }
+            return forumFavoriteAndUsernameList;
         }
 
 
-       /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
-        public List<Forum> getFavoritedForumsByUserId(int userID)
-        {
+        /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
+         public List<Forum> getFavoritedForumsByUserId(int userID)
+         {
 
-        }
-        //CreateForum(Forum forum) - Creates a new forum.
-        public ActionResult<Forum> createForum()
-        {
+         }
+         //CreateForum(Forum forum) - Creates a new forum.
+         public ActionResult<Forum> createForum()
+         {
 
-        }
-        //UpdateForum(Forum forum) - Updates an existing forum.
-        public ActionResult<Forum> updateForum(int forumId)
-        {
+         }
+         //UpdateForum(Forum forum) - Updates an existing forum.
+         public ActionResult<Forum> updateForum(int forumId)
+         {
 
-        }
-        //DeleteForum(int forumId) - Deletes a forum by ID.
-        public ActionResult deleteForum(int forumId)
-        {
+         }
+         //DeleteForum(int forumId) - Deletes a forum by ID.
+         public ActionResult deleteForum(int forumId)
+         {
 
-        }*/
-        
+         }*/
+
 
         public Forum GetTransferFromReader(SqlDataReader reader)
         {
