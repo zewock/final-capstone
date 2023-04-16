@@ -65,7 +65,7 @@ namespace Capstone.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged in to post a forum");
+                return StatusCode(401, "You need to be logged in to post to a forum");
             }
 
             try
@@ -79,6 +79,35 @@ namespace Capstone.Controllers
             }
         }
 
+        [HttpPut("/DeletePost")]
+        public ActionResult DeletePost(DeletePostDTO deletePostDTO)
+        {
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to delete a post");
+            }
+
+            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
+            int postOwnerID = postDao.GetUserIDByPostID(deletePostDTO.PostID);
+            List<int> modsID = postDao.GetModsIDsByForumID(deletePostDTO.FormID);
+
+            if (postOwnerID == tokenUserId || tokenUserRole == "admin" || modsID.Contains(tokenUserId))
+            {
+                postDao.DeletePost(deletePostDTO.PostID);
+                return StatusCode(200, "Post successfully deleted");
+            }
+            else
+            {
+                return StatusCode(401, "Only a admins, mods, or the post owner can delete a post");
+            }
+        }
+
+        
 
 
         /* [HttpPost("/PostToForum")]

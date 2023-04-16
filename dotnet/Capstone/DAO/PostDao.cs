@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Web.Mvc.Html;
 
 
@@ -295,6 +296,53 @@ namespace Capstone.DAO
                 cmd.Parameters.AddWithValue("@forum_id", postToForumDTO.ForumID);
                 cmd.Parameters.AddWithValue("@user_id", userID);
                 cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int GetUserIDByPostID(int postID)
+        {
+            int postUserID = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select user_id from Forum_Posts where post_id = @post_id", conn);
+                cmd.Parameters.AddWithValue("@post_id", postID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    postUserID = Convert.ToInt32(reader["user_id"]);
+                }
+            }
+            return postUserID;
+        }
+
+        public List<int> GetModsIDsByForumID(int forumID)
+        {
+            List<int> modsIDs = new List<int>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select user_id from Forum_Mods where forum_id = @forum_id", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    modsIDs.Add(Convert.ToInt32(reader["user_id"]));
+                }
+            }
+            return modsIDs;
+        }
+
+        public void DeletePost(int postID) 
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Forum_Posts " +
+                    "set is_visible = 0 " +
+                    "where post_id = @post_id;", conn);
+                cmd.Parameters.AddWithValue("@post_id", postID);
                 cmd.ExecuteNonQuery();
             }
         }
