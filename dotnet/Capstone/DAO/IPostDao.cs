@@ -15,6 +15,7 @@ namespace Capstone.DAO
         public int GetUserIDByPostID(int postID);
         public List<int> GetModsIDsByForumID(int forumPostID);
         public void DeletePost(int postID);
+        public List<ForumPostWithVotesAndUserName> GetPostsByPostId(int postId);
 
 
     }
