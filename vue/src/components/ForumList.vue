@@ -130,7 +130,7 @@
         <header
           class="card-header input"
           v-for="post in postsList"
-          :key="post.postID"
+          :key="post.postId"
         >
           <section class="card-header-title">
             {{ post.title }}
@@ -156,7 +156,7 @@ export default {
       selectForum: null,
       newForum: {
         image: "",
-        Topic: "",
+        topic: "",
         title: "",
         description: "",
       },
@@ -167,8 +167,8 @@ export default {
     ViewForum(id) {
       this.$router.push(`/forum/${id}`);
     },
-    ViewPost(id) {
-      this.$router.push(`/ForumPosts/${id}`);
+    ViewPost(forumId) {
+      this.$router.push(`/ForumPosts/${forumId}`);
     },
     formatDate(dateString) {
       try {
@@ -203,7 +203,8 @@ export default {
     RetrievePosts(forum) {
       this.selectForum = forum;
       PostService.getPost(forum.forumID).then((response) => {
-        this.postsList = response.data.value
+        this.postsList = response.data.value;
+    
       });
     },
   },
