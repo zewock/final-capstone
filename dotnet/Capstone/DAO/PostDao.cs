@@ -1,4 +1,5 @@
 ﻿using Capstone.DAO;
+using Capstone.Models.IncomingDTOs;
 using Capstone.Models.IntermediaryModles;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -47,7 +48,6 @@ namespace Capstone.DAO
                         }
                     }
                 }
-                
                 return GetCompletePostThreads(postDict);
             }
 
@@ -278,6 +278,14 @@ namespace Capstone.DAO
                 }
             }
             return GetCompletePostThreads(postDict);
+        }
+
+        public void PostToForum (PostToForumDTO postToForumDTO, int userID) 
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("", conn);
         }
 
         private void AddPostToHierarchy(ForumPostWithVotesAndUserName post, Dictionary<long, ForumPostWithVotesAndUserName> postDict)

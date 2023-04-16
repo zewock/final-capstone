@@ -1,4 +1,5 @@
 ﻿using Capstone.DAO;
+using Capstone.Models.DatabaseModles;
 using Capstone.Models.IncomingDTOs;
 using Capstone.Models.IntermediaryModles;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,13 @@ namespace Capstone.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostDao postDao;
-   
-       
+        private readonly IUserDao userDao;
 
-        public PostController(IPostDao _postDao)
-        {   
+
+        public PostController(IPostDao _postDao, IUserDao userDao)
+        {
             postDao = _postDao;
-           
+            this.userDao = userDao;
         }
 
         [HttpGet("/ForumPosts/{forumId}")]
@@ -26,6 +27,8 @@ namespace Capstone.Controllers
        
         public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostsByForumId(int forumId)
         {
+                // need to pass in the user id to get information on whether the user has upvoted or downvoted posts
+                // as well as has the user favorited this forum/ as a mod of this forum
                 try
                 {
                     var posts = postDao.GetPostsByForumId(forumId);
@@ -39,7 +42,6 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("/Posts/{keyword}")]
-
         public ActionResult<List<ForumPostWithVotesAndUserName>> SearchPosts(string keyword)
         {
             try
@@ -53,26 +55,8 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpGet("/Thread/{postId}")]
-
-        public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostThreadById(int postId)
-        {
-            try
-            {
-                var posts = postDao.GetCompletePostThreadById(postId);
-                return Ok(posts);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { message = "An error occured while fetching the posts." });
-            }
-        }
-
-
-       /* [HttpPost("/PostToForum")]
-
-       
-        public IActionResult PostToForum(PostToForumDTO PostToForumDTO)
+        [HttpPost("/PostToForum")]
+        public ActionResult PostToForum (PostToForumDTO postToForumDTO) 
         {
             int tokenUserId;
             try
@@ -81,18 +65,40 @@ namespace Capstone.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged in to post to a forum");
+                return StatusCode(401, "You need to be logged in to post a forum");
             }
 
-            ForumPost forumPost = new ForumPost();
-            forumPost.isVisible = true;
-            forumPost.image = PostToForumDTO.Image;
-            forumPost.content = PostToForumDTO.Content;
-            forumPost.forumId = PostToForumDTO.ForumID;
-            forumPost.postId = tokenUserId;
 
 
-            return StatusCode(201, "Forum post successfully added to database ");
-        }*/
+            return StatusCode(200, "blah blah");
+        }
+
+
+
+        /* [HttpPost("/PostToForum")]
+
+
+         public IActionResult PostToForum(PostToForumDTO PostToForumDTO)
+         {
+             int tokenUserId;
+             try
+             {
+                 tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+             }
+             catch (Exception)
+             {
+                 return StatusCode(401, "You need to be logged in to post to a forum");
+             }
+
+             ForumPost forumPost = new ForumPost();
+             forumPost.isVisible = true;
+             forumPost.image = PostToForumDTO.Image;
+             forumPost.content = PostToForumDTO.Content;
+             forumPost.forumId = PostToForumDTO.ForumID;
+             forumPost.postId = tokenUserId;
+
+
+             return StatusCode(201, "Forum post successfully added to database ");
+         }*/
     }
 }

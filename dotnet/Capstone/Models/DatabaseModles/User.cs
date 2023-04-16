@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Capstone.Models.DatabaseModles
@@ -12,6 +13,7 @@ namespace Capstone.Models.DatabaseModles
         [JsonIgnore]
         public string Salt { get; set; }
         public string Role { get; set; }
+        public DateTime RestoreBanDate { get; set; }
     }
 
     /// <summary>
