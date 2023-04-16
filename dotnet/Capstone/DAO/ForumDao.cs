@@ -137,6 +137,27 @@ namespace Capstone.DAO
             }
             return forumFavoriteAndUsernameList;
         }
+        //change from void to something else? 
+        
+        public int ToggleForumFavorites(int tokenUserId, int favoriteForumId)
+        {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(@"
+                           IF EXISTS (SELECT 1 FROM Forum_Favorites WHERE user_id = @tokenUserId AND forum_id = @favoriteForumId)
+                           DELETE FROM Forum_Favorites WHERE user_id = @tokenUserId AND forum_id = @favoriteForumId
+                           ELSE
+                           INSERT INTO Forum_Favorites (user_id, forum_id) VALUES (@tokenUserId, @favoriteForumId)", conn);
+
+                    cmd.Parameters.AddWithValue("@tokenUserId", tokenUserId);
+                    cmd.Parameters.AddWithValue("@favoriteForumId", favoriteForumId);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected;
+                }
+        }
+        
 
 
         /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
