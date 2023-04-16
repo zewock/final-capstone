@@ -35,7 +35,7 @@ namespace Capstone.Controllers
 
         [HttpGet("/ForumsList")]
 
-        public ActionResult<string> getForums()
+        public ActionResult<ForumListDTO> getForums()
         {   
                 int tokenUserId;
             string tokenUserName;
@@ -90,7 +90,7 @@ namespace Capstone.Controllers
                 }
 
 
-                ActionResult<string> json = JsonConvert.SerializeObject(forumListDTO);
+                
                 //return Ok(json);
                 return Ok(forumListDTO);
 
