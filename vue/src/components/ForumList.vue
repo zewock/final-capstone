@@ -97,31 +97,46 @@
           </section>
         </header>
       </div>
-      <div class="card" v-if="posts == false" @click="posts = true">
-        <header
-          class="card-header input"
+      <div v-if="posts == false">
+        <div
+          class="card"
           v-for="forum in formattedForums"
           :key="forum.ForumID"
+          @click="
+            posts = true;
+            RetrievePosts(forum);
+          "
+        >
+          <header class="card-header input">
+            <section class="card-header-title">
+              {{ forum.title }}
+              <span
+                ><time>{{ forum.FormattedCreateDate }} </time></span
+              >
+            </section>
+          </header>
+        </div>
+      </div>
+    
+      <div class="card" v-else>
+        <div>
+         <header
+          class="card-header input"
         >
           <section class="card-header-title">
-            {{ forum.Title }}
-            <span
-              ><time>{{ forum.FormattedCreateDate }} </time></span
-            >
+            {{selectForum.title}}
+            {{selectForum.description}}
           </section>
         </header>
-      </div>
-      <div class="card" v-if="posts == true">
+        </div>
         <header
           class="card-header input"
-          v-for="forum in formattedForums"
-          :key="forum.ForumID"
+          v-for="post in postsList"
+          :key="post.postID"
         >
           <section class="card-header-title">
-            {{ forum.Title }}
-            <span
-              ><time>{{ forum.FormattedCreateDate }} </time></span
-            >
+            {{ post.title }}
+            {{ post.content }}
           </section>
         </header>
       </div>
@@ -131,14 +146,16 @@
 
 <script>
 import ForumService from "../services/ForumService";
-//import PostService from "../services/PostService";
+import PostService from "../services/PostService";
 
 export default {
   name: "forumList",
   data() {
     return {
       forums: [],
+      postsList: [],
       form: false,
+      selectForum: null,
       newForum: {
         image: "",
         Topic: "",
@@ -149,24 +166,28 @@ export default {
     };
   },
   methods: {
+    
     ViewForum(id) {
       this.$router.push(`/forum/${id}`);
     },
+    ViewPost(id) {
+      this.$router.push(`/ForumPosts/${id}`);
+    },
     formatDate(dateString) {
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date)) {
-      throw new Error('Invalid date');
-    }
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    return `${month}-${day}-${year}`;
-  } catch (error) {
-    console.error(`Error formatting date: ${error.message}`);
-    return 'Invalid date';
-  }
-},
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+          throw new Error("Invalid date");
+        }
+        const year = date.getFullYear();
+        const month = ("0" + (date.getMonth() + 1)).slice(-2);
+        const day = ("0" + date.getDate()).slice(-2);
+        return `${month}-${day}-${year}`;
+      } catch (error) {
+        console.error(`Error formatting date: ${error.message}`);
+        return "Invalid date";
+      }
+    },
 
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
@@ -182,16 +203,24 @@ export default {
         this.$router.go();
       });
     },
+    RetrievePosts(forum) {
+      this.selectForum = forum
+      PostService.getPost(forum.forumID).then((response) => {
+        this.postsList = response.data;
+    
+      });
+    },
   },
   created() {
     ForumService.getForums().then((response) => {
-      this.forums = response.data.forumArray
+      this.forums = response.data.forumArray;
     });
   },
+
   computed: {
     formattedForums() {
       return this.forums.map((forum) => {
-        const rawCreateDate = forum.CreateDate;
+        const rawCreateDate = forum.createDate;
         const formattedCreateDate = this.formatDate(rawCreateDate);
         return {
           ...forum,
@@ -246,7 +275,7 @@ export default {
   position: absolute;
   top: 100%;
 }
-.dropdown-item{
+.dropdown-item {
   right: 10px;
   align-items: center;
 }
@@ -268,5 +297,4 @@ export default {
   overflow-y: auto; /* Enable vertical scrolling */
   border-radius: 5px;
 }
-
 </style>
