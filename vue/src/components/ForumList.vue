@@ -74,7 +74,6 @@
                     <i class="fas fa-angle-down" aria-hidden="true"></i>
                   </span>
                 </button>
-
                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                   <div class="dropdown-content">
                     <div class="dropdown-item">
@@ -96,10 +95,8 @@
           :key="forum.ForumID"
         >
           <section class="card-header-title">
-            {{ forum.Topic }}
-            <span
-              ><time>{{ forum.FormattedCreateDate }} </time></span
-            >
+            {{ forum.title }}
+          
           </section>
         </header>
       </div>
@@ -148,9 +145,10 @@ export default {
   },
   created() {
     ForumService.getForums().then((response) => {
-      let parsedResponse = JSON.parse(response.data.value);
-      const forumArray = parsedResponse.ForumArray;
-      this.forums.push(...forumArray);
+     this.forums = response.data.forumArray
+    })
+    .catch(error => {
+      console.log(error);
     });
   },
   computed: {
