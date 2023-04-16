@@ -4,7 +4,7 @@
       <strong>Feeds</strong>
     </p>
     <ul class="menu-list">
-      <li><router-link v-bind:to="{ name: 'forum' }">Forums</router-link></li>
+      <li><router-link v-bind:to="{ name: 'forum' }" @click.native="refreshForum">Forums</router-link></li>
       <li><a>Popular</a></li>
     </ul>
     <p class="menu-label">
@@ -30,6 +30,13 @@ export default {
   data() {
     return {};
   },
+  methods:{
+    refreshForum() {
+      this.$nextTick(() => {
+        this.$router.go();
+      });
+    }
+  }
 };
 </script>
 

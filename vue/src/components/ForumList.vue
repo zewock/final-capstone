@@ -117,17 +117,15 @@
           </header>
         </div>
       </div>
-    
+
       <div class="card" v-else>
         <div>
-         <header
-          class="card-header input"
-        >
-          <section class="card-header-title">
-            {{selectForum.title}}
-            {{selectForum.description}}
-          </section>
-        </header>
+          <header class="card-header input">
+            <section class="card-header-title">
+              {{ selectForum.title }}
+              {{ selectForum.description }}
+            </section>
+          </header>
         </div>
         <header
           class="card-header input"
@@ -166,7 +164,6 @@ export default {
     };
   },
   methods: {
-    
     ViewForum(id) {
       this.$router.push(`/forum/${id}`);
     },
@@ -189,7 +186,6 @@ export default {
       }
     },
 
-
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
         if (response.status === 201) {
@@ -205,10 +201,9 @@ export default {
       });
     },
     RetrievePosts(forum) {
-      this.selectForum = forum
+      this.selectForum = forum;
       PostService.getPost(forum.forumID).then((response) => {
-        this.postsList = response.data;
-    
+        this.postsList = response.data.value
       });
     },
   },
