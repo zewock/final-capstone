@@ -285,7 +285,18 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("", conn);
+                SqlCommand cmd = new SqlCommand("insert into Forum_Posts " +
+                    "(header, parent_post_id, post_content, is_visible, forum_id, user_id, image_url) " +
+                    "values (@header, @parent_post_id, @post_content, @is_visible, @forum_id, @user_id, @image_url);", conn);
+                cmd.Parameters.AddWithValue("@header", postToForumDTO.Header);
+                cmd.Parameters.AddWithValue("@parent_post_id", postToForumDTO.ParentPostID);
+                cmd.Parameters.AddWithValue("@post_content", postToForumDTO.Content);
+                cmd.Parameters.AddWithValue("@is_visible", true);
+                cmd.Parameters.AddWithValue("@forum_id", postToForumDTO.ForumID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
+                cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private void AddPostToHierarchy(ForumPostWithVotesAndUserName post, Dictionary<long, ForumPostWithVotesAndUserName> postDict)
@@ -341,7 +352,7 @@ namespace Capstone.DAO
         }
 
 
-        public UpvotesDownvotesInLast24H readUpvotesDownVotesIn24H(SqlDataReader reader) 
+        private UpvotesDownvotesInLast24H readUpvotesDownVotesIn24H(SqlDataReader reader) 
         {
             UpvotesDownvotesInLast24H upvotesDownvotesIn24H = new UpvotesDownvotesInLast24H();
             upvotesDownvotesIn24H.post_id = Convert.ToInt32(reader["post_id"]);
@@ -516,7 +527,7 @@ namespace Capstone.DAO
                  return completePostThreads;
              };
          }*/
-
+      
     }
 }
 

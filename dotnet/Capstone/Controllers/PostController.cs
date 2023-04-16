@@ -68,9 +68,15 @@ namespace Capstone.Controllers
                 return StatusCode(401, "You need to be logged in to post a forum");
             }
 
-
-
-            return StatusCode(200, "blah blah");
+            try
+            {
+                postDao.PostToForum(postToForumDTO, tokenUserId);
+                return StatusCode(200, "Post successfully added");
+            } 
+            catch (Exception)
+            {
+                return StatusCode(500, "Post was unable to be added");
+            }
         }
 
 
