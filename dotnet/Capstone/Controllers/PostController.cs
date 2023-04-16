@@ -11,30 +11,49 @@ namespace Capstone.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private readonly IUserDao userDao;
         private readonly IPostDao postDao;
+   
        
 
         public PostController(IPostDao _postDao)
-        {
+        {   
             postDao = _postDao;
+           
         }
 
-        [HttpGet("/ForumPosts/{id}")]
+        [HttpGet("/ForumPosts/{forumId}")]
 
-        public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostsByForumId(int id)
+       
+        public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostsByForumId(int forumId)
+        {
+                try
+                {
+                    var posts = postDao.GetPostsByForumId(forumId);
+                    return Ok(posts);
+                }
+                catch (Exception)
+                {
+                    
+                    return StatusCode(500, new { message = "An error occurred while fetching the posts." });
+                }
+        }
+
+        [HttpGet("/Posts/{keyword}")]
+
+        public ActionResult<List<ForumPostWithVotesAndUserName>> SearchPosts(string keyword)
         {
             try
             {
-                List<ForumPostWithVotesAndUserName> posts =  postDao.GetPostsByForumId(id);
-                return posts;
+                var posts = postDao.SearchPostsForKeyword(keyword);
+                return Ok(posts);
             }
-            catch(Exception)
+            catch (Exception)
             {
-                return StatusCode(404, "not found");
+                return StatusCode(500, new { message = "An error occured while fetching the posts." });
             }
         }
-        
+
+
        /* [HttpPost("/PostToForum")]
 
        

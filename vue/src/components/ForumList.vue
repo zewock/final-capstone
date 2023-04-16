@@ -189,6 +189,7 @@ export default {
       }
     },
 
+
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
         if (response.status === 201) {
