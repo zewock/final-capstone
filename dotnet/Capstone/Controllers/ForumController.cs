@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using Capstone.Models.OutgoingDTOs;
 using Newtonsoft.Json;
+using Capstone.Models.IntermediaryModles;
 
 namespace Capstone.Controllers
 {
@@ -56,9 +57,37 @@ namespace Capstone.Controllers
             try
             {
                 ForumListDTO forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
-                List<ForumMod> forumMods = new List<ForumMod>();
+                List<ForumModAndUsername> forumMods = forumDao.GetAllForumMods();
+                List<ForumFavoriteAndUsername> forumFavorites = forumDao.GetAllForumFavorites();
 
+                int modListIterator = 0;
+                int favoriteListIterator = 0;
+                for (int i = 0; i < forumListDTO.ForumArray.Length; i++)
+                {
+                    List<Forum_ModsArray> indvidualForumModList = new List<Forum_ModsArray>();
+                    while (modListIterator < forumMods.Count && 
+                        forumMods[modListIterator].forumId == forumListDTO.ForumArray[i].ForumID)
+                    {
+                        Forum_ModsArray forum_ModsArray = new Forum_ModsArray();
+                        forum_ModsArray.Username = forumMods[modListIterator].username;
+                        forum_ModsArray.UserID = forumMods[modListIterator].userId;
+                        indvidualForumModList.Add(forum_ModsArray);
+                        modListIterator++;
+                    }
+                    forumListDTO.ForumArray[i].Forums_ModsArrays = indvidualForumModList.ToArray();
 
+                    List<Forums_FavoritesArray> indvidualForumFavoriteList = new List<Forums_FavoritesArray>();
+                    while (favoriteListIterator < forumFavorites.Count &&
+                        forumFavorites[favoriteListIterator].forumId == forumListDTO.ForumArray[i].ForumID)
+                    {
+                        Forums_FavoritesArray forums_FavoritesArray = new Forums_FavoritesArray();
+                        forums_FavoritesArray.Username = forumFavorites[favoriteListIterator].username;
+                        forums_FavoritesArray.UserID = forumFavorites[favoriteListIterator].userId;
+                        indvidualForumFavoriteList.Add(forums_FavoritesArray);
+                        favoriteListIterator++;
+                    }
+                    forumListDTO.ForumArray[i].Forums_FavoritesArrays = indvidualForumFavoriteList.ToArray();
+                }
 
 
                 
