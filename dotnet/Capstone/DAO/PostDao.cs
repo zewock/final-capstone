@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Web.Mvc.Html;
 
 
@@ -285,7 +286,64 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("", conn);
+                SqlCommand cmd = new SqlCommand("insert into Forum_Posts " +
+                    "(header, parent_post_id, post_content, is_visible, forum_id, user_id, image_url) " +
+                    "values (@header, @parent_post_id, @post_content, @is_visible, @forum_id, @user_id, @image_url);", conn);
+                cmd.Parameters.AddWithValue("@header", postToForumDTO.Header);
+                cmd.Parameters.AddWithValue("@parent_post_id", postToForumDTO.ParentPostID);
+                cmd.Parameters.AddWithValue("@post_content", postToForumDTO.Content);
+                cmd.Parameters.AddWithValue("@is_visible", true);
+                cmd.Parameters.AddWithValue("@forum_id", postToForumDTO.ForumID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
+                cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int GetUserIDByPostID(int postID)
+        {
+            int postUserID = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select user_id from Forum_Posts where post_id = @post_id", conn);
+                cmd.Parameters.AddWithValue("@post_id", postID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    postUserID = Convert.ToInt32(reader["user_id"]);
+                }
+            }
+            return postUserID;
+        }
+
+        public List<int> GetModsIDsByForumID(int forumID)
+        {
+            List<int> modsIDs = new List<int>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select user_id from Forum_Mods where forum_id = @forum_id", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    modsIDs.Add(Convert.ToInt32(reader["user_id"]));
+                }
+            }
+            return modsIDs;
+        }
+
+        public void DeletePost(int postID) 
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Forum_Posts " +
+                    "set is_visible = 0 " +
+                    "where post_id = @post_id;", conn);
+                cmd.Parameters.AddWithValue("@post_id", postID);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -342,7 +400,7 @@ namespace Capstone.DAO
         }
 
 
-        public UpvotesDownvotesInLast24H readUpvotesDownVotesIn24H(SqlDataReader reader) 
+        private UpvotesDownvotesInLast24H readUpvotesDownVotesIn24H(SqlDataReader reader) 
         {
             UpvotesDownvotesInLast24H upvotesDownvotesIn24H = new UpvotesDownvotesInLast24H();
             upvotesDownvotesIn24H.post_id = Convert.ToInt32(reader["post_id"]);
@@ -517,7 +575,7 @@ namespace Capstone.DAO
                  return completePostThreads;
              };
          }*/
-
+      
     }
 }
 
