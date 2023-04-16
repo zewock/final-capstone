@@ -4,15 +4,15 @@ namespace Capstone.Models.DatabaseModles
 {
     public class ForumPost
     {
-        int PostID { get; set; }
-        string Header { get; set; }
-        string PostContent { get; set; }
-        string ImageURL { get; set; }
-        DateTime CreateDate { get; set; }
-        int UserID { get; set; }
-        int ForumID { get; set; }
-        bool IsVisable { get; set; }
-        int ParentPostID { get; set; }
+        public int PostID { get; set; }
+        public string Header { get; set; }
+        public string PostContent { get; set; }
+        public string ImageURL { get; set; }
+        public DateTime CreateDate { get; set; }
+        public int UserID { get; set; }
+        public int ForumID { get; set; }
+        public bool IsVisable { get; set; }
+        public int ParentPostID { get; set; }
 
         public ForumPost ()
         {
@@ -32,8 +32,5 @@ namespace Capstone.Models.DatabaseModles
             IsVisable = isVisable;
             ParentPostID = parentPostID;
         }
-
-
-
     }
 }

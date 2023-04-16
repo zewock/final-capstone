@@ -13,13 +13,13 @@ namespace Capstone.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostDao postDao;
-   
-       
+        private readonly IUserDao userDao;
 
-        public PostController(IPostDao _postDao)
-        {   
+
+        public PostController(IPostDao _postDao, IUserDao userDao)
+        {
             postDao = _postDao;
-           
+            this.userDao = userDao;
         }
 
         [HttpGet("/ForumPosts/{forumId}")]
@@ -27,6 +27,8 @@ namespace Capstone.Controllers
        
         public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostsByForumId(int forumId)
         {
+                // need to pass in the user id to get information on whether the user has upvoted or downvoted posts
+                // as well as has the user favorited this forum/ as a mod of this forum
                 try
                 {
                     var posts = postDao.GetPostsByForumId(forumId);
@@ -56,8 +58,18 @@ namespace Capstone.Controllers
         [HttpPost("/PostToForum")]
         public ActionResult PostToForum (PostToForumDTO postToForumDTO) 
         {
-            ForumPost forumPost = new ForumPost();
-            forumPost.U
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to post a forum");
+            }
+
+
+
             return StatusCode(200, "blah blah");
         }
 
