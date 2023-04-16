@@ -105,7 +105,7 @@
           :key="forum.ForumID"
         >
           <section class="card-header-title">
-            {{ forum.Title }}
+            {{ forum.title }}
             <span
               ><time>{{ forum.FormattedCreateDate }} </time></span
             >
@@ -121,7 +121,7 @@
           <section class="card-header-title">
             {{ forum.Title }}
             <span
-              ><time>{{ forum.FormattedCreateDate }} </time></span
+              ><time>{{ forum.CreateDate }} </time></span
             >
           </section>
         </header>
@@ -154,6 +154,7 @@ export default {
       this.$router.push(`/forum/${id}`);
     },
     formatDate(dateString) {
+  console.log('Input date:', dateString);
   try {
     const date = new Date(dateString);
     if (isNaN(date)) {
@@ -168,6 +169,7 @@ export default {
     return 'Invalid date';
   }
 },
+
 
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
@@ -192,7 +194,8 @@ export default {
   computed: {
     formattedForums() {
       return this.forums.map((forum) => {
-        const rawCreateDate = forum.CreateDate;
+        console.log('ForumObject:', forum)
+        const rawCreateDate = forum.createDate;
         const formattedCreateDate = this.formatDate(rawCreateDate);
         return {
           ...forum,
