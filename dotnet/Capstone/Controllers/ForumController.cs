@@ -142,7 +142,7 @@ namespace Capstone.Controllers
 
         [HttpPost("/ChangeFavoriteForumState")]
 
-        public ActionResult PostToForumFavorites(ChangeFavoritveForumStateDTO favoriteForum)
+        public ActionResult ToggleForumFavorite(ChangeFavoritveForumStateDTO favoriteForum)
         {
             int tokenUserId; 
             try
@@ -156,14 +156,14 @@ namespace Capstone.Controllers
             try
             {
                 int favoriteForumId = favoriteForum.ForumId;
-                forumDao.PostForumFavorite(tokenUserId, favoriteForumId);
+                forumDao.ToggleForumFavorites(tokenUserId, favoriteForumId);
             }
             catch(Exception)
             {
                 return StatusCode(400, "Bad Request");
             }
 
-
+            return StatusCode(200);
         }
 
     }
