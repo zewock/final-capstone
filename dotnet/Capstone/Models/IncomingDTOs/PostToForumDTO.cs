@@ -4,23 +4,26 @@
     {
         public int ForumID { get; set; }
 
+        public string Header { get; set; }
+
         public string Content { get; set; }
 
         public string Image { get; set; }
 
-        public string Path { get; set; }
+        public int ParentPostID { get; set; }
 
         public PostToForumDTO() 
         {
-
+            
         }
-
-        public PostToForumDTO(int forumID, string content, string image, string path)
+        
+        public PostToForumDTO(int forumID, string header, string content, string image, int parentPostID )
         {
             ForumID = forumID;
+            Header = header;
             Content = content;
             Image = image;
-            Path = path;
+            ParentPostID = parentPostID;
         }
     }
 }
