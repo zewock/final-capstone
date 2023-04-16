@@ -141,5 +141,31 @@ namespace Capstone.Controllers
             return StatusCode(200, "blah blah");
         }
 
+        [HttpPost("/ChangeFavoriteForumState")]
+
+        public ActionResult PostToForumFavorites(ChangeFavoritveForumStateDTO favoriteForum)
+        {
+            int tokenUserId; 
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch(Exception)
+            {
+                return StatusCode(401, "You need to be logged in to complete this action");
+            }
+            try
+            {
+                int favoriteForumId = favoriteForum.ForumId;
+                forumDao.PostForumFavorite(tokenUserId, favoriteForumId);
+            }
+            catch(Exception)
+            {
+                return StatusCode(400, "Bad Request");
+            }
+
+
+        }
+
     }
 }

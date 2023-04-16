@@ -137,6 +137,20 @@ namespace Capstone.DAO
             }
             return forumFavoriteAndUsernameList;
         }
+        //change from void to something else? 
+        public  PostForumFavorite(int tokenUserId, int favoriteForumId)
+        {
+            using(SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO Forum_Favorites (int user_id, int forum_id) VALUES (@tokenUserId, @favorieForumId)", conn);
+                cmd.Parameters.AddWithValue("@tokenUserId", tokenUserId);
+                cmd.Parameters.AddWithValue("@favoriteForumId", favoriteForumId);
+                int rowsAffected = cmd.ExecuteNonQuery();
+               
+            }
+            return
+        }
 
 
         /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
