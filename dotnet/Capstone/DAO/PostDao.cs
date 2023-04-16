@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc.Html;
 
+
 namespace Capstone.DAO
 {
     public class PostDao : IPostDao
@@ -38,6 +39,10 @@ namespace Capstone.DAO
                         {
                             ForumPostWithVotesAndUserName post = ReadPostFromReader(reader);
                             AddPostToHierarchy(post, postDict);
+                            UpvotesDownvotesInLast24H upvotesDownvotes = readUpvotesDownVotesIn24H(reader);
+                            postDict[upvotesDownvotes.post_id].upvotesLast24Hours = upvotesDownvotes.upvotesInLast24H;
+                            postDict[upvotesDownvotes.post_id].downvotesLast24Hours = upvotesDownvotes.downvotesInLast24H;
+
                         }
                     }
                 }
@@ -115,30 +120,6 @@ namespace Capstone.DAO
                                 ph.depth
                             ORDER BY ph.depth, ph.create_date";
             return query;
-        }
-
-    
-
-        private ForumPostWithVotesAndUserName ReadPostFromReader(SqlDataReader reader)
-        {
-            ForumPostWithVotesAndUserName post = new ForumPostWithVotesAndUserName();
-
-            post.postId = Convert.ToInt32(reader["post_id"]);
-            post.forumId = Convert.ToInt32(reader["forum_id"]);
-            post.username = Convert.ToString(reader["username"]);
-            post.parentPostId = reader["parent_post_id"] == DBNull.Value ? (long?)null : (long)reader["parent_post_id"];
-            post.content = Convert.ToString(reader["post_content"]);
-            post.title = Convert.ToString(reader["header"]);
-            post.createDate = Convert.ToDateTime(reader["create_date"]);
-            post.isVisible = Convert.ToBoolean(reader["is_visible"]);
-            post.userId = Convert.ToInt32(reader["user_id"]);
-            post.depth = Convert.ToInt32(reader["depth"]);
-            post.upVotes = Convert.ToInt32(reader["upvotes"]);
-            post.downVotes = Convert.ToInt32(reader["downvotes"]);
-            post.upvotesLast24Hours = Convert.ToInt32(reader["upvotes_last_24h"]);
-            post.downvotesLast24Hours = Convert.ToInt32(reader["downvotes_last_24h"]);
-
-            return post;
         }
 
         private void AddPostToHierarchy(ForumPostWithVotesAndUserName post, Dictionary<long, ForumPostWithVotesAndUserName> postDict)
@@ -227,7 +208,37 @@ namespace Capstone.DAO
             return postsWithKeyword;
         }
 
-  
+        private ForumPostWithVotesAndUserName ReadPostFromReader(SqlDataReader reader)
+        {
+            ForumPostWithVotesAndUserName post = new ForumPostWithVotesAndUserName();
+
+            post.postId = Convert.ToInt32(reader["post_id"]);
+            post.forumId = Convert.ToInt32(reader["forum_id"]);
+            post.username = Convert.ToString(reader["username"]);
+            post.parentPostId = reader["parent_post_id"] == DBNull.Value ? (long?)null : (long)reader["parent_post_id"];
+            post.content = Convert.ToString(reader["post_content"]);
+            post.title = Convert.ToString(reader["header"]);
+            post.createDate = Convert.ToDateTime(reader["create_date"]);
+            post.isVisible = Convert.ToBoolean(reader["is_visible"]);
+            post.userId = Convert.ToInt32(reader["user_id"]);
+            post.depth = 0;
+            post.upVotes = Convert.ToInt32(reader["upvotes"]);
+            post.downVotes = Convert.ToInt32(reader["downvotes"]);
+
+
+            return post;
+        }
+
+
+        public UpvotesDownvotesInLast24H readUpvotesDownVotesIn24H(SqlDataReader reader) 
+        {
+            UpvotesDownvotesInLast24H upvotesDownvotesIn24H = new UpvotesDownvotesInLast24H();
+            upvotesDownvotesIn24H.post_id = Convert.ToInt32(reader["post_id"]);
+            upvotesDownvotesIn24H.forum_id = Convert.ToInt32(reader["forum_id"]);
+            upvotesDownvotesIn24H.upvotesInLast24H = Convert.ToInt32(reader["upvotes"]);
+            upvotesDownvotesIn24H.downvotesInLast24H = Convert.ToInt32(reader["downvotes"]);
+            return upvotesDownvotesIn24H; 
+        }
 
            /* string query = @"
                     WITH PostHierarchy AS (
