@@ -129,7 +129,7 @@
               </p>
             </section>
           </header>
-          <div class="post-card" v-for="post in postsList" :key="post.postId">
+          <div class="post-card" v-for="post in postsList" :key="post.postId" @click="RetrieveReply(post)">
             <button id="post-header" class="card-header button">
               <h1 class="card-header-title">
                 {{ post.title }}
@@ -154,7 +154,6 @@
           </div>
         </div>
       </div>
-      
     </div>
   </body>
 </template>
@@ -169,6 +168,7 @@ export default {
     return {
       forums: [],
       postsList: [],
+      replyList: [],
       form: false,
       selectForum: null,
       newForum: {
@@ -239,9 +239,23 @@ export default {
     RetrievePosts(forum) {
       this.selectForum = forum;
       PostService.getPost(forum.forumID).then((response) => {
-        this.postsList = response.data.value;
+        this.postsList = response.data;
       });
     },
+RetrieveReply(post) {
+    if (post.postId > post.ParentPostId) {
+        if (!this.replyList[post.ParentPostId]) {
+            this.replyList[post.ParentPostId] = [];
+        }
+        post.replies.forEach(reply => {
+            this.replyList[post.ParentPostId].push(reply);
+        });
+    }
+    this.postsList = post.replies;
+    if (post.replies.length > 0) {
+        this.replyList = this.replyList[post.replies[0].ParentPostId];
+    }
+},
   },
   created() {
     ForumService.getForums().then((response) => {
@@ -278,7 +292,7 @@ export default {
   margin-bottom: 10px;
 }
 #in-forum-title .card-header {
-  background-color: #ff9f29; 
+  background-color: #ff9f29;
   margin-bottom: 0;
   border-radius: 10px;
   position: sticky;
@@ -307,8 +321,8 @@ export default {
   border-color: transparent;
   height: auto;
 }
-.card-footer a{
-  color:#1a4d2e;
+.card-footer a {
+  color: #1a4d2e;
 }
 .card-footer a:hover {
   background-color: #faf3e3;

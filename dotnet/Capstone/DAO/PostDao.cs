@@ -286,6 +286,7 @@ namespace Capstone.DAO
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("", conn);
+            }
         }
 
         private void AddPostToHierarchy(ForumPostWithVotesAndUserName post, Dictionary<long, ForumPostWithVotesAndUserName> postDict)
