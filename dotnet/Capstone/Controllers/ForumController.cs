@@ -34,7 +34,6 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("/ForumsList")]
-
         public ActionResult<ForumListDTO> getForums()
         {   
                 int tokenUserId;

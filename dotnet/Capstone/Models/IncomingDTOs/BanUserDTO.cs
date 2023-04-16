@@ -1,12 +1,13 @@
 ﻿using Microsoft.VisualBasic;
+using System;
 
 namespace Capstone.Models.IncomingDTOs
 {
     public class BanUserDTO
     {
-        public int Username { get; set; }
+        public int UserID { get; set; }
 
-        public DateAndTime DateBanLifted { get; set; }
+        public DateTime DateBanLifted { get; set; }
 
         public bool DeleteAllTraffic { get; set; }
 
@@ -15,9 +16,9 @@ namespace Capstone.Models.IncomingDTOs
 
         }
 
-        public BanUserDTO(int username, DateAndTime dateBanLifted, bool deleteAllTraffic)
+        public BanUserDTO(int userID, DateTime dateBanLifted, bool deleteAllTraffic)
         {
-            Username = username;
+            UserID = userID;
             DateBanLifted = dateBanLifted;
             DeleteAllTraffic = deleteAllTraffic;
         }

@@ -2,6 +2,8 @@
 using Capstone.DAO;
 using Capstone.Security;
 using Capstone.Models.DatabaseModles;
+using System;
+
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
@@ -28,6 +30,11 @@ namespace Capstone.Controllers
             // Get the user by username
             User user = userDao.GetUser(userParam.Username);
 
+            if (user.RestoreBanDate > DateTime.Now)
+            {
+                return StatusCode(401, "Unable to log in, Account banned until " + user.RestoreBanDate);
+            }
+
             // If we found a user and the password hash matches
             if (user != null && passwordHasher.VerifyHashMatch(user.PasswordHash, userParam.Password, user.Salt))
             {
@@ -41,7 +48,7 @@ namespace Capstone.Controllers
                 // Switch to 200 OK
                 result = Ok(retUser);
             }
-
+            
             return result;
         }
 
