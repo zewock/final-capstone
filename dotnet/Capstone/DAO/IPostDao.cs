@@ -12,6 +12,9 @@ namespace Capstone.DAO
         public List<ForumPostWithVotesAndUserName> SearchPostsForKeyword(string keyword);
         public List<ForumPostWithVotesAndUserName> GetCompletePostThreadById(int postId);
         public void PostToForum(PostToForumDTO postToForumDTO, int userID);
+        public int GetUserIDByPostID(int postID);
+        public List<int> GetModsIDsByForumID(int forumPostID);
+        public void DeletePost(int postID);
 
 
     }

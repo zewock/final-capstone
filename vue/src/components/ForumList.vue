@@ -131,7 +131,7 @@
               </p>
             </section>
           </header>
-          <div class="post-card" v-for="post in postsList" :key="post.postId">
+          <div class="post-card" v-for="post in postsList" :key="post.postId" @click="RetrieveReply(post)">
             <button id="post-header" class="card-header button">
               <h1 class="card-header-title">
                 {{ post.title }}
@@ -169,6 +169,7 @@ export default {
     return {
       forums: [],
       postsList: [],
+      replyList: [],
       form: false,
       selectForum: null,
       newForum: {
@@ -247,6 +248,21 @@ export default {
         .slice()
         .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
     },
+        
+RetrieveReply(post) {
+    if (post.postId > post.ParentPostId) {
+        if (!this.replyList[post.ParentPostId]) {
+            this.replyList[post.ParentPostId] = [];
+        }
+        post.replies.forEach(reply => {
+            this.replyList[post.ParentPostId].push(reply);
+        });
+    }
+    this.postsList = post.replies;
+    if (post.replies.length > 0) {
+        this.replyList = this.replyList[post.replies[0].ParentPostId];
+    }
+},
   },
   created() {
     ForumService.getForums().then((response) => {

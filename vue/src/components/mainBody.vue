@@ -1,46 +1,54 @@
 <template>
   <body class="mainBody">
     <div class="body-container">
-      <div class="card" v-for="post in posts"
-          :key="post.postID">
+      <div class="card" v-for="forum in forums"
+          :key="forum.forumID" >
+            
         <header class="card-header">
           <p class="card-header-title">
-            {{ post.Header }}
+          
           </p>
           <button class="card-header-icon" aria-label="more options">
             <span class="icon">
-              <i class="fas fa-angle-down" aria-hidden="true"></i>
+             <i class="fa fa-columns"></i>
             </span>
           </button>
         </header>
-        <div class="card-content">
-          <div class="content">
-            <p>@{{ ownerUsername }}</p>
-            {{ post.Content }}
-            <br />
-            <time>{{ post.CreateDate }}</time>
-          </div>
-        </div>
-        <footer class="card-footer">
-          <a href="#" class="card-footer-item">{{ totalNumUpvotes }} | Like</a>
-          <a href="#" class="card-footer-item"
-            >{{ totalNumDownvotes }} | Dislike</a
-          >
-        </footer>
       </div>
     </div>
   </body>
 </template>
 
 <script>
+import ForumService from "../services/ForumService";
+import PostService from "../services/PostService";
 export default {
   name: "mainBody",
   data() {
     return{
-      posts: []
+      forums: [],
+      postsList: [],
     }
   },
+  methods: {
+     RetrievePosts(forum) {
+      PostService.getPost(forum.forumID).then((response) => {
+        this.postsList = response.data;
+
+      });
+    },
+},
+     created() {
+    ForumService.getForums().then((response) => {
+      this.forums = response.data.forumArray;
+    this.forums.forEach(forum => {
+      this.RetrievePosts(forum)
+      
+    });
+    });
+  },
 };
+
 </script>
 
 <style scoped>
