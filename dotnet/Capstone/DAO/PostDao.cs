@@ -25,7 +25,7 @@ namespace Capstone.DAO
 
         public List<ForumPostWithVotesAndUserName> GetPostsByForumId(int forumId)
         {
-            string query = BuildQuery();
+            string query = BuildPostByForumQuery();
             Dictionary<long, ForumPostWithVotesAndUserName> postDict = new Dictionary<long, ForumPostWithVotesAndUserName>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -53,7 +53,39 @@ namespace Capstone.DAO
             }
 
         }
-        public string BuildQuery()
+        public List<ForumPostWithVotesAndUserName> GetPostsByPostId(int postId)
+        {
+            string query = BuildPostByPostIdQuery();
+            Dictionary<long, ForumPostWithVotesAndUserName> postDict = new Dictionary<long, ForumPostWithVotesAndUserName>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@postId", postId);
+                    conn.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ForumPostWithVotesAndUserName post = ReadPostFromReader(reader, true);
+                            AddPostToHierarchy(post, postDict);
+                            UpvotesDownvotesInLast24H upvotesDownvotes = readUpvotesDownVotesIn24H(reader);
+                            postDict[upvotesDownvotes.post_id].upvotesLast24Hours = upvotesDownvotes.upvotesInLast24H;
+                            postDict[upvotesDownvotes.post_id].downvotesLast24Hours = upvotesDownvotes.downvotesInLast24H;
+
+                        }
+                    }
+                }
+                return GetCompletePostThreads(postDict);
+            }
+
+        }
+
+        
+        public string BuildPostByForumQuery()
         {
             string query = @"
                             WITH PostHierarchy AS (
@@ -124,7 +156,75 @@ namespace Capstone.DAO
             return query;
         }
 
-    
+        public string BuildPostByPostIdQuery()
+        {
+            string query = @"WITH PostHierarchy AS (
+                                SELECT
+                                    fp.post_id,
+                                    fp.forum_id,
+                                    fp.user_id,
+                                    fp.header,
+                                    fp.parent_post_id,
+                                    fp.post_content,
+                                    fp.is_visible,
+                                    fp.create_date,
+                                    u.username,
+                                    0 AS depth
+                                FROM forum_posts fp
+                                JOIN users u ON fp.user_id = u.user_id
+                                WHERE fp.post_id = @postId 
+                                
+
+                                UNION ALL
+
+                                SELECT
+                                    fp.post_id,
+                                    fp.forum_id,
+                                    fp.user_id,
+                                    fp.header,
+                                    fp.parent_post_id,
+                                    fp.post_content,
+                                    fp.is_visible,
+                                    fp.create_date,
+                                    u.username,
+                                    ph.depth + 1
+                                FROM forum_posts fp
+                                JOIN users u ON fp.user_id = u.user_id
+                                JOIN PostHierarchy ph ON fp.parent_post_id = ph.post_id
+                                
+                           
+                            )
+                            SELECT
+                                ph.post_id,
+                                ph.forum_id,
+                                ph.user_id,
+                                ph.header,
+                                ph.parent_post_id,
+                                ph.post_content,
+                                ph.is_visible,
+                                ph.create_date,
+                                ph.username,
+                                ph.depth,
+                                SUM(CASE WHEN pud.is_upvoted = 1 THEN 1 ELSE 0 END) AS upvotes,
+                                SUM(CASE WHEN pud.is_downvoted = 1 THEN 1 ELSE 0 END) AS downvotes,
+                                SUM(CASE WHEN pud.is_upvoted = 1 AND pud.create_date > DATEADD(day, -1, GETDATE()) THEN 1 ELSE 0 END) AS upvotes_last_24h,
+                                SUM(CASE WHEN pud.is_downvoted = 1 AND pud.create_date > DATEADD(day, -1, GETDATE()) THEN 1 ELSE 0 END) AS downvotes_last_24h
+                            FROM PostHierarchy ph
+                            LEFT JOIN Post_Upvotes_Downvotes pud ON ph.post_id = pud.post_id
+                            GROUP BY
+                                ph.post_id,
+                                ph.forum_id,
+                                ph.user_id,
+                                ph.header,
+                                ph.parent_post_id,
+                                ph.post_content,
+                                ph.is_visible,
+                                ph.create_date,
+                                ph.username,
+                                ph.depth
+                            ORDER BY ph.depth, ph.create_date";
+            return query;
+        }
 
 
      
