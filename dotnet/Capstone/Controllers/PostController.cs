@@ -53,6 +53,21 @@ namespace Capstone.Controllers
             }
         }
 
+        [HttpGet("/Thread/{postId}")]
+
+        public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostThreadById(int postId)
+        {
+            try
+            {
+                var posts = postDao.GetCompletePostThreadById(postId);
+                return Ok(posts);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An error occured while fetching the posts." });
+            }
+        }
+
 
        /* [HttpPost("/PostToForum")]
 
