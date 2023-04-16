@@ -109,7 +109,8 @@
         >
           <header class="card-header input">
             <section class="card-header-title">
-              {{ forum.title }}
+              {{ forum.title }} <br/>
+              Topic: {{ forum.topic }}
               <span
                 ><time>{{ forum.FormattedCreateDate }} </time></span
               >
@@ -124,7 +125,8 @@
             <section class="card-header-title">
               <h1>{{ selectForum.title }}</h1>
               <p>
-                {{ selectForum.description }}<br /><br />
+                {{ selectForum.description }}<br /> <br />
+                {{ selectForum.topic }}<br />
                 @{{ selectForum.ownerUsername }}
               </p>
             </section>
@@ -134,10 +136,11 @@
               <h1 class="card-header-title">
                 {{ post.title }}
               </h1>
+              <p class="replies">Replies: {{ post.replies.length }}</p>
             </button>
             <div class="card-content">
               <div class="content">
-                <p>@{{ post.authorUserName }}</p>
+                <p>@{{ post.username }}</p>
                 {{ post.content }}
                 <br />
                 <br />
@@ -145,11 +148,9 @@
               </div>
             </div>
             <footer class="card-footer">
-              <a href="#" class="card-footer-item">Like | {{ post.upVotes }}</a>
-              <a href="#" class="card-footer-item"
-                >Dislike | {{ post.downVotes }}</a
-              >
-              <a href="#" class="card-footer-item">Favorite</a>
+              <a class="card-footer-item">Like | {{ post.upVotes }}</a>
+              <a class="card-footer-item">Dislike | {{ post.downVotes }}</a>
+              <a class="card-footer-item">Favorite</a>
             </footer>
           </div>
         </div>
@@ -239,9 +240,15 @@ export default {
     RetrievePosts(forum) {
       this.selectForum = forum;
       PostService.getPost(forum.forumID).then((response) => {
-        this.postsList = response.data;
+        this.postsList = this.sortPostsByDate(response.data);
       });
     },
+    sortPostsByDate(posts) {
+      return posts
+        .slice()
+        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+    },
+        
 RetrieveReply(post) {
     if (post.postId > post.ParentPostId) {
         if (!this.replyList[post.ParentPostId]) {
@@ -265,14 +272,16 @@ RetrieveReply(post) {
 
   computed: {
     formattedForums() {
-      return this.forums.map((forum) => {
-        const rawCreateDate = forum.createDate;
-        const formattedCreateDate = this.formatDate(rawCreateDate);
-        return {
-          ...forum,
-          FormattedCreateDate: formattedCreateDate,
-        };
-      });
+      return this.forums
+        .map((forum) => {
+          const rawCreateDate = forum.createDate;
+          const formattedCreateDate = this.formatDate(rawCreateDate);
+          return {
+            ...forum,
+            FormattedCreateDate: formattedCreateDate,
+          };
+        })
+        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
     },
   },
 };
@@ -300,7 +309,9 @@ RetrieveReply(post) {
   align-items: center;
   width: 100%;
 }
-
+.replies {
+  color: #1a4d2e;
+}
 #in-forum-title .card-header h1 {
   display: inline-flex;
   color: #1a4d2e;
@@ -319,6 +330,7 @@ RetrieveReply(post) {
   margin-bottom: 10px;
   border-radius: 10px;
   border-color: transparent;
+  padding-left: 0;
   height: auto;
 }
 .card-footer a {
