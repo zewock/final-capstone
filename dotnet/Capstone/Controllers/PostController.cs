@@ -41,6 +41,22 @@ namespace Capstone.Controllers
             }
         }
 
+        [HttpGet("/PostById/{postId}")]
+
+        public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostsByPostId(int postId)
+        {
+            try
+            {
+                var posts = postDao.GetPostsByForumId(postId);
+                return Ok(posts);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, new { message = "An error occurred while fetching the posts." });
+            }
+        }
+
         [HttpGet("/Posts/{keyword}")]
         public ActionResult<List<ForumPostWithVotesAndUserName>> SearchPosts(string keyword)
         {
