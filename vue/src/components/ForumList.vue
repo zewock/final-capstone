@@ -100,7 +100,7 @@
       <div v-if="posts == false">
         <div
           class="card"
-          v-for="forum in formattedForums"
+          v-for="forum in sortForums(formattedForums)"
           :key="forum.ForumID"
           @click="
             posts = true;
@@ -129,7 +129,7 @@
               </p>
             </section>
           </header>
-          <div class="post-card" v-for="post in postsList" :key="post.postId" @click="RetrieveReply(post)">
+          <div class="post-card" v-for="post in sortPosts(postsList)" :key="post.postId" @click="RetrieveReply(post)">
             <button id="post-header" class="card-header button">
               <h1 class="card-header-title">
                 {{ post.title }}
@@ -222,7 +222,16 @@ export default {
         return "Invalid date";
       }
     },
-
+    sortForums(forums) {
+    return forums.sort(
+      (a, b) => new Date(b.createDate) - new Date(a.createDate)
+    );
+  },
+  sortPosts(posts) {
+    return posts.sort(
+      (a, b) => new Date(b.createDate) - new Date(a.createDate)
+    );
+  },
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
         if (response.status === 201) {

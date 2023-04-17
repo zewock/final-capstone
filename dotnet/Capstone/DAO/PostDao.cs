@@ -387,9 +387,6 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-<<<<<<< HEAD
-                SqlCommand cmd = new SqlCommand("", conn);
-=======
                 SqlCommand cmd = new SqlCommand("insert into Forum_Posts " +
                     "(header, parent_post_id, post_content, is_visible, forum_id, user_id, image_url) " +
                     "values (@header, @parent_post_id, @post_content, @is_visible, @forum_id, @user_id, @image_url);", conn);
@@ -585,8 +582,6 @@ namespace Capstone.DAO
             }
             return isUpvotedDownVoted;
         }
-
-        public 
         public int DosePostExist (int postID)
         {
             int dosePostExist = -1;
@@ -616,7 +611,6 @@ namespace Capstone.DAO
                     "where post_id = @post_id;", conn);
                 cmd.Parameters.AddWithValue("@post_id", postID);
                 cmd.ExecuteNonQuery();
->>>>>>> 46cf6b588cb4a8e51d57b1e06ee3c0d0aacdc1b2
             }
         }
 
