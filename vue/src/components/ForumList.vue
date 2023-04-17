@@ -98,18 +98,19 @@
         </header>
       </div>
       <div v-if="posts == false">
-        <div
-          class="card"
-          v-for="forum in sortForums(formattedForums)"
-          :key="forum.ForumID"
-          @click="
-            posts = true;
-            RetrievePosts(forum);
-          "
-        >
-          <header class="card-header input">
+        <div class="card">
+          <header
+            class="card-header input"
+            v-for="forum in sortForums(formattedForums)"
+            :key="forum.ForumID"
+            @click="
+              posts = true;
+              RetrievePosts(forum);
+            "
+          >
             <section class="card-header-title">
-              {{ forum.title }}
+              {{ forum.title }}<br />
+              Topic: {{ forum.topic }}
               <span
                 ><time>{{ forum.FormattedCreateDate }} </time></span
               >
@@ -129,15 +130,24 @@
               </p>
             </section>
           </header>
-          <div class="post-card" v-for="post in sortPosts(postsList)" :key="post.postId" @click="RetrieveReply(post)">
-            <button id="post-header" class="card-header button">
+          <div
+            class="post-card"
+            v-for="post in sortPosts(postsList)"
+            :key="post.postId"
+          >
+            <button
+              id="post-header"
+              class="card-header button"
+              @click="RetrieveReply(post)"
+            >
               <h1 class="card-header-title">
                 {{ post.title }}
               </h1>
+              <p class="replies">Replies: {{ post.replies.length }}</p>
             </button>
             <div class="card-content">
               <div class="content">
-                <p>@{{ post.authorUserName }}</p>
+                <p>@{{ post.username }}</p>
                 {{ post.content }}
                 <br />
                 <br />
@@ -223,15 +233,15 @@ export default {
       }
     },
     sortForums(forums) {
-    return forums.sort(
-      (a, b) => new Date(b.createDate) - new Date(a.createDate)
-    );
-  },
-  sortPosts(posts) {
-    return posts.sort(
-      (a, b) => new Date(b.createDate) - new Date(a.createDate)
-    );
-  },
+      return forums.sort(
+        (a, b) => new Date(b.createDate) - new Date(a.createDate)
+      );
+    },
+    sortPosts(posts) {
+      return posts.sort(
+        (a, b) => new Date(b.createDate) - new Date(a.createDate)
+      );
+    },
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
         if (response.status === 201) {
@@ -252,20 +262,20 @@ export default {
         this.postsList = response.data;
       });
     },
-RetrieveReply(post) {
-    if (post.postId > post.ParentPostId) {
+    RetrieveReply(post) {
+      if (post.postId > post.ParentPostId) {
         if (!this.replyList[post.ParentPostId]) {
-            this.replyList[post.ParentPostId] = [];
+          this.replyList[post.ParentPostId] = [];
         }
-        post.replies.forEach(reply => {
-            this.replyList[post.ParentPostId].push(reply);
+        post.replies.forEach((reply) => {
+          this.replyList[post.ParentPostId].push(reply);
         });
-    }
-    this.postsList = post.replies;
-    if (post.replies.length > 0) {
+      }
+      this.postsList = post.replies;
+      if (post.replies.length > 0) {
         this.replyList = this.replyList[post.replies[0].ParentPostId];
-    }
-},
+      }
+    },
   },
   created() {
     ForumService.getForums().then((response) => {
@@ -297,6 +307,9 @@ RetrieveReply(post) {
   background-color: #faf3e3;
   padding: 15px;
   border-radius: 10px;
+}
+.replies {
+  color: #1a4d2e;
 }
 #in-forum-title #forum-title {
   margin-bottom: 10px;
