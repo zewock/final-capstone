@@ -13,6 +13,7 @@ namespace Capstone.DAO
         public List<ForumModAndUsername> GetAllForumMods();
         public List<ForumFavoriteAndUsername> GetAllForumFavorites();
         public int ToggleForumFavorites(int tokenUserId, int favoriteForumId);
+        public void PostToForum(ForumPost forumPost);
 
 
     }

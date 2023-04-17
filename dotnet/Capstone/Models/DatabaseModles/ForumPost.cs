@@ -12,7 +12,7 @@ namespace Capstone.Models.DatabaseModles
         public int UserID { get; set; }
         public int ForumID { get; set; }
         public bool IsVisable { get; set; }
-        public int ParentPostID { get; set; }
+        public int? ParentPostID { get; set; }
 
         public ForumPost ()
         {
@@ -20,7 +20,7 @@ namespace Capstone.Models.DatabaseModles
         }
 
         public ForumPost(int postID, string header, string postConetent, string imageURL,
-            DateTime createDate, int userID, int forumID, bool isVisable, int parentPostID)
+            DateTime createDate, int userID, int forumID, bool isVisable, int? parentPostID)
         {
             PostID = postID;
             Header = header;

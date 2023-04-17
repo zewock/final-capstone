@@ -20,14 +20,16 @@ namespace Capstone.DAO
         public int IsUserModOfForum(string username, int forumID);
         public void AddMod(int userID, int forumID);
         public void RemoveMod(int userID, int forumID);
-        public int isForumFavorited(int userID, int forumID);
+        public int IsForumFavorited(int userID, int forumID);
         public void RemoveFavorite(int userID, int forumID);
         public void AddFavoriteForum(int userID, int forumID);
-        public int doseForumExist(int forumID);
+        public bool DoseForumExist(int forumID);
         public IsUpvotedDownVoted GetPostsUpvotesDownvotes(int userID, int postID, IsUpvotedDownVoted isUpvotedDownVoted);
-        public int DosePostExist(int postID);
-
-
+        public bool DosePostExist(int postID, int forumID);
+        public void CreateUpvoteDownvote(PostsUpvotesDownvotes postsUpvotesDownvotes);
+        public void DeleteUpvoteDownvote(int userID, int postID);
+        public void UpdateUpvoteDownvote(PostsUpvotesDownvotes postsUpvotesDownvotes);
+        public int GetForumOwnerUserID(int forumID);
 
     }
 }

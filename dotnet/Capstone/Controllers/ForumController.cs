@@ -22,10 +22,9 @@ namespace Capstone.Controllers
     [ApiController]
     public class ForumController : ControllerBase
     { 
-        private readonly ITokenGenerator tokenGenerator;
-        private readonly IPasswordHasher passwordHasher;
         private readonly IUserDao userDao;
         private readonly IForumDao forumDao;
+
 
         public ForumController(IForumDao _forumDao, IUserDao _userDoa)
         {
@@ -87,9 +86,9 @@ namespace Capstone.Controllers
                     }
                     forumListDTO.ForumArray[i].Forums_FavoritesArrays = indvidualForumFavoriteList.ToArray();
                 }
+                forumListDTO.UserRole = tokenUserRole;
 
 
-                
                 //return Ok(json);
                 return Ok(forumListDTO);
 
@@ -114,32 +113,31 @@ namespace Capstone.Controllers
                 return StatusCode(401, "You need to be logged in to create a forum");
             }
 
-            //Check to see of the user exists 
-            if (false)
-            {
-                return StatusCode(401, "This account does not exist");
-            }
-
-            //Check to see of the user is banned
-            if (false)
-            {
-                return StatusCode(401, "This account is banned");
-            }
-
-            //Data valid?
 
             Forum forum = new Forum();
             forum.ownerId = tokenUserId;
-            forum.title = createForumDTO.Title;
-            forum.topic = createForumDTO.Topic;
-            forum.description = createForumDTO.Description;
+            forum.title = createForumDTO.ForumTitle;
+            forum.topic = createForumDTO.ForumTopic;
+            forum.description = createForumDTO.ForumDescription;
             forum.isVisible = true;
 
-            forumDao.CreateForum(forum);
+            int forumID = forumDao.CreateForum(forum);
 
-            return StatusCode(200, "blah blah");
+            ForumPost forumPost = new ForumPost();
+            forumPost.Header = createForumDTO.PostHeader;
+            forumPost.PostContent = createForumDTO.PostContent;
+            forumPost.ImageURL = createForumDTO.PostImageURL;
+            forumPost.UserID = tokenUserId;
+            forumPost.ForumID = forumID;
+            forumPost.IsVisable = true;
+            forumPost.ParentPostID = null;
+
+            forumDao.PostToForum(forumPost);
+
+
+            return StatusCode(200, "New Forum Created");
         }
-
+        /*
         [HttpPost("/ChangeFavoriteForumState")]
 
         public ActionResult ToggleForumFavorite(ChangeFavoritveForumStateDTO favoriteForum)
@@ -165,6 +163,6 @@ namespace Capstone.Controllers
 
             return StatusCode(200);
         }
-
+        */
     }
 }

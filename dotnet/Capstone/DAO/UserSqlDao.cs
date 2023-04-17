@@ -248,7 +248,7 @@ namespace Capstone.DAO
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    UserID = Convert.ToInt32(reader["isUserNameInDataBase"]);
+                    UserID = Convert.ToInt32(reader["user_id"]);
                 }
             }
             return UserID;
