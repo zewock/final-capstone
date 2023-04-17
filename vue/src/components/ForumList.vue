@@ -109,8 +109,7 @@
         >
           <header class="card-header input">
             <section class="card-header-title">
-              {{ forum.title }} <br/>
-              Topic: {{ forum.topic }}
+              {{ forum.title }}
               <span
                 ><time>{{ forum.FormattedCreateDate }} </time></span
               >
@@ -125,8 +124,7 @@
             <section class="card-header-title">
               <h1>{{ selectForum.title }}</h1>
               <p>
-                {{ selectForum.description }}<br /> <br />
-                {{ selectForum.topic }}<br />
+                {{ selectForum.description }}<br /><br />
                 @{{ selectForum.ownerUsername }}
               </p>
             </section>
@@ -136,11 +134,10 @@
               <h1 class="card-header-title">
                 {{ post.title }}
               </h1>
-              <p class="replies">Replies: {{ post.replies.length }}</p>
             </button>
             <div class="card-content">
               <div class="content">
-                <p>@{{ post.username }}</p>
+                <p>@{{ post.authorUserName }}</p>
                 {{ post.content }}
                 <br />
                 <br />
@@ -148,9 +145,11 @@
               </div>
             </div>
             <footer class="card-footer">
-              <a class="card-footer-item">Like | {{ post.upVotes }}</a>
-              <a class="card-footer-item">Dislike | {{ post.downVotes }}</a>
-              <a class="card-footer-item">Favorite</a>
+              <a href="#" class="card-footer-item">Like | {{ post.upVotes }}</a>
+              <a href="#" class="card-footer-item"
+                >Dislike | {{ post.downVotes }}</a
+              >
+              <a href="#" class="card-footer-item">Favorite</a>
             </footer>
           </div>
         </div>
@@ -171,6 +170,7 @@ export default {
       postsList: [],
       replyList: [],
       form: false,
+      menu: false,
       selectForum: null,
       newForum: {
         image: "",
@@ -240,15 +240,9 @@ export default {
     RetrievePosts(forum) {
       this.selectForum = forum;
       PostService.getPost(forum.forumID).then((response) => {
-        this.postsList = this.sortPostsByDate(response.data);
+        this.postsList = response.data;
       });
     },
-    sortPostsByDate(posts) {
-      return posts
-        .slice()
-        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-    },
-        
 RetrieveReply(post) {
     if (post.postId > post.ParentPostId) {
         if (!this.replyList[post.ParentPostId]) {
@@ -272,16 +266,14 @@ RetrieveReply(post) {
 
   computed: {
     formattedForums() {
-      return this.forums
-        .map((forum) => {
-          const rawCreateDate = forum.createDate;
-          const formattedCreateDate = this.formatDate(rawCreateDate);
-          return {
-            ...forum,
-            FormattedCreateDate: formattedCreateDate,
-          };
-        })
-        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+      return this.forums.map((forum) => {
+        const rawCreateDate = forum.createDate;
+        const formattedCreateDate = this.formatDate(rawCreateDate);
+        return {
+          ...forum,
+          FormattedCreateDate: formattedCreateDate,
+        };
+      });
     },
   },
 };
@@ -309,9 +301,7 @@ RetrieveReply(post) {
   align-items: center;
   width: 100%;
 }
-.replies {
-  color: #1a4d2e;
-}
+
 #in-forum-title .card-header h1 {
   display: inline-flex;
   color: #1a4d2e;
@@ -330,7 +320,6 @@ RetrieveReply(post) {
   margin-bottom: 10px;
   border-radius: 10px;
   border-color: transparent;
-  padding-left: 0;
   height: auto;
 }
 .card-footer a {
