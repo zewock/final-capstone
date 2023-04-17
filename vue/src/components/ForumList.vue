@@ -323,7 +323,6 @@ export default {
   align-items: center;
   width: 100%;
 }
-
 #in-forum-title .card-header h1 {
   display: inline-flex;
   color: #1a4d2e;
@@ -336,7 +335,12 @@ export default {
   font-size: smaller;
   text-align: right;
 }
-
+.card-header:first-child{
+  border-radius: 10px;
+}
+.card-header:last-child{
+  border-radius: 10px;
+}
 .card-header {
   background-color: #ff9f29;
   margin-bottom: 10px;
@@ -365,6 +369,7 @@ export default {
   justify-content: space-between;
   display: flex;
   align-items: center;
+  padding: 0;
 }
 .post-card {
   background-color: #ff9f29;
