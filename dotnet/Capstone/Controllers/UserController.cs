@@ -35,7 +35,7 @@ namespace Capstone.Controllers
             {
                 return StatusCode(401, "You need to be logged to bann a user");
             }
-            
+
             string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
             if (tokenUserRole != "admin")
             {
@@ -52,6 +52,66 @@ namespace Capstone.Controllers
             else
             {
                 return StatusCode(200, "User was successfully banned");
+            }
+        }
+
+        [HttpPut("/AddAdmin")]
+        public ActionResult AddAdmin(AddRemoveAdminDTO addRemoveAdminDTO)
+        {
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged to promate an admin");
+            }
+
+            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
+            if (tokenUserRole != "admin")
+            {
+                return StatusCode(401, "Only admins can promote admins");
+            }
+
+            if (userDao.IsUsernameInDatabase(addRemoveAdminDTO.Username) != 1)
+            {
+                return StatusCode(401, "" + addRemoveAdminDTO.Username + " is not in the database");
+            }
+            else
+            {
+                userDao.PromoteUserToAdmin(addRemoveAdminDTO.Username);
+                return StatusCode(200, "User was successfully promoted to admin");
+            }
+        }
+
+        [HttpPut("/RemoveAdmin")]
+        public ActionResult RemoveAdmin(AddRemoveAdminDTO addRemoveAdminDTO)
+        {
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged to demote an admin");
+            }
+
+            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
+            if (tokenUserRole != "admin")
+            {
+                return StatusCode(401, "Only admins can demote admins");
+            }
+
+            if (userDao.IsUsernameInDatabase(addRemoveAdminDTO.Username) != 1)
+            {
+                return StatusCode(401, "" + addRemoveAdminDTO.Username + " is not in the database");
+            }
+            else
+            {
+                userDao.DemoteUserFromAdmin(addRemoveAdminDTO.Username);
+                return StatusCode(200, "User was successfully demoted from admin");
             }
         }
     }

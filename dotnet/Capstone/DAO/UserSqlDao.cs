@@ -5,6 +5,7 @@ using Capstone.Models.DatabaseModles;
 using Capstone.Security;
 using Capstone.Security.Models;
 using Capstone.Models.IncomingDTOs;
+using System.Reflection.PortableExecutable;
 
 namespace Capstone.DAO
 {
@@ -164,6 +165,49 @@ namespace Capstone.DAO
             }
         }
 
+        public int IsUsernameInDatabase (string username)
+        {
+            int isUsernameInDatabase = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("select Count(*) as isUserNameInDataBase from Users where username = @username", conn);
+                cmd.Parameters.AddWithValue("@username", username);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    isUsernameInDatabase = Convert.ToInt32(reader["isUserNameInDataBase"]);
+                }
+            }
+            return isUsernameInDatabase;
+        }
+
+        public void PromoteUserToAdmin (string username)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Users " +
+                    "Set user_role = 'admin' " +
+                    "where username = @username;", conn);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DemoteUserFromAdmin(string username)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Users " +
+                    "Set user_role = 'member' " +
+                    "where username = @username;", conn);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.ExecuteNonQuery();
+            }
+        }
 
         public User AddUser(string username, string password, string role)
         {
@@ -192,8 +236,23 @@ namespace Capstone.DAO
             return GetUser(username);
         }
 
+        public int GetUserIDByUsername (string username)
+        {
+            int UserID = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
 
-
+                SqlCommand cmd = new SqlCommand("select user_id from users where username = @username;", conn);
+                cmd.Parameters.AddWithValue("@username", username);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    UserID = Convert.ToInt32(reader["isUserNameInDataBase"]);
+                }
+            }
+            return UserID;
+        }
         private User GetUserFromReader(SqlDataReader reader)
         {
             User u = new User()
