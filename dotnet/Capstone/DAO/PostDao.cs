@@ -1,4 +1,5 @@
 ﻿using Capstone.DAO;
+using Capstone.Models.DatabaseModles;
 using Capstone.Models.IncomingDTOs;
 using Capstone.Models.IntermediaryModles;
 using Microsoft.AspNetCore.Mvc;
@@ -409,7 +410,7 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select user_id from Forum_Posts where post_id = @post_id", conn);
+                SqlCommand cmd = new SqlCommand("select user_id from Forum_Posts where post_id = @post_id;", conn);
                 cmd.Parameters.AddWithValue("@post_id", postID);
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -426,7 +427,7 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select user_id from Forum_Mods where forum_id = @forum_id", conn);
+                SqlCommand cmd = new SqlCommand("select user_id from Forum_Mods where forum_id = @forum_id;", conn);
                 cmd.Parameters.AddWithValue("@forum_id", forumID);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -435,6 +436,174 @@ namespace Capstone.DAO
                 }
             }
             return modsIDs;
+        }
+
+        public int IsUserOwnerOfForum(int userID, int forumID)
+        {
+            int isOwnerOfForum = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select Count(*) as isUserOwnerOfForum from Forums " +
+                    "where user_id = @user_id and forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    isOwnerOfForum = (Convert.ToInt32(reader["isUserOwnerOfForum"]));
+                }
+            }
+            return isOwnerOfForum;
+        }
+
+        public int IsUserModOfForum(string username, int forumID)
+        {
+            int isUserModOfForum = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select count(*) as isUserModOfForum from Forum_Mods " +
+                    "join users on Forum_Mods.user_id = users.user_id " +
+                    "where username = @username and forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    isUserModOfForum = (Convert.ToInt32(reader["isUserModOfForum"]));
+                }
+            }
+            return isUserModOfForum;
+        }
+
+        public void AddMod(int userID, int forumID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("insert into Forum_Mods (forum_id, user_id) " +
+                    "values (@forum_id, @user_id;);", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.Parameters.AddWithValue("@userID", userID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void RemoveMod(int userID, int forumID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("delete from Forum_Mods where user_id = @userID and forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.Parameters.AddWithValue("@userID", userID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int isForumFavorited (int userID, int forumID)
+        {
+            int isForumFavorited = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select Count(*) as isForumFavorited from Forum_Favorites " +
+                    "where user_id = @user_id and forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    isForumFavorited = (Convert.ToInt32(reader["isForumFavorited"]));
+                }
+            }
+            return isForumFavorited;
+        }
+
+        public void RemoveFavorite(int userID, int forumID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("delete from Forum_Favorites where user_id = @userID and forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.Parameters.AddWithValue("@userID", userID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void AddFavoriteForum(int userID, int forumID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("insert into Forum_Favorites (forum_id, user_id) " +
+                    "values (@forum_id, @user_id);", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.Parameters.AddWithValue("@userID", userID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int doseForumExist (int forumID)
+        {
+            int doseForumExist = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select Count(*) as doseForumExist from Forum_Favorites " +
+                    "where forum_id = @forum_id", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    doseForumExist = (Convert.ToInt32(reader["doseForumExist"]));
+                }
+            }
+            return doseForumExist;
+        }
+
+        public IsUpvotedDownVoted GetPostsUpvotesDownvotes (int userID, int postID, IsUpvotedDownVoted isUpvotedDownVoted)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select post_id, is_upvoted, is_downvoted from Post_Upvotes_Downvotes " +
+                    "where post_id = @post_id and user_id = @user_id;", conn);
+                cmd.Parameters.AddWithValue("@post_id", userID);
+                cmd.Parameters.AddWithValue("@user_id", postID);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    isUpvotedDownVoted.postID = Convert.ToInt32(reader["post_id"]);
+                    isUpvotedDownVoted.isUpvoted = Convert.ToBoolean(reader["is_upvoted"]);
+                    isUpvotedDownVoted.isDownvoted = Convert.ToBoolean(reader["is_downvoted"]);
+                }
+            }
+            return isUpvotedDownVoted;
+        }
+
+        public 
+        public int DosePostExist (int postID)
+        {
+            int dosePostExist = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select Count(*) as dosePostExist from Post_Upvotes_Downvotes " +
+                    "where post_id = @post_id", conn);
+                cmd.Parameters.AddWithValue("@post_id", postID);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    dosePostExist = (Convert.ToInt32(reader["dosePostExist"]));
+                }
+            }
+            return dosePostExist;
         }
 
         public void DeletePost(int postID) 
@@ -450,6 +619,7 @@ namespace Capstone.DAO
 >>>>>>> 46cf6b588cb4a8e51d57b1e06ee3c0d0aacdc1b2
             }
         }
+
 
         private void AddPostToHierarchy(ForumPostWithVotesAndUserName post, Dictionary<long, ForumPostWithVotesAndUserName> postDict)
         {

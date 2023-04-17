@@ -4,8 +4,6 @@ namespace Capstone.Models.IncomingDTOs
 {
     public class ChangeUpvoteDownvoteStateDTO
     {
-        public int ForumID { get; set; }
-
         public int PostID { get; set; }
 
         public ChangeUpvoteDownvoteStateDTO ()
@@ -13,9 +11,8 @@ namespace Capstone.Models.IncomingDTOs
 
         }
 
-        public ChangeUpvoteDownvoteStateDTO(int forumID, int postID)
+        public ChangeUpvoteDownvoteStateDTO(int postID)
         {
-            ForumID = forumID;
             PostID = postID;
         }
     }
