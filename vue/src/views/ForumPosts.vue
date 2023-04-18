@@ -1,28 +1,28 @@
 <template>
   <section class="container is-fullscreen">
-    <topbar class="topbar" />
-    <sidebarLeft />
-    <forum-list/>
-    <sidebar-right />
-    <logo />
+    <Topbar class="topbar" />
+    <SidebarLeft />
+    <PostList/>
+    <SidebarRight />
+    <Logo />
   </section>
 </template>
 
 <script>
 import Topbar from "../components/Topbar.vue";
-import sidebarLeft from "../components/SideBarLeft.vue";
-import sidebarRight from "../components/SidebarRight.vue";
-import logo from "../components/logo.vue";
-import ForumList from "../components/Forums/ForumList.vue"
+import SidebarLeft from "../components/SideBarLeft.vue";
+import SidebarRight from "../components/SidebarRight.vue";
+import Logo from "../components/logo.vue";
+import PostList from "../components/Posts/PostList.vue";
 export default {
   name: "forum",
   components: {
     Topbar,
-    sidebarLeft,
-    sidebarRight,
-    logo,
-    ForumList,
-  },
+    SidebarLeft,
+    SidebarRight,
+    Logo,
+    PostList,
+  }
 };
 </script>
 

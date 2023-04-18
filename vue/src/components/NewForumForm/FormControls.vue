@@ -1,60 +1,38 @@
 <template>
+  <div class="form-controls">
+    <button class="button" @click="createForm">
+      New Forum
+    </button>
+    <template>
+    <options-dropdown
     
-  <div >
-      <header class="card-header input" @click="
-            retrievePosts(forum);
-            togglePosts()
-          ">
-        <section class="card-header-title">
-          {{ forum.title }}
-          <span
-            ><time>{{ forum.FormattedCreateDate }} </time></span
-          >
-        </section>
-      </header>
-    </div>
+    />
+</template>
+  </div>
 </template>
 
 <script>
+import OptionsDropdown from '../Forums/OptionsDropdown.vue';
 export default {
-  name: "forumBody",
-  props: ['forum'],
+  components: { OptionsDropdown },
+  name: "FormControls",
   methods: {
-  addPosts() {
-      this.$store.commit("ADD_POSTS_BY_FORUMID");
-    },
-    
-  retrievePosts(forum) {
-        console.log('forum:', forum);
-        this.$store.dispatch('selectForum', forum)
-        this.addPosts();
-    },
-
-    togglePosts() {
-      this.$store.commit("TOGGLE_SOME_POSTS");
-    },
-    
-},
-
-
-  created() {
-
-  },
-  computed: {
-    
+    createForm() {
+      this.$emit("createForm");
+    }
   },
 };
 </script>
 
-<style>
-.mainBody {
-  grid-area: mainBody;
-  position: sticky;
-  overflow: hidden;
-  height: 87vh;
-  background-color: #faf3e3;
-  padding: 15px;
-  border-radius: 10px;
+<style scoped>
+.button {
+  background-color: #1a4d2e;
+  color: #faf3e3;
+}
+.box {
+  height: 100%;
+  background-color: #ff9f29;
+  z-index: 20;
 }
 #in-forum-title #forum-title {
   margin-bottom: 10px;
@@ -68,7 +46,9 @@ export default {
   align-items: center;
   width: 100%;
 }
-
+.replies {
+  color: #1a4d2e;
+}
 #in-forum-title .card-header h1 {
   display: inline-flex;
   color: #1a4d2e;
@@ -87,6 +67,7 @@ export default {
   margin-bottom: 10px;
   border-radius: 10px;
   border-color: transparent;
+  padding-left: 0;
   height: auto;
 }
 .card-footer a {
