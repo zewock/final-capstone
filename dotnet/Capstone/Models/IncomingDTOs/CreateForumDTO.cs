@@ -1,29 +1,35 @@
-﻿namespace Capstone.Models.IncomingDTOs
+﻿using System.Globalization;
+
+namespace Capstone.Models.IncomingDTOs
 {
     public class CreateForumDTO
     {
-        public string Content { get; set; }
+        public string ForumTitle { get; set; }
 
-        public string Image { get; set; }
+        public string ForumDescription { get; set; }
 
-        public string Topic { get; set; }
+        public string ForumTopic { get; set; }
 
-        public string Title { get; set; }
+        public string PostHeader { get; set; }
 
-        public string Description { get; set; }
+        public string PostContent { get; set; }
 
-        public CreateForumDTO()
-        {
+        public string PostImageURL { get; set; }
+
+        public CreateForumDTO() 
+        { 
 
         }
 
-        public CreateForumDTO(string content, string image, string topic, string title, string description)
+        public CreateForumDTO(string forumTitle, string forumDescription, string forumTopic, string postHeader, string postContent, string postImageURL)
         {
-            Content = content;
-            Image = image;
-            Topic = topic;
-            Title = title;
-            Description = description;
+            ForumTitle = forumTitle;
+            ForumDescription = forumDescription;
+            ForumTopic = forumTopic;
+            ForumTopic = forumTopic;
+            PostHeader = postHeader;
+            PostContent = postContent;
+            PostImageURL = postImageURL;
         }
     }
 }

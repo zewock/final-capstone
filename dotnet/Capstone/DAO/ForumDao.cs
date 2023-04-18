@@ -157,7 +157,54 @@ namespace Capstone.DAO
                     return rowsAffected;
                 }
         }
-        
+
+        public void PostToForum(ForumPost forumPost)
+        {
+            
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("insert into Forum_Posts (header, post_content, is_visible, forum_id, user_id, image_url) " +
+                    "values (@header, @post_content, @is_visible, @forum_id, @user_id, @image_url);", conn);
+                cmd.Parameters.AddWithValue("@header", forumPost.Header);
+                cmd.Parameters.AddWithValue("@post_content", forumPost.PostContent);
+                cmd.Parameters.AddWithValue("@is_visible", forumPost.IsVisable);
+                cmd.Parameters.AddWithValue("@forum_id", forumPost.ForumID);
+                cmd.Parameters.AddWithValue("@user_id", forumPost.UserID);
+                cmd.Parameters.AddWithValue("@image_url", forumPost.ImageURL);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int GetForumOwnerUserID(int forumID)
+        {
+            int forumOwnerID = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select USER_ID from Forums where forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    forumOwnerID = (Convert.ToInt32(reader["USER_ID"]));
+                }
+            }
+            return forumOwnerID;
+        }
+
+        public void DeletePost(int forumID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Forums " +
+                    "set is_visible = 0 " +
+                    "where forum_id = @forum_id", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.ExecuteNonQuery();
+            }
+        }
 
 
         /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
@@ -180,20 +227,6 @@ namespace Capstone.DAO
          {
 
          }*/
-
-
-        public Forum GetTransferFromReader(SqlDataReader reader)
-        {
-            Forum forum = new Forum(); 
-
-            forum.forumId = Convert.ToInt32(reader["forum_id"]);
-            forum.topic = Convert.ToString(reader["topic"]);
-            forum.ownerId = Convert.ToInt32(reader["owner_id"]);
-            forum.createdDate = Convert.ToDateTime(reader["create_date"]);
-            forum.isVisible = Convert.ToBoolean(reader["isVisible"]);
-            return forum;
-
-        }
     }
 }
 
