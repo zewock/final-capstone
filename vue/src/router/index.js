@@ -6,6 +6,9 @@ import Logout from '../views/Logout.vue'
 import Register from '../views/Register.vue'
 import store from '../store/index'
 import Forum from '../views/Forum.vue'
+import ForumPosts from '../views/ForumPosts'
+
+
 
 
 Vue.use(Router)
@@ -40,11 +43,11 @@ const router = new Router({
       }
     },
     {
-      path: '/forum/:id',
-      name: 'forum',
-      component: Forum,
+      path: '/forumPosts',
+      name: 'posts',
+      component: ForumPosts,
       meta: {
-        requiresAuth: false
+        requiresAuth:false
       }
     },
     {
