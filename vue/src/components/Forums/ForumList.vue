@@ -1,33 +1,56 @@
 <template>
-  <div>
-    <button id="post-header" class="card-header button" @click="RetrieveReply(post)">
-      <h1 class="card-header-title">
-        {{ post.title }}
-      </h1>
-    </button>
-    <div class="card-content">
-      <div class="content">
-        <p>@{{ post.authorUserName }}</p>
-        {{ post.content }}
-        <br />
-        <br />
-        <time>{{ formatDateTime(post.createDate) }}</time>
-      </div>
-    </div>
-    <footer class="card-footer">
-      <a href="#" class="card-footer-item">Like | {{ post.upVotes }}</a>
-      <a href="#" class="card-footer-item">Dislike | {{ post.downVotes }}</a>
-      <a href="#" class="card-footer-item">Favorite</a>
-    </footer>
-  </div>
+  <body class="mainBody">
+    <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)"/>
+    <FormControls @createForm="toggleVisibility(true)"/>
+    <ForumCard v-for="forum in formattedForums" :key="forum.ForumID" :forum="forum"/>
+    <!--<PostCard v-for="post in postsList" :key="post.postId" :post="post" @retrieveReply="RetrieveReply(post)"></PostCard>-->
+    <!--<ForumReply v-for="reply in replyList" :key="reply.replyId" :reply="reply"></ForumReply>-->
+  </body>
 </template>
 
 <script>
+import ForumForm from "../NewForumForm/ForumForm.vue";
+import ForumCard from "./ForumCard.vue";
+import FormControls from "../NewForumForm/FormControls.vue";
+
+
+
 export default {
-    name: "PostContent",
-    props: ['post'],
-    methods:{
-        formatDateTime(dateString) {
+  name: "forumList",
+  components: {
+    ForumForm,
+    ForumCard,
+    FormControls
+  },
+  data() {
+    return {
+    forums: [],
+    visible: false
+    }
+  },
+  methods: {
+   toggleVisibility(Bool) {
+    this.visible = Bool
+   },
+   ClearForm() {
+
+   },
+       formatDate(dateString) {
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+          throw new Error("Invalid date");
+        }
+        const year = date.getFullYear();
+        const month = ("0" + (date.getMonth() + 1)).slice(-2);
+        const day = ("0" + date.getDate()).slice(-2);
+        return `${month}-${day}-${year}`;
+      } catch (error) {
+        console.error(`Error formatting date: ${error.message}`);
+        return "Invalid date";
+      }
+    },
+    formatDateTime(dateString) {
       try {
         const date = new Date(dateString);
         if (isNaN(date)) {
@@ -46,29 +69,34 @@ export default {
         return "Invalid date";
       }
     },
-    RetrieveReply(post) {
-      if (post.postId > post.ParentPostId) {
-        if (!this.replyList[post.ParentPostId]) {
-          this.replyList[post.ParentPostId] = [];
-        }
-        post.replies.forEach((reply) => {
-          this.replyList[post.ParentPostId].push(reply);
-        });
-      }
-      this.postsList = post.replies;
-      if (post.replies.length > 0) {
-        this.replyList = this.replyList[post.replies[0].ParentPostId];
-      }
-    },
+          addForums() {
+      this.$store.commit("ADD_FORUMS");
     }
+  },
+  created() {
+   this.addForums();
+  }, 
+ 
+  computed: {
+    formattedForums() {
+      return this.$store.state.forums.map((forum) => {
+        const rawCreateDate = forum.createDate;
+        const formattedCreateDate = this.formatDate(rawCreateDate);
+        return {
+          ...forum,
+          FormattedCreateDate: formattedCreateDate,
+        };
+      });
+    },
+  }
 };
 </script>
 
-<style>
+<style scoped>
 .mainBody {
   grid-area: mainBody;
   position: sticky;
-  overflow: hidden;
+  overflow-y: auto;
   height: 87vh;
   background-color: #faf3e3;
   padding: 15px;
@@ -86,7 +114,9 @@ export default {
   align-items: center;
   width: 100%;
 }
-
+.replies {
+  color: #1a4d2e;
+}
 #in-forum-title .card-header h1 {
   display: inline-flex;
   color: #1a4d2e;
@@ -105,6 +135,7 @@ export default {
   margin-bottom: 10px;
   border-radius: 10px;
   border-color: transparent;
+  padding-left: 0;
   height: auto;
 }
 .card-footer a {

@@ -2,7 +2,7 @@
 {
     public class CreatePrivateMessageDTO
     {
-        public int OtherUserID { get; set; }
+        public string OtherUserUsername { get; set; }
 
         public string Message { get; set; }
 
@@ -11,10 +11,10 @@
 
         }
 
-        public CreatePrivateMessageDTO(string message, int otherUserID)
+        public CreatePrivateMessageDTO(string message, string otherUserUsername)
         {
             Message = message;
-            OtherUserID = otherUserID;
+            OtherUserUsername= otherUserUsername;
         }
     }
 }
