@@ -6,6 +6,7 @@ using Capstone.Security;
 using Capstone.Security.Models;
 using Capstone.Models.IncomingDTOs;
 using System.Reflection.PortableExecutable;
+using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
@@ -104,7 +105,7 @@ namespace Capstone.DAO
             return userRole;
         }
 
-        public void SetBanTime(BanUserDTO banUserDTO)
+        public void SetBanTime(BanUserDTO banUserDTO, int bannedUserID)
         {
             try
             {
@@ -115,7 +116,7 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand("update Users " +
                         "Set restore_ban_time = @restore_ban_time " +
                         "where user_id = @user_id;", conn);
-                    cmd.Parameters.AddWithValue("@user_id", banUserDTO.UserID);
+                    cmd.Parameters.AddWithValue("@user_id", bannedUserID);
                     cmd.Parameters.AddWithValue("@restore_ban_time", banUserDTO.DateBanLifted);
                     cmd.ExecuteNonQuery();
                 }
@@ -126,7 +127,7 @@ namespace Capstone.DAO
             }
         }
 
-        public void DeleteUsersContent (BanUserDTO banUserDTO)
+        public void DeleteUsersContent (int bannedUserID)
         {
             try
             {
@@ -137,7 +138,7 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand("update Forums " +
                         "Set is_visible = 0 " +
                         "where user_id = @user_id;", conn);
-                    cmd.Parameters.AddWithValue("@user_id", banUserDTO.UserID);
+                    cmd.Parameters.AddWithValue("@user_id", bannedUserID);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -146,22 +147,46 @@ namespace Capstone.DAO
                 throw;
             }
 
+            List<int> userPostsIDs = new List<int>();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("update Forum_Posts " +
-                        "Set is_visible = 0 " +
-                        "where user_id = @user_id;", conn);
-                    cmd.Parameters.AddWithValue("@user_id", banUserDTO.UserID);
-                    cmd.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand("select post_id from Forum_Posts where user_id = @user_id;", conn);
+                    cmd.Parameters.AddWithValue("@user_id", bannedUserID);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        userPostsIDs.Add(Convert.ToInt32(reader["post_id"]));
+                    }
                 }
             }
             catch (SqlException)
             {
                 throw;
+            }
+
+            for (int i = 0; i < userPostsIDs.Count; i++)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+
+                        SqlCommand cmd = new SqlCommand("update Forum_Posts " +
+                            "Set is_visible = 0 " +
+                            "where post_id = @post_id or parent_post_id = @post_id;", conn);
+                        cmd.Parameters.AddWithValue("@post_id", userPostsIDs[i]);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (SqlException)
+                {
+                    throw;
+                }
             }
         }
 
@@ -248,7 +273,7 @@ namespace Capstone.DAO
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    UserID = Convert.ToInt32(reader["isUserNameInDataBase"]);
+                    UserID = Convert.ToInt32(reader["user_id"]);
                 }
             }
             return UserID;

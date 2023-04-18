@@ -382,10 +382,11 @@ namespace Capstone.DAO
             return GetCompletePostThreads(postDict);
         }
 
-        public void PostToForum (PostToForumDTO postToForumDTO, int userID) 
+        public void PostToForum(PostToForumDTO postToForumDTO, int userID)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            if (postToForumDTO.ParentPostID != null)
             {
+<<<<<<< HEAD
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("insert into Forum_Posts " +
                     "(header, parent_post_id, post_content, is_visible, forum_id, user_id, image_url) " +
@@ -398,6 +399,40 @@ namespace Capstone.DAO
                 cmd.Parameters.AddWithValue("@user_id", userID);
                 cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
                 cmd.ExecuteNonQuery();
+=======
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("insert into Forum_Posts " +
+                        "(header, parent_post_id, post_content, is_visible, forum_id, user_id, image_url) " +
+                        "values (@header, @parent_post_id, @post_content, @is_visible, @forum_id, @user_id, @image_url);", conn);
+                    cmd.Parameters.AddWithValue("@header", postToForumDTO.Header);
+                    cmd.Parameters.AddWithValue("@parent_post_id", postToForumDTO.ParentPostID);
+                    cmd.Parameters.AddWithValue("@post_content", postToForumDTO.Content);
+                    cmd.Parameters.AddWithValue("@is_visible", true);
+                    cmd.Parameters.AddWithValue("@forum_id", postToForumDTO.ForumID);
+                    cmd.Parameters.AddWithValue("@user_id", userID);
+                    cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            else
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("insert into Forum_Posts " +
+                        "(header, post_content, is_visible, forum_id, user_id, image_url) " +
+                        "values (@header, @post_content, @is_visible, @forum_id, @user_id, @image_url);", conn);
+                    cmd.Parameters.AddWithValue("@header", postToForumDTO.Header);
+                    cmd.Parameters.AddWithValue("@post_content", postToForumDTO.Content);
+                    cmd.Parameters.AddWithValue("@is_visible", true);
+                    cmd.Parameters.AddWithValue("@forum_id", postToForumDTO.ForumID);
+                    cmd.Parameters.AddWithValue("@user_id", userID);
+                    cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
+                    cmd.ExecuteNonQuery();
+                }
+>>>>>>> cfa7fc7995eac6df447a2ac84f70b544f1c8d91a
             }
         }
 
@@ -480,9 +515,9 @@ namespace Capstone.DAO
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("insert into Forum_Mods (forum_id, user_id) " +
-                    "values (@forum_id, @user_id;);", conn);
+                    "values (@forum_id, @user_id);", conn);
                 cmd.Parameters.AddWithValue("@forum_id", forumID);
-                cmd.Parameters.AddWithValue("@userID", userID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -499,7 +534,7 @@ namespace Capstone.DAO
             }
         }
 
-        public int isForumFavorited (int userID, int forumID)
+        public int IsForumFavorited (int userID, int forumID)
         {
             int isForumFavorited = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -538,18 +573,18 @@ namespace Capstone.DAO
                 SqlCommand cmd = new SqlCommand("insert into Forum_Favorites (forum_id, user_id) " +
                     "values (@forum_id, @user_id);", conn);
                 cmd.Parameters.AddWithValue("@forum_id", forumID);
-                cmd.Parameters.AddWithValue("@userID", userID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public int doseForumExist (int forumID)
+        public bool DoseForumExist (int forumID)
         {
             int doseForumExist = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select Count(*) as doseForumExist from Forum_Favorites " +
+                SqlCommand cmd = new SqlCommand("select Count(*) as doseForumExist from Forums " +
                     "where forum_id = @forum_id", conn);
                 cmd.Parameters.AddWithValue("@forum_id", forumID);
 
@@ -559,7 +594,7 @@ namespace Capstone.DAO
                     doseForumExist = (Convert.ToInt32(reader["doseForumExist"]));
                 }
             }
-            return doseForumExist;
+            return doseForumExist >= 1;
         }
 
         public IsUpvotedDownVoted GetPostsUpvotesDownvotes (int userID, int postID, IsUpvotedDownVoted isUpvotedDownVoted)
@@ -569,9 +604,8 @@ namespace Capstone.DAO
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("select post_id, is_upvoted, is_downvoted from Post_Upvotes_Downvotes " +
                     "where post_id = @post_id and user_id = @user_id;", conn);
-                cmd.Parameters.AddWithValue("@post_id", userID);
-                cmd.Parameters.AddWithValue("@user_id", postID);
-
+                cmd.Parameters.AddWithValue("@post_id", postID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
@@ -582,15 +616,21 @@ namespace Capstone.DAO
             }
             return isUpvotedDownVoted;
         }
+<<<<<<< HEAD
         public int DosePostExist (int postID)
+=======
+
+        public bool DosePostUpvoteDownExist (int postID, int forumID)
+>>>>>>> cfa7fc7995eac6df447a2ac84f70b544f1c8d91a
         {
             int dosePostExist = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("select Count(*) as dosePostExist from Post_Upvotes_Downvotes " +
-                    "where post_id = @post_id", conn);
+                    "where post_id = @post_id and forum_id = @forum_id;", conn);
                 cmd.Parameters.AddWithValue("@post_id", postID);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
 
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -598,7 +638,89 @@ namespace Capstone.DAO
                     dosePostExist = (Convert.ToInt32(reader["dosePostExist"]));
                 }
             }
-            return dosePostExist;
+            return dosePostExist >= 1;
+        }
+
+        public bool DosePostExist(int postID, int forumID)
+        {
+            int dosePostExist = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select Count(*) as dosePostExist from Forum_Posts " +
+                    "where post_id = @post_id and forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@post_id", postID);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    dosePostExist = (Convert.ToInt32(reader["dosePostExist"]));
+                }
+            }
+            return dosePostExist >= 1;
+        }
+
+        public void CreateUpvoteDownvote (PostsUpvotesDownvotes postsUpvotesDownvotes) 
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("insert into Post_Upvotes_Downvotes (forum_id, post_id, is_upvoted, is_downvoted, user_id) " +
+                    "values (@forum_id, @post_id, @is_upvoted, @is_downvoted, @user_id);", conn);
+                cmd.Parameters.AddWithValue("@forum_id", postsUpvotesDownvotes.forumId);
+                cmd.Parameters.AddWithValue("@user_id", postsUpvotesDownvotes.userId);
+                cmd.Parameters.AddWithValue("@post_id", postsUpvotesDownvotes.postId);
+                cmd.Parameters.AddWithValue("@is_upvoted", postsUpvotesDownvotes.isUpVoted);
+                cmd.Parameters.AddWithValue("@is_downvoted", postsUpvotesDownvotes.isDownVoted);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteUpvoteDownvote (int userID, int postID) 
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("delete from Post_Upvotes_Downvotes where user_id = @user_id and post_id = @post_id;", conn);
+                cmd.Parameters.AddWithValue("@post_id", postID);
+                cmd.Parameters.AddWithValue("@user_id", userID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void UpdateUpvoteDownvote (PostsUpvotesDownvotes postsUpvotesDownvotes)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Post_Upvotes_Downvotes " +
+                    "set is_upvoted = @is_upvoted, is_downvoted = @is_downvoted, create_date = @create_date " +
+                    "where user_id = @user_id and post_id = @post_id", conn);
+                cmd.Parameters.AddWithValue("@is_upvoted", postsUpvotesDownvotes.isUpVoted);
+                cmd.Parameters.AddWithValue("@is_downvoted", postsUpvotesDownvotes.isDownVoted);
+                cmd.Parameters.AddWithValue("@create_date", postsUpvotesDownvotes.createDate);
+                cmd.Parameters.AddWithValue("@user_id", postsUpvotesDownvotes.userId);
+                cmd.Parameters.AddWithValue("@post_id", postsUpvotesDownvotes.postId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int GetForumOwnerUserID (int forumID) 
+        {
+            int forumOwnerID = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select USER_ID from Forums where forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    forumOwnerID = (Convert.ToInt32(reader["USER_ID"]));
+                }
+            }
+            return forumOwnerID;
         }
 
         public void DeletePost(int postID) 
@@ -608,7 +730,7 @@ namespace Capstone.DAO
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("update Forum_Posts " +
                     "set is_visible = 0 " +
-                    "where post_id = @post_id;", conn);
+                    "where post_id = @post_id or parent_post_id = @post_id;", conn);
                 cmd.Parameters.AddWithValue("@post_id", postID);
                 cmd.ExecuteNonQuery();
             }
@@ -657,6 +779,7 @@ namespace Capstone.DAO
             post.userId = Convert.ToInt32(reader["user_id"]);
             post.upVotes = Convert.ToInt32(reader["upvotes"]);
             post.downVotes = Convert.ToInt32(reader["downvotes"]);
+
             if (readDepth)
             {
                 post.depth = Convert.ToInt32(reader["depth"]);

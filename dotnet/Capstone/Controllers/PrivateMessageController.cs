@@ -103,13 +103,20 @@ namespace Capstone.Controllers
                 return StatusCode(401, "You need to be logged in to send a private message");
             }
 
+            int otherUsersID = -1;
+            otherUsersID = userDao.GetUserIDByUsername(createPrivateMessageDTO.OtherUserUsername);
+            if (otherUsersID == -1)
+            {
+                return StatusCode(401, "No such  receiving user exists");
+            }
+
             //Data valid?
 
             PrivateMessage privateMessage = new PrivateMessage();
             privateMessage.isVisible = true;
             privateMessage.message = createPrivateMessageDTO.Message;
             privateMessage.fromUserId = tokenUserId;
-            privateMessage.toUserId = createPrivateMessageDTO.OtherUserID;
+            privateMessage.toUserId = otherUsersID;
 
             try
             {
@@ -135,9 +142,11 @@ namespace Capstone.Controllers
                 return StatusCode(401, "You need to be logged in to delete a private message");
             }
 
-            PrivateMessage privateMessage = privateMessageDao.GetPrivateMessage(deletePrivateMessageDTO.MessageID);
+            PrivateMessage privateMessage = new PrivateMessage();
+            privateMessage.messageId = -1;
+            privateMessage = privateMessageDao.GetPrivateMessage(deletePrivateMessageDTO.MessageID);
 
-            if (privateMessage.messageId == 0)
+            if (privateMessage.messageId == -1)
             {
                 return StatusCode(400, "No such private message exists");
             }

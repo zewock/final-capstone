@@ -5,7 +5,7 @@ namespace Capstone.Models.IncomingDTOs
 {
     public class BanUserDTO
     {
-        public int UserID { get; set; }
+        public string Username { get; set; }
 
         public DateTime DateBanLifted { get; set; }
 
@@ -16,9 +16,9 @@ namespace Capstone.Models.IncomingDTOs
 
         }
 
-        public BanUserDTO(int userID, DateTime dateBanLifted, bool deleteAllTraffic)
+        public BanUserDTO(string username, DateTime dateBanLifted, bool deleteAllTraffic)
         {
-            UserID = userID;
+            Username = username;
             DateBanLifted = dateBanLifted;
             DeleteAllTraffic = deleteAllTraffic;
         }
