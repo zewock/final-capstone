@@ -386,20 +386,7 @@ namespace Capstone.DAO
         {
             if (postToForumDTO.ParentPostID != null)
             {
-<<<<<<< HEAD
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into Forum_Posts " +
-                    "(header, parent_post_id, post_content, is_visible, forum_id, user_id, image_url) " +
-                    "values (@header, @parent_post_id, @post_content, @is_visible, @forum_id, @user_id, @image_url);", conn);
-                cmd.Parameters.AddWithValue("@header", postToForumDTO.Header);
-                cmd.Parameters.AddWithValue("@parent_post_id", postToForumDTO.ParentPostID);
-                cmd.Parameters.AddWithValue("@post_content", postToForumDTO.Content);
-                cmd.Parameters.AddWithValue("@is_visible", true);
-                cmd.Parameters.AddWithValue("@forum_id", postToForumDTO.ForumID);
-                cmd.Parameters.AddWithValue("@user_id", userID);
-                cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
-                cmd.ExecuteNonQuery();
-=======
+
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
@@ -432,7 +419,6 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@image_url", postToForumDTO.Image);
                     cmd.ExecuteNonQuery();
                 }
->>>>>>> cfa7fc7995eac6df447a2ac84f70b544f1c8d91a
             }
         }
 
@@ -616,12 +602,10 @@ namespace Capstone.DAO
             }
             return isUpvotedDownVoted;
         }
-<<<<<<< HEAD
-        public int DosePostExist (int postID)
-=======
+
 
         public bool DosePostUpvoteDownExist (int postID, int forumID)
->>>>>>> cfa7fc7995eac6df447a2ac84f70b544f1c8d91a
+
         {
             int dosePostExist = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))

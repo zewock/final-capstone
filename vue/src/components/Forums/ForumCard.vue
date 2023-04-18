@@ -1,12 +1,11 @@
 <template>
   <div class="card">
-    <router-link to="/ForumPosts"><header class="card-header"  @click="retrievePosts(forum)" > 
+    <header class="card-header"  @click="retrievePosts(forum)" > 
        <section class="card-header-title input" >
        <h1>{{ forum.title }}</h1>
        <p>Topic: {{forum.topic}}<span><time>{{ forum.FormattedCreateDate }} </time></span></p>
     </section>
   </header>
-  </router-link>
   </div>
 </template>
 

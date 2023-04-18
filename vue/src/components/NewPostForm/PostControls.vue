@@ -1,38 +1,35 @@
 <template>
-  <div class="mainBody">
-    <PostCard v-for="post in this.$store.state.postsList" :key="post.postId" :post="post" />
-  </div>
+  <div class="post-controls">
+    <button class="button" @click="createPost">
+      New Post
+    </button>
+    <options-dropdown
+    />
+    </div>
 </template>
 
 <script>
-import PostCard from "../Posts/PostCard.vue";
+import OptionsDropdown from '../Forums/OptionsDropdown.vue';
 export default {
-  name: "PostList",
-  components: {PostCard},
-
-  created() {
-    this.getForumPosts();
-  },
+  components: { OptionsDropdown },
+  name: "PostControls",
   methods: {
-    sortPostsByDate(posts) {
-      return posts
-        .slice()
-        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+    createPost() {
+      this.$emit("createPost");
     }
-  }
+  },
 };
 </script>
 
-
 <style scoped>
-.mainBody {
-  grid-area: mainBody;
-  position: sticky;
-  overflow-y: auto;
-  height: 87vh;
-  background-color: #faf3e3;
-  padding: 15px;
-  border-radius: 10px;
+.button {
+  background-color: #1a4d2e;
+  color: #faf3e3;
+}
+.box {
+  height: 100%;
+  background-color: #ff9f29;
+  z-index: 20;
 }
 #in-forum-title #forum-title {
   margin-bottom: 10px;

@@ -2,7 +2,6 @@
   <section class="container is-fullscreen">
     <Topbar class="topbar" />
     <SidebarLeft />
-    <PostList/>
     <SidebarRight />
     <Logo />
   </section>
@@ -13,7 +12,6 @@ import Topbar from "../components/Topbar.vue";
 import SidebarLeft from "../components/SideBarLeft.vue";
 import SidebarRight from "../components/SidebarRight.vue";
 import Logo from "../components/logo.vue";
-import PostList from "../components/Posts/PostList.vue";
 export default {
   name: "forum",
   components: {
@@ -21,7 +19,6 @@ export default {
     SidebarLeft,
     SidebarRight,
     Logo,
-    PostList,
   }
 };
 </script>
