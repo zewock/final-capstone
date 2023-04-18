@@ -39,7 +39,8 @@ export default {
       this.showReplies = !this.showReplies;
     }
   },
-};
+}
+
 </script>
 
 <style scoped>

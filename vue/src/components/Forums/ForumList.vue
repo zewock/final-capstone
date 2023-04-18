@@ -1,13 +1,25 @@
 <template>
   <body class="mainBody">
-    <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)"/>
-    <FormControls @createForm="toggleVisibility(true)"/>
+    <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)" />
+    <FormControls @createForm="toggleVisibility(true)" v-if="$store.state.posts == false" />
+    <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
+    <PostControls @createPost="togglePostVisibility(true)" v-if="$store.state.posts == true"/>
     <div v-if="$store.state.posts == false">
-    <ForumCard v-for="forum in formattedForums" :key="forum.ForumID" :forum="forum"/>
+    <ForumCard
+      v-for="forum in formattedForums"
+      :key="forum.ForumID"
+      :forum="forum"
+    />
     </div>
     <div v-if="$store.state.posts == true">
-    <PostCard v-for="post in this.$store.state.postsList" :key="post.postId" :post="post" />
+    <PostCard
+      v-for="post in this.$store.state.postsList"
+      :key="post.postId"
+      :post="post"
+    />
     </div>
+  
+    <!--<ForumReply v-for="reply in replyList" :key="reply.replyId" :reply="reply"></ForumReply>-->
   </body>
 </template>
 
@@ -16,8 +28,8 @@ import ForumForm from "../NewForumForm/ForumForm.vue";
 import ForumCard from "./ForumCard.vue";
 import FormControls from "../NewForumForm/FormControls.vue";
 import PostCard from "../Posts/PostCard.vue";
-
-
+import PostForm from "../NewPostForm/PostForm.vue";
+import PostControls from "../NewPostForm/PostControls.vue";
 
 export default {
   name: "forumList",
@@ -25,22 +37,27 @@ export default {
     ForumForm,
     ForumCard,
     FormControls,
-    PostCard
+    PostCard,
+    PostForm,
+    PostControls,
   },
   data() {
     return {
-    forums: [],
-    visible: false
-    }
+      forums: [],
+      posts: [],
+      visible: false,
+      visiblePostForm: false,
+    };
   },
   methods: {
-   toggleVisibility(Bool) {
-    this.visible = Bool
-   },
-   ClearForm() {
-
-   },
-       formatDate(dateString) {
+    toggleVisibility(Bool) {
+      this.visible = Bool;
+    },
+    togglePostVisibility(Bool) {
+      this.visiblePostForm = Bool;
+    },
+    ClearForm() {},
+    formatDate(dateString) {
       try {
         const date = new Date(dateString);
         if (isNaN(date)) {
@@ -74,7 +91,7 @@ export default {
         return "Invalid date";
       }
     },
-          addForums() {
+    addForums() {
       this.$store.commit("ADD_FORUMS");
     },
      sortPostsByDate(posts) {
@@ -82,12 +99,14 @@ export default {
         .slice()
         .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
     },
-   
+    createPost() {
+      this.$store.commit("ADD_POSTS");
+    },
   },
   created() {
-   this.addForums();
-  }, 
- 
+    this.addForums();
+  },
+
   computed: {
     formattedForums() {
       return this.$store.state.forums.map((forum) => {
@@ -99,7 +118,7 @@ export default {
         };
       });
     },
-  }
+  },
 };
 </script>
 

@@ -67,5 +67,6 @@ export default {
 .body-container {
   height: 100%;
   overflow-y: auto;
+  border-radius: 10px;
 }
 </style>

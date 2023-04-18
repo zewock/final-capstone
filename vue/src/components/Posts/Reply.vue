@@ -1,14 +1,18 @@
 <template>
   <div>
     <div class="post-card" :class="{ 'root-post': isRootPost }">
-      <button id="post-header" class="card-header button" @click="toggleReplies">
+      <button
+        id="post-header"
+        class="card-header button"
+        @click="toggleReplies"
+      >
         <h1 class="card-header-title">
           {{ reply.title }}
-     Comments: {{ reply.replies.length }}
+          Comments: {{ reply.replies.length }}
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
-      <div class="card-content">
+      <div class="card-content replies">
         <div class="content">
           <p>@{{ reply.username }}</p>
           {{ reply.content }}
@@ -51,7 +55,7 @@ export default {
   },
   methods: {
     formatDateTime(dateString) {
-        try {
+      try {
         const date = new Date(dateString);
         if (isNaN(date)) {
           throw new Error("Invalid date");
@@ -72,7 +76,13 @@ export default {
     toggleReplies() {
       this.showReplies = !this.showReplies;
     },
+    retrievePosts(reply) {
+      this.$store.dispatch("selectPost", reply);
+    },
   },
+  created(){
+    this.retrievePosts(this.reply);
+  }
 };
 </script>
 
@@ -111,6 +121,4 @@ export default {
   background-color: #faf3e3;
   color: #1a4d2e;
 }
-
-
 </style>

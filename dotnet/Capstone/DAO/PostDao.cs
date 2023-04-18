@@ -386,6 +386,7 @@ namespace Capstone.DAO
         {
             if (postToForumDTO.ParentPostID != null)
             {
+
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
@@ -614,7 +615,9 @@ namespace Capstone.DAO
             return isUpvotedDownVoted;
         }
 
+
         public bool DosePostUpvoteDownExist (int postID, int forumID)
+
         {
             int dosePostExist = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
