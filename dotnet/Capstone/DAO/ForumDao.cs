@@ -51,7 +51,7 @@ namespace Capstone.DAO
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT forums.forum_id, forums.topic, forums.user_id, forums.create_date, users.username, forums.title, forums.description, " +
+                SqlCommand cmd = new SqlCommand("SELECT forums.forum_id, forums.topic, forums.user_id, forums.create_date, users.username, forums.title, forums.description, forums.most_recent_post_date, " +
                                                 "(CASE WHEN forum_favorites.user_id = forums.user_id THEN 1 ELSE 0 END) AS is_favorite, " +
                                                 "MAX(CASE WHEN Forum_Mods.user_id = @user_id THEN 1 ELSE 0 END) AS is_moderator, " +
                                                 "MAX(CASE WHEN Forums.user_id = 1 THEN 1 ELSE 0 END) AS is_owner, " +
@@ -63,7 +63,7 @@ namespace Capstone.DAO
                                                 "LEFT JOIN users ON Forums.user_id = users.user_id " +
                                                 "LEFT JOIN forum_favorites ON forums.forum_id = forum_favorites.forum_id AND forum_favorites.user_id = @user_id " +
                                                 "WHERE forums.is_visible = 1 OR forums.user_id = @user_id " +
-                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id, forums.title, forums.description " +
+                                                "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id, forums.title, forums.description, forums.most_recent_post_date " +
                                                 "order by forum_id;", conn);
                 cmd.Parameters.AddWithValue("@user_id", userId);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -87,6 +87,7 @@ namespace Capstone.DAO
                     forumsArray.Title = Convert.ToString(reader["title"]);
                     forumsArray.Description = Convert.ToString(reader["description"]);
                     forumsArray.IsOwner = Convert.ToBoolean(reader["is_owner"]);
+                    forumsArray.MostRecentPostDate = Convert.ToDateTime(reader["most_recent_post_date"]);
                     forumsList.Add(forumsArray);
                 }
             }
