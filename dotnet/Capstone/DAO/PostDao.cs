@@ -420,6 +420,18 @@ namespace Capstone.DAO
                     cmd.ExecuteNonQuery();
                 }
             }
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Forums " +
+                    "set most_recent_post_date = @most_recent_post_date " +
+                    "where forum_id = @forum_id", conn);
+                cmd.Parameters.AddWithValue("@forum_id", postToForumDTO.ForumID);
+                cmd.Parameters.AddWithValue("@most_recent_post_date", DateTime.Now);
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
         public int GetUserIDByPostID(int postID)
@@ -706,6 +718,7 @@ namespace Capstone.DAO
             }
             return forumOwnerID;
         }
+
 
         public void DeletePost(int postID) 
         {
