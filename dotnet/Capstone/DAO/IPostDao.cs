@@ -25,6 +25,7 @@ namespace Capstone.DAO
         public void AddFavoriteForum(int userID, int forumID);
         public bool DoseForumExist(int forumID);
         public IsUpvotedDownVoted GetPostsUpvotesDownvotes(int userID, int postID, IsUpvotedDownVoted isUpvotedDownVoted);
+        public bool DosePostUpvoteDownExist(int postID, int forumID);
         public bool DosePostExist(int postID, int forumID);
         public void CreateUpvoteDownvote(PostsUpvotesDownvotes postsUpvotesDownvotes);
         public void DeleteUpvoteDownvote(int userID, int postID);

@@ -33,7 +33,7 @@ export default {
   methods: {
      RetrievePosts(forum) {
       PostService.getPost(forum.forumID).then((response) => {
-        this.postsList = response.data.value;
+        this.postsList = response.data;
 
       });
     },

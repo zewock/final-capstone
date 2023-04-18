@@ -176,6 +176,36 @@ namespace Capstone.DAO
             }
         }
 
+        public int GetForumOwnerUserID(int forumID)
+        {
+            int forumOwnerID = -1;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select USER_ID from Forums where forum_id = @forum_id;", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    forumOwnerID = (Convert.ToInt32(reader["USER_ID"]));
+                }
+            }
+            return forumOwnerID;
+        }
+
+        public void DeletePost(int forumID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("update Forums " +
+                    "set is_visible = 0 " +
+                    "where forum_id = @forum_id", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
 
         /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
          public List<Forum> getFavoritedForumsByUserId(int userID)

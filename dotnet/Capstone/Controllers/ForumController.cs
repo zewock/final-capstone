@@ -137,6 +137,35 @@ namespace Capstone.Controllers
 
             return StatusCode(200, "New Forum Created");
         }
+
+        [HttpPut("/DeleteForum")]
+        public ActionResult DeleteForum(DeleteForumDTO deleteForumDTO)
+        {
+            int tokenUserId;
+            try
+            {
+                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "You need to be logged in to create a forum");
+            }
+
+            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
+            int forumOwnerID = forumDao.GetForumOwnerUserID(deleteForumDTO.ForumId);
+
+            if (tokenUserRole == "admin" || forumOwnerID == tokenUserId)
+            {
+                forumDao.DeletePost(deleteForumDTO.ForumId);
+                return StatusCode(200, "Forum successfully deleted");
+            }
+            else
+            {
+                return StatusCode(401, "Only admins or the post owner can delete this forum");
+            }
+
+        }
+
         /*
         [HttpPost("/ChangeFavoriteForumState")]
 

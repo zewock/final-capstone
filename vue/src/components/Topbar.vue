@@ -21,14 +21,14 @@
             Home
           </router-link>
 
-          <a class="navbar-item"> Documentation </a>
+          <a class="navbar-item"> Placeholder </a>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link"> More </a>
 
             <div class="navbar-dropdown">
               <a class="navbar-item"> About </a>
-              <a class="navbar-item"> Jobs </a>
+              <a class="navbar-item"> The Team </a>
               <a class="navbar-item"> Contact </a>
               <hr class="navbar-divider" />
               <a class="navbar-item"> Report an issue </a>
@@ -51,11 +51,6 @@
               <a class="button" v-if="$store.state.token == ''">
                 <router-link v-bind:to="{ name: 'login' }">
                   <strong>Log in</strong>
-                </router-link>
-              </a>
-              <a class="button" v-if="$store.state.token != ''">
-                <router-link v-bind:to="{ name: '' }">
-                  <strong>Account</strong>
                 </router-link>
               </a>
               <a class="button" v-if="$store.state.token != ''">

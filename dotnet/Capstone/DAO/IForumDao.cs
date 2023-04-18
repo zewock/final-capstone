@@ -14,6 +14,8 @@ namespace Capstone.DAO
         public List<ForumFavoriteAndUsername> GetAllForumFavorites();
         public int ToggleForumFavorites(int tokenUserId, int favoriteForumId);
         public void PostToForum(ForumPost forumPost);
+        public int GetForumOwnerUserID(int forumID);
+        public void DeletePost(int forumID);
 
 
     }
