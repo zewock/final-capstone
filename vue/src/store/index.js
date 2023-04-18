@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import ForumService from "../services/ForumService";
+import PostService from "../services/PostService"
 
 Vue.use(Vuex)
 
@@ -31,6 +33,18 @@ export default new Vuex.Store({
     user: currentUser || {},
     topic: '',
     forums: [],
+    postsList: [],
+    replyList: [],
+    form: false,
+    menu: false,
+    selectForum: null,
+    newForum: {
+      image: "",
+      topic: "",
+      title: "",
+      description: "",
+    },
+    posts: false,
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {
@@ -50,6 +64,33 @@ export default new Vuex.Store({
       state.token = '';
       state.user = {};
       axios.defaults.headers.common = {};
+    },
+    TOGGLE_SOME_POSTS(state) {
+      state.posts = !state.posts
+    },
+    ADD_FORUMS(state) {
+      ForumService.getForums().then((response) => {
+        state.forums = response.data.forumArray;
+  
+      });
+    },
+    SELECT_FORUM(state, forum) {
+      state.selectForum = forum
+    },
+    ADD_POSTS_BY_FORUMID(state) {
+      PostService.getPost(state.selectForum.forumID).then((response) => {
+        state.postsList = response.data;
+      });
+    },
+   
+  },
+  actions: {
+    selectForum(context, forum) {
+      context.commit('SELECT_FORUM', forum)
     }
+  },
+  getters: {
+  
   }
+
 })
