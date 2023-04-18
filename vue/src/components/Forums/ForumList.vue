@@ -1,7 +1,9 @@
 <template>
   <body class="mainBody">
     <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)" />
-    <FormControls @createForm="toggleVisibility(true)" />
+    <FormControls @createForm="toggleVisibility(true)" v-if="$store.state.posts == false" />
+    <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
+    <PostControls @createPost="togglePostVisibility(true)" v-if="$store.state.posts == true"/>
     <div v-if="$store.state.posts == false">
     <ForumCard
       v-for="forum in formattedForums"
@@ -9,8 +11,6 @@
       :forum="forum"
     />
     </div>
-    
-    <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
     <div v-if="$store.state.posts == true">
     <PostCard
       v-for="post in this.$store.state.postsList"
@@ -18,7 +18,7 @@
       :post="post"
     />
     </div>
-    <PostControls @createForm="togglePostVisibility(true)" />
+  
     <!--<ForumReply v-for="reply in replyList" :key="reply.replyId" :reply="reply"></ForumReply>-->
   </body>
 </template>

@@ -4,7 +4,7 @@ export default {
     getPost(forumId){
         return axios.get(`/ForumPosts/${forumId}`)
     },
-    create(newPost){
+    createPost(newPost){
         return axios.post('/PostToForum', newPost)
     }
 }

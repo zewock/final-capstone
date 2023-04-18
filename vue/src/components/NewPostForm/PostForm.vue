@@ -9,7 +9,7 @@
             type="text"
             placeholder="Text input"
             value="bulma"
-            v-model="newPost.title"
+            v-model="newPost.header"
           />
           <span class="icon is-small is-left">
             <i class="fas fa-font"></i>
@@ -45,8 +45,7 @@
           <button
             class="button"
             @click="
-              SavePost();
-              refreshPost();
+              SavePost(newPost);
             "
           >
             Submit
@@ -60,35 +59,24 @@
 </template>
 
 <script>
-import PostService from "@/services/PostService"
 export default {
-  name: "ForumForm",
+  name: "PostForm",
 data() {
   return {
     newPost: {
       image: "",
-      topic: "",
-      title: "",
+      header: "",
       content: "",
+      forumID: null,
+      parentPostID: null,
     },
       visible: false,
   }
 },
     methods: {
-    SavePost() {
-    PostService.create(this.newPost).then((response) => {
-      if (response.status === 201) {
-        alert("Post Created");
-        this.forums.push(response.data);
-        this.form = false;
-        }
-      })
+    SavePost(newPost) {
+      this.$store.dispatch('savePost', newPost);
     },
-      refreshPost() {
-      this.$nextTick(() => {
-      this.$router.go();
-    });
-  },
     onPostCancel() {
       this.$emit("cancelForm");
     }

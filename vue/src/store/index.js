@@ -38,11 +38,15 @@ export default new Vuex.Store({
     form: false,
     menu: false,
     selectForum: null,
+    selectPost: null,
     newForum: {
       image: "",
       topic: "",
       title: "",
       description: "",
+    },
+    newPost: {
+      forumID: null
     },
     posts: false,
   },
@@ -71,7 +75,7 @@ export default new Vuex.Store({
     ADD_FORUMS(state) {
       ForumService.getForums().then((response) => {
         state.forums = response.data.forumArray;
-  
+
       });
     },
     SELECT_FORUM(state, forum) {
@@ -84,16 +88,38 @@ export default new Vuex.Store({
     },
     SAVE_FORUM(state, forum) {
       state.forums.push(forum)
+    },
+    SELECT_POST(state, post) {
+      state.selectPost = post
+    },
+    SAVE_POST(state, newPost) {
+     
+      newPost.forumID = state.selectForum.forumID
+      console.log(newPost)
+      PostService.createPost(newPost).then((response) => {
+        if (response.status === 201) {
+            alert("post created")
+        }
+      })
     }
-   
+
   },
   actions: {
     selectForum(context, forum) {
       context.commit('SELECT_FORUM', forum)
     },
+    selectPost(context, post) {
+      context.commit("SELECT_POST", post)
+    },
+    selectNewPost(context, newPost) {
+      context.commit('SAVE_POST', newPost)
+    },
+    savePost(context, newPost) {
+      context.commit('SAVE_POST', newPost);
+    },
   },
   getters: {
-  
+
   }
 
 })
