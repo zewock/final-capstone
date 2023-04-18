@@ -97,61 +97,35 @@
           </section>
         </header>
       </div>
-      <div v-if="posts == false">
+
+      <div v-if="$store.state.posts == false">
         <div
           class="card"
-          v-for="forum in formattedForums"
+          v-for="forum in this.formattedForums"
           :key="forum.ForumID"
-          @click="
-            posts = true;
-            RetrievePosts(forum);
-          "
         >
-          <header class="card-header input">
-            <section class="card-header-title">
-              {{ forum.title }} <br/>
-              Topic: {{ forum.topic }}
-              <span
-                ><time>{{ forum.FormattedCreateDate }} </time></span
-              >
-            </section>
-          </header>
+          <forum-body :forum="forum" />
         </div>
       </div>
 
-      <div class="card" v-else>
+      <div class="card" v-if="$store.state.posts == true">
         <div id="in-forum-title">
           <header id="forum-title" class="card-header input">
             <section class="card-header-title">
-              <h1>{{ selectForum.title }}</h1>
+              <h1>{{ $store.state.selectForum.title }}</h1>
               <p>
-                {{ selectForum.description }}<br /> <br />
-                {{ selectForum.topic }}<br />
-                @{{ selectForum.ownerUsername }}
+                {{ $store.state.selectForum.description }}<br /><br />
+                @{{ $store.state.selectForum.ownerUsername }}
               </p>
             </section>
           </header>
-          <div class="post-card" v-for="post in postsList" :key="post.postId" @click="RetrieveReply(post)">
-            <button id="post-header" class="card-header button">
-              <h1 class="card-header-title">
-                {{ post.title }}
-              </h1>
-              <p class="replies">Replies: {{ post.replies.length }}</p>
-            </button>
-            <div class="card-content">
-              <div class="content">
-                <p>@{{ post.username }}</p>
-                {{ post.content }}
-                <br />
-                <br />
-                <time>{{ formatDateTime(post.createDate) }}</time>
-              </div>
-            </div>
-            <footer class="card-footer">
-              <a class="card-footer-item">Like | {{ post.upVotes }}</a>
-              <a class="card-footer-item">Dislike | {{ post.downVotes }}</a>
-              <a class="card-footer-item">Favorite</a>
-            </footer>
+          <div
+            class="post-card"
+            v-for="post in $store.state.postsList"
+            :key="post.postId"
+            
+          >
+            <post-content :post="post"/>
           </div>
         </div>
       </div>
@@ -161,16 +135,21 @@
 
 <script>
 import ForumService from "../services/ForumService";
-import PostService from "../services/PostService";
+import forumBody from "../components/Forum.vue";
+import PostContent from "../components/Post.vue";
 
 export default {
   name: "forumList",
+  components: {
+    forumBody,
+    PostContent,
+  },
   data() {
     return {
-      forums: [],
       postsList: [],
       replyList: [],
       form: false,
+      menu: false,
       selectForum: null,
       newForum: {
         image: "",
@@ -178,7 +157,6 @@ export default {
         title: "",
         description: "",
       },
-      posts: false,
     };
   },
   methods: {
@@ -203,25 +181,6 @@ export default {
         return "Invalid date";
       }
     },
-    formatDateTime(dateString) {
-      try {
-        const date = new Date(dateString);
-        if (isNaN(date)) {
-          throw new Error("Invalid date");
-        }
-        const year = date.getFullYear();
-        const month = ("0" + (date.getMonth() + 1)).slice(-2);
-        const day = ("0" + date.getDate()).slice(-2);
-        const hours = date.getHours();
-        const minutes = ("0" + date.getMinutes()).slice(-2);
-        const ampm = hours >= 12 ? "PM" : "AM";
-        const formattedHours = hours % 12 || 12;
-        return `${month}-${day}-${year} ${formattedHours}:${minutes} ${ampm}`;
-      } catch (error) {
-        console.error(`Error formatting date: ${error.message}`);
-        return "Invalid date";
-      }
-    },
 
     SaveForum() {
       ForumService.create(this.newForum).then((response) => {
@@ -237,51 +196,24 @@ export default {
         this.$router.go();
       });
     },
-    RetrievePosts(forum) {
-      this.selectForum = forum;
-      PostService.getPost(forum.forumID).then((response) => {
-        this.postsList = this.sortPostsByDate(response.data);
-      });
+    addForums() {
+      this.$store.commit("ADD_FORUMS");
     },
-    sortPostsByDate(posts) {
-      return posts
-        .slice()
-        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-    },
-        
-RetrieveReply(post) {
-    if (post.postId > post.ParentPostId) {
-        if (!this.replyList[post.ParentPostId]) {
-            this.replyList[post.ParentPostId] = [];
-        }
-        post.replies.forEach(reply => {
-            this.replyList[post.ParentPostId].push(reply);
-        });
-    }
-    this.postsList = post.replies;
-    if (post.replies.length > 0) {
-        this.replyList = this.replyList[post.replies[0].ParentPostId];
-    }
-},
   },
   created() {
-    ForumService.getForums().then((response) => {
-      this.forums = response.data.forumArray;
-    });
+    this.addForums();
   },
 
   computed: {
     formattedForums() {
-      return this.forums
-        .map((forum) => {
-          const rawCreateDate = forum.createDate;
-          const formattedCreateDate = this.formatDate(rawCreateDate);
-          return {
-            ...forum,
-            FormattedCreateDate: formattedCreateDate,
-          };
-        })
-        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+      return this.$store.state.forums.map((forum) => {
+        const rawCreateDate = forum.createDate;
+        const formattedCreateDate = this.formatDate(rawCreateDate);
+        return {
+          ...forum,
+          FormattedCreateDate: formattedCreateDate,
+        };
+      });
     },
   },
 };
@@ -309,9 +241,7 @@ RetrieveReply(post) {
   align-items: center;
   width: 100%;
 }
-.replies {
-  color: #1a4d2e;
-}
+
 #in-forum-title .card-header h1 {
   display: inline-flex;
   color: #1a4d2e;
@@ -330,7 +260,6 @@ RetrieveReply(post) {
   margin-bottom: 10px;
   border-radius: 10px;
   border-color: transparent;
-  padding-left: 0;
   height: auto;
 }
 .card-footer a {

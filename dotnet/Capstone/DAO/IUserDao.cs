@@ -11,5 +11,9 @@ namespace Capstone.DAO
         public string GetUserRoleById(int userId);
         public void SetBanTime(BanUserDTO banUserDTO);
         public void DeleteUsersContent(BanUserDTO banUserDTO);
+        public int IsUsernameInDatabase(string username);
+        public void PromoteUserToAdmin(string username);
+        public void DemoteUserFromAdmin(string username);
+        public int GetUserIDByUsername(string username);
     }
 }

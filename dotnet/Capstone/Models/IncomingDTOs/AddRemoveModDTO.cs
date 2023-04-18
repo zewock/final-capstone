@@ -1,17 +1,20 @@
 ﻿namespace Capstone.Models.IncomingDTOs
 {
-    public class AddRemoveMod
+    public class AddRemoveModDTO
     {
         public int formID { get; set; }
+        
+        public string username { get; set; }
 
-        public AddRemoveMod()
+        public AddRemoveModDTO()
         {
 
         }
 
-        public AddRemoveMod(int formID)
+        public AddRemoveModDTO(int formID, string username)
         {
             this.formID = formID;
+            this.username = username;
         }
     }
 }
