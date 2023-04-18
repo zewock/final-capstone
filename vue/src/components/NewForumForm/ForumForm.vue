@@ -83,9 +83,8 @@ data() {
     SaveForum() {
     ForumService.create(this.newForum).then((response) => {
       if (response.status === 201) {
-        alert("Forum Created");
-        this.forums.push(response.data);
-        this.form = false;
+        console.log();("Forum Created");
+        this.$store.commit('SAVE_FORUM', response.data);
         }
       })
     },
@@ -96,6 +95,11 @@ data() {
   },
     onFormCancel() {
       this.$emit("cancelForm");
+    }
+  },
+    computed: {
+    forums() {
+      return this.$store.state.forums
     }
   }
 };

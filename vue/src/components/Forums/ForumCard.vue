@@ -1,9 +1,9 @@
 <template>
   <div class="card">
-    <header class="card-header"  @click="retrievePosts(forum)" > 
+  <header class="card-header"  @click="retrievePosts(forum);togglePosts()" > 
        <section class="card-header-title input" >
        <h1>{{ forum.title }}</h1>
-       <p>Topic: {{forum.topic}}<span><time>{{ forum.FormattedCreateDate }} </time></span></p>
+       <p>Topic: {{forum.topic}} <span><time>{{ forum.FormattedCreateDate }} </time></span></p>
     </section>
   </header>
   </div>
@@ -19,6 +19,10 @@ export default {
   methods: {
       addPosts() {
       this.$store.commit("ADD_POSTS_BY_FORUMID");
+    },
+
+       togglePosts() {
+      this.$store.commit("TOGGLE_SOME_POSTS");
     },
     
   retrievePosts(forum) {
@@ -158,6 +162,9 @@ export default {
   height: 100%;
   overflow-y: auto;
   border-radius: 10px;
+}
+.topicStyle {
+  padding-right: 20px;
 }
 </style>
 
