@@ -10,14 +10,14 @@
 
         public string Image { get; set; }
 
-        public int ParentPostID { get; set; }
+        public int? ParentPostID { get; set; }
 
         public PostToForumDTO() 
         {
             
         }
         
-        public PostToForumDTO(int forumID, string header, string content, string image, int parentPostID )
+        public PostToForumDTO(int forumID, string header, string content, string image, int? parentPostID )
         {
             ForumID = forumID;
             Header = header;

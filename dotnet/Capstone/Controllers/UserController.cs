@@ -42,11 +42,18 @@ namespace Capstone.Controllers
                 return StatusCode(401, "Only admins can bann a user");
             }
 
-            userDao.SetBanTime(banUserDTO);
+            if (userDao.IsUsernameInDatabase(banUserDTO.Username) != 1)
+            {
+                return StatusCode(401, "" + banUserDTO.Username + " is not in the database");
+            }
+
+            int bannedUserID = userDao.GetUserIDByUsername(banUserDTO.Username);
+
+            userDao.SetBanTime(banUserDTO, bannedUserID);
 
             if (banUserDTO.DeleteAllTraffic)
             {
-                userDao.DeleteUsersContent(banUserDTO);
+                userDao.DeleteUsersContent(bannedUserID);
                 return StatusCode(200, "User was successfully banned, all users content was deleted");
             }
             else
