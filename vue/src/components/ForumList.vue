@@ -369,7 +369,7 @@ export default {
   justify-content: space-between;
   display: flex;
   align-items: center;
-  padding: 0;
+  padding: 10px;
 }
 .post-card {
   background-color: #ff9f29;
