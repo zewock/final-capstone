@@ -2,9 +2,12 @@
   <body class="mainBody">
     <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)"/>
     <FormControls @createForm="toggleVisibility(true)"/>
+    <div v-if="$store.state.posts == false">
     <ForumCard v-for="forum in formattedForums" :key="forum.ForumID" :forum="forum"/>
-    <!--<PostCard v-for="post in postsList" :key="post.postId" :post="post" @retrieveReply="RetrieveReply(post)"></PostCard>-->
-    <!--<ForumReply v-for="reply in replyList" :key="reply.replyId" :reply="reply"></ForumReply>-->
+    </div>
+    <div v-if="$store.state.posts == true">
+    <PostCard v-for="post in this.$store.state.postsList" :key="post.postId" :post="post" />
+    </div>
   </body>
 </template>
 
@@ -12,6 +15,7 @@
 import ForumForm from "../NewForumForm/ForumForm.vue";
 import ForumCard from "./ForumCard.vue";
 import FormControls from "../NewForumForm/FormControls.vue";
+import PostCard from "../Posts/PostCard.vue";
 
 
 
@@ -20,7 +24,8 @@ export default {
   components: {
     ForumForm,
     ForumCard,
-    FormControls
+    FormControls,
+    PostCard
   },
   data() {
     return {
@@ -71,7 +76,13 @@ export default {
     },
           addForums() {
       this.$store.commit("ADD_FORUMS");
-    }
+    },
+     sortPostsByDate(posts) {
+      return posts
+        .slice()
+        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+    },
+   
   },
   created() {
    this.addForums();
