@@ -82,12 +82,15 @@ export default new Vuex.Store({
         state.postsList = response.data;
       });
     },
+    SAVE_FORUM(state, forum) {
+      state.forums.push(forum)
+    }
    
   },
   actions: {
     selectForum(context, forum) {
       context.commit('SELECT_FORUM', forum)
-    }
+    },
   },
   getters: {
   
