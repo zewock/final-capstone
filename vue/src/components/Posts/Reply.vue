@@ -1,23 +1,57 @@
 <template>
-<reply :reply="post" :isRootPost="true"/>
+  <div>
+    <div class="post-card" :class="{ 'root-post': isRootPost }">
+      <button id="post-header" class="card-header button" @click="toggleReplies">
+        <h1 class="card-header-title">
+          {{ reply.title }}
+     Comments: {{ reply.replies.length }}
+        </h1>
+        <p class="replies" v-if="!isRootPost"></p>
+      </button>
+      <div class="card-content">
+        <div class="content">
+          <p>@{{ reply.username }}</p>
+          {{ reply.content }}
+          <br />
+          <br />
+          <time>{{ formatDateTime(reply.createDate) }}</time>
+        </div>
+      </div>
+      <footer class="card-footer">
+        <a class="card-footer-item">Like | {{ reply.upVotes }}</a>
+        <a class="card-footer-item">Dislike | {{ reply.downVotes }}</a>
+        <a class="card-footer-item">Favorite</a>
+      </footer>
+    </div>
+    <div v-if="showReplies" class="replies-container">
+      <Reply
+        v-for="(nestedReply, index) in reply.replies"
+        :key="index"
+        :reply="nestedReply"
+        :isRootPost="false"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
-import Reply from './Reply.vue';
 export default {
-  components: { Reply },
-  name: "PostCard",
-  data(){
-    return{
-    showReplies: false,
-    }
-  },
+  name: "Reply",
   props: {
-    post: Object,
+    reply: Object,
+    isRootPost: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      showReplies: false,
+    };
   },
   methods: {
     formatDateTime(dateString) {
-      try {
+        try {
         const date = new Date(dateString);
         if (isNaN(date)) {
           throw new Error("Invalid date");
@@ -37,12 +71,16 @@ export default {
     },
     toggleReplies() {
       this.showReplies = !this.showReplies;
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
+.root-post {
+  margin-bottom: 10px;
+}
+
 .media {
   background-color: #e0e0e0;
   padding: 10px;
@@ -73,4 +111,6 @@ export default {
   background-color: #faf3e3;
   color: #1a4d2e;
 }
+
+
 </style>

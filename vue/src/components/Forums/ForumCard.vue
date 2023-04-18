@@ -3,7 +3,7 @@
   <header class="card-header"  @click="retrievePosts(forum);togglePosts()" > 
        <section class="card-header-title input" >
        <h1>{{ forum.title }}</h1>
-       <p>Topic: {{forum.topic}}<span><time>{{ forum.FormattedCreateDate }} </time></span></p>
+       <p>Topic: {{forum.topic}} <span><time>{{ forum.FormattedCreateDate }} </time></span></p>
     </section>
   </header>
   </div>
@@ -162,6 +162,9 @@ export default {
   height: 100%;
   overflow-y: auto;
   border-radius: 10px;
+}
+.topicStyle {
+  padding-right: 20px;
 }
 </style>
 
