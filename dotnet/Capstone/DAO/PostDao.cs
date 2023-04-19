@@ -231,41 +231,69 @@ namespace Capstone.DAO
      
         public List<ForumPostWithVotesAndUserName> SearchPostsForKeyword(string keyword)
         {
-            string query = @"SELECT 
-                    forum_posts.post_id, 
-                    forum_posts.forum_id, 
-                    forum_posts.user_id, 
-                    forum_posts.header, 
-                    forum_posts.parent_post_id, 
-                    forum_posts.post_content, 
-                    forum_posts.is_visible, 
-                    forum_posts.create_date, 
-                    users.username, 
-                    SUM(CASE WHEN pud.is_upvoted = 1 THEN 1 ELSE 0 END) AS upvotes, 
-                    SUM(CASE WHEN pud.is_downvoted = 1 THEN 1 ELSE 0 END) AS downvotes    
-                FROM 
-                    forum_posts 
-                JOIN 
-                    users ON users.user_id = forum_posts.user_id 
-                LEFT JOIN 
-                    Post_Upvotes_Downvotes pud ON forum_posts.post_id = pud.post_id
-                WHERE 
-                    (forum_posts.header LIKE @keyword OR forum_posts.post_content LIKE @keyword)
-                AND forum_posts.parent_post_id IS NULL
-                GROUP BY 
-                    forum_posts.post_id, 
-                    forum_posts.forum_id, 
-                    forum_posts.user_id, 
-                    forum_posts.header, 
-                    forum_posts.parent_post_id, 
-                    forum_posts.post_content, 
-                    forum_posts.is_visible, 
-                    forum_posts.create_date, 
-                    users.username
-                ORDER BY 
-                    forum_posts.create_date";
+            string query = @"WITH PostHierarchy AS (
+                    SELECT
+                        fp.post_id,
+                        fp.forum_id,
+                        fp.user_id,
+                        fp.header,
+                        fp.parent_post_id,
+                        fp.post_content,
+                        fp.is_visible,
+                        fp.create_date,
+                        u.username,
+                        0 AS depth
+                    FROM forum_posts fp
+                    JOIN users u ON fp.user_id = u.user_id
+                    WHERE (fp.header LIKE @keyword OR fp.post_content LIKE @keyword) AND fp.parent_post_id IS NULL
+
+                    UNION ALL
+
+                    SELECT
+                        fp.post_id,
+                        fp.forum_id,
+                        fp.user_id,
+                        fp.header,
+                        fp.parent_post_id,
+                        fp.post_content,
+                        fp.is_visible,
+                        fp.create_date,
+                        u.username,
+                        ph.depth + 1
+                    FROM forum_posts fp
+                    JOIN users u ON fp.user_id = u.user_id
+                    JOIN PostHierarchy ph ON fp.parent_post_id = ph.post_id
+                )
+                SELECT
+                    ph.post_id,
+                    ph.forum_id,
+                    ph.user_id,
+                    ph.header,
+                    ph.parent_post_id,
+                    ph.post_content,
+                    ph.is_visible,
+                    ph.create_date,
+                    ph.username,
+                    ph.depth,
+                    SUM(CASE WHEN pud.is_upvoted = 1 THEN 1 ELSE 0 END) AS upvotes,
+                    SUM(CASE WHEN pud.is_downvoted = 1 THEN 1 ELSE 0 END) AS downvotes
+                FROM PostHierarchy ph
+                LEFT JOIN Post_Upvotes_Downvotes pud ON ph.post_id = pud.post_id
+                GROUP BY
+                    ph.post_id,
+                    ph.forum_id,
+                    ph.user_id,
+                    ph.header,
+                    ph.parent_post_id,
+                    ph.post_content,
+                    ph.is_visible,
+                    ph.create_date,
+                    ph.username,
+                    ph.depth
+                ORDER BY ph.depth, ph.create_date";
 
             List<ForumPostWithVotesAndUserName> postsWithKeyword = new List<ForumPostWithVotesAndUserName>();
+            Dictionary<long, ForumPostWithVotesAndUserName> postDict = new Dictionary<long, ForumPostWithVotesAndUserName>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
 
@@ -277,13 +305,17 @@ namespace Capstone.DAO
                     {   
                         while (reader.Read())
                         {
-                            ForumPostWithVotesAndUserName post = ReadPostFromReader(reader);
+                            ForumPostWithVotesAndUserName post = ReadPostFromReader(reader, true);
                             postsWithKeyword.Add(post);
+                            AddPostToHierarchy(post, postDict);
+                            UpvotesDownvotesInLast24H upvotesDownvotes = readUpvotesDownVotesIn24H(reader);
+                            postDict[upvotesDownvotes.post_id].upvotesLast24Hours = upvotesDownvotes.upvotesInLast24H;
+                            postDict[upvotesDownvotes.post_id].downvotesLast24Hours = upvotesDownvotes.downvotesInLast24H;
                         }
                     }
                 }
             }
-            return postsWithKeyword;
+            return GetCompletePostThreads(postDict);
         }
 
         public List<ForumPostWithVotesAndUserName> GetCompletePostThreadById(int postId)
