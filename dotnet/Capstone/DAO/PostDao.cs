@@ -99,11 +99,12 @@ namespace Capstone.DAO
                                     fp.post_content,
                                     fp.is_visible,
                                     fp.create_date,
+                                    fp.image_url,
                                     u.username,
                                     0 AS depth
                                 FROM forum_posts fp
                                 JOIN users u ON fp.user_id = u.user_id
-                                WHERE fp.parent_post_id IS NULL AND fp.forum_id = @forumId
+                                WHERE fp.parent_post_id IS NULL AND fp.forum_id = @forumId AND fp.is_visible = 1
                                 
 
                                 UNION ALL
@@ -117,12 +118,13 @@ namespace Capstone.DAO
                                     fp.post_content,
                                     fp.is_visible,
                                     fp.create_date,
+                                    fp.image_url,
                                     u.username,
                                     ph.depth + 1
                                 FROM forum_posts fp
                                 JOIN users u ON fp.user_id = u.user_id
                                 JOIN PostHierarchy ph ON fp.parent_post_id = ph.post_id
-                                WHERE fp.forum_id = @forumId
+                                WHERE fp.forum_id = @forumId AND fp.is_visible = 1
                            
                             )
                             SELECT
@@ -136,12 +138,14 @@ namespace Capstone.DAO
                                 ph.create_date,
                                 ph.username,
                                 ph.depth,
+                                ph.image_url,
                                 SUM(CASE WHEN pud.is_upvoted = 1 THEN 1 ELSE 0 END) AS upvotes,
                                 SUM(CASE WHEN pud.is_downvoted = 1 THEN 1 ELSE 0 END) AS downvotes,
                                 SUM(CASE WHEN pud.is_upvoted = 1 AND pud.create_date > DATEADD(day, -1, GETDATE()) THEN 1 ELSE 0 END) AS upvotes_last_24h,
                                 SUM(CASE WHEN pud.is_downvoted = 1 AND pud.create_date > DATEADD(day, -1, GETDATE()) THEN 1 ELSE 0 END) AS downvotes_last_24h
                             FROM PostHierarchy ph
                             LEFT JOIN Post_Upvotes_Downvotes pud ON ph.post_id = pud.post_id
+                            WHERE ph.is_visible = 1
                             GROUP BY
                                 ph.post_id,
                                 ph.forum_id,
@@ -152,6 +156,7 @@ namespace Capstone.DAO
                                 ph.is_visible,
                                 ph.create_date,
                                 ph.username,
+                                ph.image_url,
                                 ph.depth
                             ORDER BY ph.depth, ph.create_date";
             return query;
@@ -169,6 +174,7 @@ namespace Capstone.DAO
                                     fp.post_content,
                                     fp.is_visible,
                                     fp.create_date,
+                                    fp.image_url,
                                     u.username,
                                     0 AS depth
                                 FROM forum_posts fp
@@ -187,6 +193,7 @@ namespace Capstone.DAO
                                     fp.post_content,
                                     fp.is_visible,
                                     fp.create_date,
+                                    fp.image_url,
                                     u.username,
                                     ph.depth + 1
                                 FROM forum_posts fp
@@ -206,6 +213,7 @@ namespace Capstone.DAO
                                 ph.create_date,
                                 ph.username,
                                 ph.depth,
+                                ph.image_url,
                                 SUM(CASE WHEN pud.is_upvoted = 1 THEN 1 ELSE 0 END) AS upvotes,
                                 SUM(CASE WHEN pud.is_downvoted = 1 THEN 1 ELSE 0 END) AS downvotes,
                                 SUM(CASE WHEN pud.is_upvoted = 1 AND pud.create_date > DATEADD(day, -1, GETDATE()) THEN 1 ELSE 0 END) AS upvotes_last_24h,
@@ -222,6 +230,7 @@ namespace Capstone.DAO
                                 ph.is_visible,
                                 ph.create_date,
                                 ph.username,
+                                ph.image_url,
                                 ph.depth
                             ORDER BY ph.depth, ph.create_date";
             return query;
@@ -241,6 +250,7 @@ namespace Capstone.DAO
                         fp.post_content,
                         fp.is_visible,
                         fp.create_date,
+                        fp.image_url,
                         u.username,
                         0 AS depth
                     FROM forum_posts fp
@@ -258,6 +268,7 @@ namespace Capstone.DAO
                         fp.post_content,
                         fp.is_visible,
                         fp.create_date,
+                        fp.image_url,
                         u.username,
                         ph.depth + 1
                     FROM forum_posts fp
@@ -275,6 +286,7 @@ namespace Capstone.DAO
                     ph.create_date,
                     ph.username,
                     ph.depth,
+                    ph.image_url,
                     SUM(CASE WHEN pud.is_upvoted = 1 THEN 1 ELSE 0 END) AS upvotes,
                     SUM(CASE WHEN pud.is_downvoted = 1 THEN 1 ELSE 0 END) AS downvotes
                 FROM PostHierarchy ph
@@ -289,6 +301,7 @@ namespace Capstone.DAO
                     ph.is_visible,
                     ph.create_date,
                     ph.username,
+                    ph.image_url,
                     ph.depth
                 ORDER BY ph.depth, ph.create_date";
 
@@ -331,6 +344,7 @@ namespace Capstone.DAO
                             fp.post_content,
                             fp.is_visible,
                             fp.create_date,
+                            fp.image_url,
                             u.username,
                             0 AS depth
                         FROM forum_posts fp
@@ -348,6 +362,7 @@ namespace Capstone.DAO
                             fp.post_content,
                             fp.is_visible,
                             fp.create_date,
+                            fp.image_url,
                             u.username,
                             ph.depth + 1
                         FROM forum_posts fp
@@ -371,6 +386,7 @@ namespace Capstone.DAO
                         ph.create_date,
                         ph.username,
                         ph.depth,
+                        ph.image_url,
                         SUM(CASE WHEN pud.is_upvoted = 1 THEN 1 ELSE 0 END) AS upvotes,
                         SUM(CASE WHEN pud.is_downvoted = 1 THEN 1 ELSE 0 END) AS downvotes,
                         SUM(CASE WHEN pud.is_upvoted = 1 AND pud.create_date > DATEADD(day, -1, GETDATE()) THEN 1 ELSE 0 END) AS upvotes_last_24h,
@@ -388,6 +404,7 @@ namespace Capstone.DAO
                         ph.is_visible,
                         ph.create_date,
                         ph.username,
+                        ph.image_url,
                         ph.depth
                     ORDER BY ph.depth, ph.create_date";
 
@@ -833,6 +850,7 @@ namespace Capstone.DAO
             post.userId = Convert.ToInt32(reader["user_id"]);
             post.upVotes = Convert.ToInt32(reader["upvotes"]);
             post.downVotes = Convert.ToInt32(reader["downvotes"]);
+            post.image = Convert.ToString(reader["image_url"]);
 
             if (readDepth)
             {
