@@ -33,6 +33,7 @@ export default new Vuex.Store({
     user: currentUser || {},
     topic: '',
     forums: [],
+    filteredForums: [],
     postsList: [],
     replyList: [],
     form: false,
@@ -53,6 +54,7 @@ export default new Vuex.Store({
       description: "",
     },
     posts: false,
+    keyword: "",
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {
@@ -117,6 +119,9 @@ export default new Vuex.Store({
             }
         }
       })
+    },
+    SEARCH_ALL_POSTS(state,posts){
+      this.postsList = posts;
       
     },
     UPDATE_SELECT_POST(state) {
