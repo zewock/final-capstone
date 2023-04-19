@@ -62,7 +62,7 @@ namespace Capstone.DAO
                                                 "LEFT JOIN forum_mods ON forums.forum_id = forum_mods.forum_id AND forum_mods.user_id = @user_id " +
                                                 "LEFT JOIN users ON Forums.user_id = users.user_id " +
                                                 "LEFT JOIN forum_favorites ON forums.forum_id = forum_favorites.forum_id AND forum_favorites.user_id = @user_id " +
-                                                "WHERE forums.is_visible = 1 OR forums.user_id = @user_id " +
+                                                "WHERE forums.is_visible = 1 AND forums.user_id = @user_id " +
                                                 "GROUP BY forums.forum_id, forums.user_id, forums.topic, forums.create_date, forums.is_visible, users.username, forum_favorites.user_id, forums.title, forums.description, forums.most_recent_post_date " +
                                                 "order by forum_id;", conn);
                 cmd.Parameters.AddWithValue("@user_id", userId);

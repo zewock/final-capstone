@@ -382,7 +382,7 @@ namespace Capstone.Controllers
                 }
                 catch (Exception)
                 {
-                    return StatusCode(401, "You need to be logged to upvote or downvote");
+                    return StatusCode(401, "You need to be logged in to upvote or downvote");
                 }
 
                 if (!postDao.DosePostExist(changeUpvoteDownvoteStateDTO.PostID,
@@ -435,58 +435,70 @@ namespace Capstone.Controllers
         [HttpPut("/ChangeDownvoteState")]
         public ActionResult ChangeDownvoteState(ChangeUpvoteDownvoteStateDTO changeUpvoteDownvoteStateDTO)
         {
-
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to upvote or downvote");
+                }
+
+                if (!postDao.DosePostExist(changeUpvoteDownvoteStateDTO.PostID,
+                    changeUpvoteDownvoteStateDTO.ForumID))
+                {
+                    return StatusCode(401, "No such post exists");
+                }
+
+                IsUpvotedDownVoted isUpvotedDownVoted = new IsUpvotedDownVoted();
+                isUpvotedDownVoted.postID = -1;
+                isUpvotedDownVoted = postDao.GetPostsUpvotesDownvotes
+                    (userData.UserID, changeUpvoteDownvoteStateDTO.PostID, isUpvotedDownVoted);
+                if (isUpvotedDownVoted.postID == -1)
+                {
+                    //add new object
+                    PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
+                    postsUpvotesDownvotes.isDownVoted = true;
+                    postsUpvotesDownvotes.isUpVoted = false;
+                    postsUpvotesDownvotes.forumId = changeUpvoteDownvoteStateDTO.ForumID;
+                    postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
+                    postsUpvotesDownvotes.userId = userData.UserID;
+                    postDao.CreateUpvoteDownvote(postsUpvotesDownvotes);
+                    return StatusCode(200, "Post successfully downvoted");
+                }
+                else if (isUpvotedDownVoted.isDownvoted)
+                {
+                    //remove object
+                    postDao.DeleteUpvoteDownvote(userData.UserID, changeUpvoteDownvoteStateDTO.PostID);
+                    return StatusCode(200, "Post successfully dedownvoted");
+                }
+                else
+                {
+                    //change states of curret object
+                    PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
+                    postsUpvotesDownvotes.isDownVoted = true;
+                    postsUpvotesDownvotes.isUpVoted = false;
+                    postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
+                    postsUpvotesDownvotes.userId = userData.UserID;
+                    postsUpvotesDownvotes.createDate = DateTime.Now;
+                    postDao.UpdateUpvoteDownvote(postsUpvotesDownvotes);
+                    return StatusCode(200, "Post successfully switched to downvoted");
+                }
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged to upvote or downvote");
-            }
-
-            if (!postDao.DosePostExist(changeUpvoteDownvoteStateDTO.PostID,
-                changeUpvoteDownvoteStateDTO.ForumID))
-            {
-                return StatusCode(401, "No such post exists");
-            }
-
-            IsUpvotedDownVoted isUpvotedDownVoted = new IsUpvotedDownVoted();
-            isUpvotedDownVoted.postID = -1;
-            isUpvotedDownVoted = postDao.GetPostsUpvotesDownvotes
-                (tokenUserId, changeUpvoteDownvoteStateDTO.PostID, isUpvotedDownVoted);
-            if (isUpvotedDownVoted.postID == -1)
-            {
-                //add new object
-                PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
-                postsUpvotesDownvotes.isDownVoted = true;
-                postsUpvotesDownvotes.isUpVoted = false;
-                postsUpvotesDownvotes.forumId = changeUpvoteDownvoteStateDTO.ForumID;
-                postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
-                postsUpvotesDownvotes.userId = tokenUserId;
-                postDao.CreateUpvoteDownvote(postsUpvotesDownvotes);
-                return StatusCode(200, "Post successfully downvoted");
-            }
-            else if (isUpvotedDownVoted.isDownvoted)
-            {
-                //remove object
-                postDao.DeleteUpvoteDownvote(tokenUserId, changeUpvoteDownvoteStateDTO.PostID);
-                return StatusCode(200, "Post successfully dedownvoted");
-            }
-            else
-            {
-                //change states of curret object
-                PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
-                postsUpvotesDownvotes.isDownVoted = true;
-                postsUpvotesDownvotes.isUpVoted = false;
-                postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
-                postsUpvotesDownvotes.userId = tokenUserId;
-                postsUpvotesDownvotes.createDate = DateTime.Now;
-                postDao.UpdateUpvoteDownvote(postsUpvotesDownvotes);
-                return StatusCode(200, "Post successfully switched to downvoted");
+                return StatusCode(500, new { message = "An error occured while changing downvote state" });
             }
         }
+
 
 
         /* [HttpPost("/PostToForum")]

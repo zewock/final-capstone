@@ -26,39 +26,46 @@ namespace Capstone.Controllers
         [HttpPut("/BanUser")]
         public ActionResult BanUser(BanUserDTO banUserDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+                int tokenUserId;
+                try
+                {
+                    tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged to bann a user");
+                }
+
+                string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
+                if (tokenUserRole != "admin")
+                {
+                    return StatusCode(401, "Only admins can bann a user");
+                }
+
+                if (userDao.IsUsernameInDatabase(banUserDTO.Username) != 1)
+                {
+                    return StatusCode(401, "" + banUserDTO.Username + " is not in the database");
+                }
+
+                int bannedUserID = userDao.GetUserIDByUsername(banUserDTO.Username);
+
+                userDao.SetBanTime(banUserDTO, bannedUserID);
+
+                if (banUserDTO.DeleteAllTraffic)
+                {
+                    userDao.DeleteUsersForums(bannedUserID);
+                    return StatusCode(200, "User was successfully banned, all users content was deleted");
+                }
+                else
+                {
+                    return StatusCode(200, "User was successfully banned");
+                }
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged to bann a user");
-            }
-
-            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
-            if (tokenUserRole != "admin")
-            {
-                return StatusCode(401, "Only admins can bann a user");
-            }
-
-            if (userDao.IsUsernameInDatabase(banUserDTO.Username) != 1)
-            {
-                return StatusCode(401, "" + banUserDTO.Username + " is not in the database");
-            }
-
-            int bannedUserID = userDao.GetUserIDByUsername(banUserDTO.Username);
-
-            userDao.SetBanTime(banUserDTO, bannedUserID);
-
-            if (banUserDTO.DeleteAllTraffic)
-            {
-                userDao.DeleteUsersContent(bannedUserID);
-                return StatusCode(200, "User was successfully banned, all users content was deleted");
-            }
-            else
-            {
-                return StatusCode(200, "User was successfully banned");
+                return StatusCode(500, new { message = "An error occured while banning user" });
             }
         }
 

@@ -22,7 +22,7 @@
     </div>
     <div v-if="$store.state.posts == true">
       <PostCard
-        v-for="post in this.$store.state.postsList"
+        v-for="post in displayedFormattedPosts"
         :key="post.postId"
         :post="post"
       />
@@ -128,6 +128,21 @@ export default {
         const formattedCreateDate = this.formatDate(rawCreateDate);
         return {
           ...forum,
+          FormattedCreateDate: formattedCreateDate,
+        };
+      });
+    },
+    displayedFormattedPosts() {
+      const postsToDisplay =
+        this.$store.state.filteredPosts.length > 0
+          ? this.$store.state.filteredPosts
+          : this.$store.state.postsList;
+
+      return postsToDisplay.map((post) => {
+        const rawCreateDate = post.createDate;
+        const formattedCreateDate = this.formatDateTime(rawCreateDate);
+        return {
+          ...post,
           FormattedCreateDate: formattedCreateDate,
         };
       });

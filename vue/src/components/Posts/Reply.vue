@@ -7,7 +7,7 @@
         id="post-header"
         class="card-header button"
         @click="toggleReplies"
-      >
+      >    
         <h1 class="card-header-title">
           {{ reply.title }}
           Comments: {{ reply.replies.length }}

@@ -156,7 +156,7 @@ namespace Capstone.DAO
             }
         }
 
-        public void DeleteUsersContent (int bannedUserID)
+        public void DeleteUsersForums (int bannedUserID)
         {
             try
             {
