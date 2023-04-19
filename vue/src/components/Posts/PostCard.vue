@@ -1,11 +1,16 @@
 <template>
-<reply :reply="post" :isRootPost="true"/>
+<div><reply :reply="post" :isRootPost="true"/></div>
+
 </template>
 
 <script>
 import Reply from './Reply.vue';
+
 export default {
-  components: { Reply },
+  components: { 
+    Reply,
+   },
+  
   name: "PostCard",
   data(){
     return{

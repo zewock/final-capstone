@@ -99,6 +99,7 @@ export default new Vuex.Store({
       PostService.createPost(newPost).then((response) => {
         if (response.status === 201) {
             alert("post created")
+            console.log('post created')
         }
       })
     }
