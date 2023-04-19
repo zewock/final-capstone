@@ -26,6 +26,7 @@ namespace Capstone.DAO
 
         public List<ForumPostWithVotesAndUserName> GetPostsByForumId(int forumId)
         {
+            //Need code to send up code again
             string query = BuildPostByForumQuery();
             Dictionary<long, ForumPostWithVotesAndUserName> postDict = new Dictionary<long, ForumPostWithVotesAndUserName>();
 
