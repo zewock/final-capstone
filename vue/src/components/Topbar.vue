@@ -53,7 +53,8 @@
             class="input is-rounded"
             v-if="$route.name === 'forum' && isPosts"
             v-model="keyword"
-            type="text"
+            type="search"
+            @search="searchForumPosts(keyword)"
             placeholder="Search Posts"
           />
           <input
@@ -119,6 +120,12 @@ export default {
         forum.title.toLowerCase().includes(keyword.toLowerCase())
       );
       this.$store.state.filteredForums = filteredForums;
+    },
+    searchForumPosts(keyword) {
+      const filteredPosts = this.$store.state.postsList.filter((post) =>
+        post.title.toLowerCase().includes(keyword.toLowerCase())
+      );
+      this.$store.state.filteredPosts = filteredPosts;
     },
   },
 
