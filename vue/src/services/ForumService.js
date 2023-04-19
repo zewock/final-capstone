@@ -16,5 +16,5 @@ export default {
     },
     favorite(payload) {
       return axios.post('/ChangeFavoriteState', payload)
-    },
+    },    
   }

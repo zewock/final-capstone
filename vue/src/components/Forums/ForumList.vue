@@ -23,7 +23,7 @@
     <div v-if="$store.state.posts == true">
       <section class="card-header-title post-card">
         {{ $store.state.selectForum.description }}
-        <button>Favorite</button>
+        <input type="checkbox" @change="toggleFavorite" /> Favorite
       </section>
       <PostCard
         v-for="post in displayedFormattedPosts"
@@ -114,6 +114,11 @@ export default {
     },
     createPost() {
       this.$store.commit("ADD_POSTS");
+    },
+    toggleFavorite() {
+      this.$store.dispatch("TOGGLE_FAVORITE", {
+        forumId: this.$store.state.selectForum.ForumID,
+      });
     },
   },
   created() {
