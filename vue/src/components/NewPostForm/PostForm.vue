@@ -1,86 +1,92 @@
 <template>
   <section class="box">
-      <h1 style="">New Post Form</h1>
-      <div class="field">
-        <label class="label">Post Name</label>
-        <div class="control has-icons-left has-icons-right">
-          <input
-            class="input is-success"
-            type="text"
-            placeholder="Text input"
-            value="bulma"
-            v-model="newPost.header"
-          />
-          <span class="icon is-small is-left">
-            <i class="fas fa-font"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-check"></i>
-          </span>
-        </div>
+    <h1 style="">New Post Form</h1>
+    <div class="field">
+      <label class="label">Post Name</label>
+      <div class="control has-icons-left has-icons-right">
+        <input
+          class="input is-success"
+          type="text"
+          placeholder="Text input"
+          value="bulma"
+          v-model="newPost.header"
+        />
+        <span class="icon is-small is-left">
+          <i class="fas fa-font"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-check"></i>
+        </span>
       </div>
-      <div class="field">
-        <label class="label">Content</label>
-        <div class="control">
-          <textarea
-            class="textarea"
-            placeholder="Textarea"
-            v-model="newPost.description"
-          ></textarea>
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">Content</label>
+      <div class="control">
+        <textarea
+          class="textarea"
+          placeholder="Textarea"
+          v-model="newPost.content"
+        ></textarea>
       </div>
-      <div class="field">
-        <label class="label">Image</label>
-        <div class="control">
-          <textarea
-            class="textarea"
-            placeholder="Textarea"
-            v-model="newPost.image"
-          ></textarea>
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">Image</label>
+      <div class="control">
+        <textarea
+          class="textarea"
+          placeholder="Textarea"
+          v-model="newPost.image"
+        ></textarea>
       </div>
+    </div>
 
-      <div class="field is-grouped">
-        <div class="control">
-          <button
-            class="button"
-            @click="
-              SavePost(newPost);
-            "
-          >
-            Submit
-          </button>
-        </div>
-        <div class="control">
-          <button class="button" @click="onPostCancel">Cancel</button>
-        </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button
+          class="button"
+          @click="
+            SavePost(newPost)
+            
+          "
+        >
+          Submit
+        </button>
       </div>
+      <div class="control">
+        <button class="button" @click="onPostCancel">Cancel</button>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
 export default {
   name: "PostForm",
-data() {
-  return {
-    newPost: {
-      image: "",
-      header: "",
-      content: "",
-      forumID: null,
-      parentPostID: null,
-    },
+  data() {
+    return {
+      newPost: {
+        image: "",
+        header: "",
+        content: "",
+        forumID: null,
+        parentPostID: null,
+      },
       visible: false,
-  }
-},
-    methods: {
+    };
+  },
+  methods: {
     SavePost(newPost) {
-      this.$store.dispatch('savePost', newPost);
+      this.$store.dispatch("savePost", newPost);
+      this.onPostCancel()
     },
     onPostCancel() {
       this.$emit("cancelForm");
-    }
-  }
+      this.resetSelectPostOnCancel()
+    },
+    resetSelectPostOnCancel() {
+      this.$store.commit("UPDATE_SELECT_POST");
+    },
+  },
 };
 </script>
 

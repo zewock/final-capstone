@@ -7,6 +7,7 @@ using Capstone.Security.Models;
 using Capstone.Models.IncomingDTOs;
 using System.Reflection.PortableExecutable;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Capstone.DAO
 {
@@ -45,6 +46,34 @@ namespace Capstone.DAO
             }
 
             return returnUser;
+        }
+
+        public UserData GetUserData(string username) 
+        { 
+            UserData userData = new UserData();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("select user_id, username, user_role, restore_ban_time from users where username = @username", conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        userData.UserID = Convert.ToInt32(reader["user_id"]);
+                        userData.Username = Convert.ToString(reader["username"]);
+                        userData.Userrole = Convert.ToString(reader["user_role"]);
+                        userData.RestoreBanTime = Convert.ToDateTime(reader["restore_ban_time"]);
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return userData;
         }
 
         public string GetUsernameById(int userId)
@@ -278,6 +307,7 @@ namespace Capstone.DAO
             }
             return UserID;
         }
+
         private User GetUserFromReader(SqlDataReader reader)
         {
             User u = new User()

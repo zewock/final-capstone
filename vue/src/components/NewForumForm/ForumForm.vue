@@ -9,7 +9,7 @@
             type="text"
             placeholder="Text input"
             value="bulma"
-            v-model="newForum.title"
+            v-model="newForum.forumTitle"
           />
           <span class="icon is-small is-left">
             <i class="fas fa-font"></i>
@@ -23,7 +23,7 @@
         <label class="label">Topic</label>
         <div class="control">
           <div class="select">
-            <select v-model="newForum.Topic">
+            <select v-model="newForum.forumTopic">
               <option>Gaming</option>
               <option>Sports</option>
               <option>Tech</option>
@@ -40,7 +40,7 @@
           <textarea
             class="textarea"
             placeholder="Textarea"
-            v-model="newForum.description"
+            v-model="newForum.forumDescription"
           ></textarea>
         </div>
       </div>
@@ -51,7 +51,7 @@
             class="button"
             @click="
               SaveForum();
-              refreshForum();
+            
             "
           >
             Submit
@@ -71,20 +71,24 @@ export default {
 data() {
   return {
     newForum: {
-      image: "",
-      topic: "",
-      title: "",
-      description: "",
+      postImageURL: "",
+      forumTopic: "",
+      forumTitle: "",
+      forumDescription: "",
+      postHeader: "string",
+      postContent: "string",
     },
       visible: false,
   }
 },
     methods: {
     SaveForum() {
+      console.log(this.newForum)
     ForumService.create(this.newForum).then((response) => {
-      if (response.status === 201) {
+      if (response.status === 200) {
         console.log();("Forum Created");
         this.$store.commit('SAVE_FORUM', response.data);
+        this.onFormCancel()
         }
       })
     },
