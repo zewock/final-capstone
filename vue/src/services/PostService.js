@@ -9,5 +9,8 @@ export default {
     },
     searchPosts(keyword){
         return axios.get(`/Posts/${keyword}`)
+    },
+    deletePost(Ids) {
+        return axios.put(`/DeletePost`, Ids)
     }
 }
