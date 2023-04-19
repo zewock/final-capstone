@@ -89,6 +89,7 @@ data() {
         console.log();("Forum Created");
         this.$store.commit('SAVE_FORUM', response.data);
         this.onFormCancel()
+        this.refreshForum()
         }
       })
     },

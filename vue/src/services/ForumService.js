@@ -10,5 +10,8 @@ export default {
     },
     create(newForum) {
       return axios.post(`/CreateForum`, newForum)
+    },
+    deleteForum(forumId) {
+      return axios.put(`/DeleteForum`, forumId)
     }
   }
