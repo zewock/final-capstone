@@ -3,7 +3,10 @@
     <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)" />
     <FormControls @createForm="toggleVisibility(true)" v-if="$store.state.posts == false" />
     <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
-    <PostControls @createPost="togglePostVisibility(true)" v-if="$store.state.posts == true"/>
+    <section>
+<PostControls @createPost="togglePostVisibility(true)" v-if="$store.state.posts == true" />
+    </section>
+    
     <div v-if="$store.state.posts == false">
     <ForumCard
       v-for="forum in formattedForums"
