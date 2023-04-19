@@ -5,7 +5,7 @@
         class="button"
         aria-haspopup="true"
         aria-controls="dropdown-menu4"
-        
+        @mouseover="setupForDeletion"
       >
         <span>Options</span>
         <span class="icon is-small">
@@ -36,8 +36,12 @@ export default {
       deletePost: {
         formID: null,
         postID: null
+      },
+      deleteForum: {
+        forumID: null
       }
     }
+    
   },
  
     components: {
@@ -48,9 +52,10 @@ export default {
      },
     methods: {
   setupForDeletion() {
-    console.log(this.reply)
-        this.deletePost.postID = this.$store.state.deletePost.postID = this.reply.postID
-        this.deletePost.formID = this.$store.state.deletePost.formID = this.reply.forumId
+    console.log(this.deleteForum)
+        this.deletePost.postID = this.reply.postId
+        this.deletePost.formID = this.reply.forumId
+        this.deleteForum.forumID = this.$store.state.selectForum.forumID
        this.$store.commit('DELETION')
   },
       removeForum(id) {
@@ -62,9 +67,11 @@ export default {
         PostService.deletePost(id)
       },
           deletion() {
-        this.removeForum(this.$store.state.deleteForum)
-     
-        this.removePost(this.deletePost)
+        this.removeForum(this.deleteForum)
+        if(this.deletePost.postID != null) {
+            this.removePost(this.deletePost)
+        }
+        
       },
 
     }
