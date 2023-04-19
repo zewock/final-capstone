@@ -3,7 +3,7 @@
     <button class="button" @click="createPost">
       New Post
     </button>
-    <options-dropdown
+    <options-dropdown :reply="reply"
     />
     </div>
 </template>
@@ -11,6 +11,9 @@
 <script>
 import OptionsDropdown from '../OptionsDropdown.vue';
 export default {
+  props: {
+    reply: Object
+     },
   components: { OptionsDropdown },
   name: "PostControls",
   methods: {

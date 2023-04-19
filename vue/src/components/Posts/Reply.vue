@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="card-header-title post-card">{{$store.state.selectForum.description}}</section>
+     <section class="card-header-title post-card">{{$store.state.selectForum.description}}</section>
     <div class="post-card" :class="{ 'root-post': isRootPost }">
       
       <button
@@ -14,7 +14,7 @@
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
-      <PostControls @createPost="togglePostVisibility(true); retrievePosts(reply)" v-if="$store.state.posts == true"/>
+      <PostControls @createPost="togglePostVisibility(true); retrievePosts(reply)" v-if="$store.state.posts == true" :reply="reply" />
        <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
       <div class="card-content replies">
         <div class="content">
@@ -32,6 +32,7 @@
       </footer>
     </div>
     <div v-if="showReplies" class="replies-container">
+     
       <Reply
         v-for="(nestedReply, index) in reply.replies"
         :key="index"
