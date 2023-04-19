@@ -47,13 +47,27 @@ export default new Vuex.Store({
       forumID: null,
       parentPostID: null,
     },
-    SelectPostParent: null,
+    SelectPostParent: {
+      image: "",
+      header: "",
+      content: "",
+      forumID: null,
+      postId: null,
+    },
     newForum: {
       image: "",
       topic: "",
       title: "",
       description: "",
     },
+    deleteForum: {
+      forumId : null
+    },
+    deletePost: {
+      formID: null,
+      postID: null
+    },
+    
     posts: false,
     keyword: "",
   },
@@ -102,7 +116,7 @@ export default new Vuex.Store({
     },
     SAVE_POST(state, newPost) {
       newPost.forumID = state.selectForum.forumID
-      newPost.parentPostID = state.selectPost.parentPostId
+      newPost.parentPostID = state.SelectPostParent.postId
       console.log(newPost)
       PostService.createPost(newPost).then((response) => {
         if (response.status === 200) {
@@ -133,6 +147,11 @@ export default new Vuex.Store({
         forumID: null,
         parentPostID: null,
       }
+    },
+    DELETION(state) {
+      state.deleteForum = state.selectForum.forumID
+      state.deletePost.formID = state.selectForum.forumID
+      state.deletePost.postID = state.selectPost.postID
     }
 
   },
