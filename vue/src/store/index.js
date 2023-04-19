@@ -35,6 +35,7 @@ export default new Vuex.Store({
     forums: [],
     filteredForums: [],
     postsList: [],
+    filteredPosts: [],
     replyList: [],
     form: false,
     menu: false,
@@ -46,7 +47,7 @@ export default new Vuex.Store({
       forumID: null,
       parentPostID: null,
     },
-    SelectPostParent:null,
+    SelectPostParent: null,
     newForum: {
       image: "",
       topic: "",
@@ -105,32 +106,32 @@ export default new Vuex.Store({
       console.log(newPost)
       PostService.createPost(newPost).then((response) => {
         if (response.status === 200) {
-            alert("post created")
-            
-            PostService.getPost(state.selectForum.forumID).then((response) => {
-              state.postsList = response.data;
-            });
-            state.selectPost = {
-              image: "",
-      header: "",
-      content: "",
-      forumID: null,
-      parentPostID: null,
-            }
+          alert("post created")
+
+          PostService.getPost(state.selectForum.forumID).then((response) => {
+            state.postsList = response.data;
+          });
+          state.selectPost = {
+            image: "",
+            header: "",
+            content: "",
+            forumID: null,
+            parentPostID: null,
+          }
         }
       })
     },
-    SEARCH_ALL_POSTS(state,posts){
+    SEARCH_ALL_POSTS(state, posts) {
       this.postsList = posts;
-      
+
     },
     UPDATE_SELECT_POST(state) {
       state.selectPost = {
         image: "",
-header: "",
-content: "",
-forumID: null,
-parentPostID: null,
+        header: "",
+        content: "",
+        forumID: null,
+        parentPostID: null,
       }
     }
 
