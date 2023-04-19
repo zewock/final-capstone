@@ -15,5 +15,8 @@ export default {
     },
     downvote(){
         return axios.put('/ChangeDownvoteState')
+    },
+    deletePost(Ids) {
+        return axios.put(`/DeletePost`, Ids)
     }
 }
