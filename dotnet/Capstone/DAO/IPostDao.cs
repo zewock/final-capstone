@@ -31,6 +31,7 @@ namespace Capstone.DAO
         public void DeleteUpvoteDownvote(int userID, int postID);
         public void UpdateUpvoteDownvote(PostsUpvotesDownvotes postsUpvotesDownvotes);
         public int GetForumOwnerUserID(int forumID);
+        public List<IDsAndParentIDsPostsInForum> GetIDsAndParentIDsInForm(int forumID, int postID);
 
     }
 }

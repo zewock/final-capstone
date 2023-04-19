@@ -1,5 +1,6 @@
 ﻿using Capstone.Models.DatabaseModles;
 using Capstone.Models.IncomingDTOs;
+using Capstone.Models.IntermediaryModles;
 
 namespace Capstone.DAO
 {
@@ -15,5 +16,6 @@ namespace Capstone.DAO
         public void PromoteUserToAdmin(string username);
         public void DemoteUserFromAdmin(string username);
         public int GetUserIDByUsername(string username);
+        public UserData GetUserData(string username);
     }
 }
