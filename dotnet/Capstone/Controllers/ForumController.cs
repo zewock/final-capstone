@@ -130,7 +130,7 @@ namespace Capstone.Controllers
                 forum.isVisible = true;
 
                 int forumID = forumDao.CreateForum(forum);
-
+                /*
                 ForumPost forumPost = new ForumPost();
                 forumPost.Header = createForumDTO.PostHeader;
                 forumPost.PostContent = createForumDTO.PostContent;
@@ -140,7 +140,7 @@ namespace Capstone.Controllers
                 forumPost.IsVisable = true;
 
                 forumDao.PostToForum(forumPost);
-
+                */
                 return StatusCode(200, "New Forum Created");
             }
             catch (Exception)
