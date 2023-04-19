@@ -1,25 +1,33 @@
 <template>
   <body class="mainBody">
-    <div class="body-container">
-      <div class="card" v-for="forum in forums"
-          :key="forum.forumID" >
-            
-        
+    <div class="body-container" v-if="postList.length === 0">
+      <div  class="card" v-for="forum in forums"
+          :key="forum.forumID" > 
       </div>
     </div>
+          <PostCard
+      v-for="post in postList"
+      :key="post.postId"
+      :post="post"/>
   </body>
 </template>
 
 <script>
 import ForumService from "../services/ForumService";
 import PostService from "../services/PostService";
+import PostCard from '../components/Posts/PostCard.vue'
 export default {
+  components: {PostCard},
   name: "mainBody",
   data() {
     return{
       forums: [],
-      postsList: [],
     }
+  },
+  computed:{
+    postList(){
+      return this.$store.state.postsList;
+    },
   },
   methods: {
      RetrievePosts(forum) {
@@ -46,7 +54,7 @@ export default {
 .mainBody {
   grid-area: mainBody;
   position: sticky;
-  overflow: hidden;
+  overflow: auto;
   height: 87vh;
   background-color: #faf3e3;
   padding: 15px;
