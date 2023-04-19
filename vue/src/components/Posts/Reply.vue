@@ -69,7 +69,7 @@ export default {
     localVotes: {
       type: Object,
       default: null,
-    }
+    },
   },
   data() {
     return {
@@ -133,7 +133,9 @@ export default {
       return post ? post.downVotes : this.reply.downVotes;
     },
   },
-  created() {},
+  created() {
+    console.log("Reply received:", this.reply);
+  },
 };
 </script>
 
