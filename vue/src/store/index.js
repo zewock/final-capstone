@@ -39,14 +39,12 @@ export default new Vuex.Store({
     menu: false,
     selectForum: null,
     selectPost: null,
+    SelectPostParent:null,
     newForum: {
       image: "",
       topic: "",
       title: "",
       description: "",
-    },
-    newPost: {
-      forumID: null
     },
     posts: false,
   },
@@ -90,18 +88,21 @@ export default new Vuex.Store({
       state.forums.push(forum)
     },
     SELECT_POST(state, post) {
-      state.selectPost = post
+      state.SelectPostParent = post
+      state.selectPost = post.replies[0]
     },
     SAVE_POST(state, newPost) {
      
       newPost.forumID = state.selectForum.forumID
+      newPost.parentPostID = state.selectPost.parentPostId
       console.log(newPost)
       PostService.createPost(newPost).then((response) => {
         if (response.status === 201) {
             alert("post created")
-            console.log('post created')
+            state.SelectPostParent.replies.push(response.data) 
         }
       })
+      
     }
 
   },
