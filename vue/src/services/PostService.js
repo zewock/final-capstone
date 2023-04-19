@@ -6,5 +6,8 @@ export default {
     },
     createPost(newPost){
         return axios.post('/PostToForum', newPost)
+    },
+    searchPosts(keyword){
+        return axios.get(`/Posts/${keyword}`)
     }
 }

@@ -12,6 +12,8 @@
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
+      <PostControls @createPost="togglePostVisibility(true); retrievePosts(reply)" v-if="$store.state.posts == true"/>
+       <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
       <div class="card-content replies">
         <div class="content">
           <p>@{{ reply.username }}</p>
@@ -39,8 +41,14 @@
 </template>
 
 <script>
+import PostControls from "../NewPostForm/PostControls.vue";
+import PostForm from "../NewPostForm/PostForm.vue";
 export default {
   name: "Reply",
+  components: {
+      PostControls,
+      PostForm,
+  },
   props: {
     reply: Object,
     isRootPost: {
@@ -51,6 +59,7 @@ export default {
   data() {
     return {
       showReplies: false,
+       visiblePostForm: false,
     };
   },
   methods: {
@@ -79,9 +88,11 @@ export default {
     retrievePosts(reply) {
       this.$store.dispatch("selectPost", reply);
     },
+     togglePostVisibility(Bool) {
+      this.visiblePostForm = Bool;
+    },
   },
   created(){
-    this.retrievePosts(this.reply);
   }
 };
 </script>

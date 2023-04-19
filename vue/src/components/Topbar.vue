@@ -17,7 +17,11 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start pl-2">
-          <router-link class="navbar-item" v-bind:to="{ name: 'home' }" @click.native="refreshHome">
+          <router-link
+            class="navbar-item"
+            v-bind:to="{ name: 'home' }"
+            @click.native="refreshHome"
+          >
             Home
           </router-link>
 
@@ -37,7 +41,29 @@
         </div>
 
         <div class="navbar-item is-expanded">
-          <input class="input is-rounded" type="text" placeholder="Search" />
+          <input
+            class="input is-rounded"
+            v-if="$route.name === 'home'"
+            type="search"
+            v-model="keyword"
+            @search="searchPosts(keyword)"
+            placeholder="Search All Posts"
+          />
+          <input
+            class="input is-rounded"
+            v-if="$route.name === 'forum' && isPosts"
+            v-model="keyword"
+            type="text"
+            placeholder="Search Posts"
+          />
+          <input
+            class="input is-rounded"
+            v-if="$route.name === 'forum' && !isPosts"
+            v-model="keyword"
+            type="search"
+            @search="searchForums(keyword)"
+            placeholder="Search Fourms"
+          />
         </div>
 
         <div class="navbar-end pr-2">
@@ -67,21 +93,40 @@
 </template>
 
 <script>
+import PostService from "../services/PostService";
 export default {
   name: "topbar",
   data() {
     return {
       loginButtonMessage: "Login",
       searchBarMessage: "Search bar",
+      keyword: "",
     };
   },
   methods: {
     refreshHome() {
-      if (this.$route.name === 'home') {
+      if (this.$route.name === "home") {
         location.reload();
       }
     },
-  }
+    searchPosts(keyword) {
+      PostService.searchPosts(keyword).then((response) => {
+        this.$store.state.postsList = response.data;
+      });
+    },
+    searchForums(keyword) {
+      const filteredForums = this.$store.state.forums.filter((forum) =>
+        forum.title.toLowerCase().includes(keyword.toLowerCase())
+      );
+      this.$store.state.filteredForums = filteredForums;
+    },
+  },
+
+  computed: {
+    isPosts() {
+      return this.$store.state.posts;
+    },
+  },
 };
 </script>
 

@@ -1,24 +1,33 @@
 <template>
   <body class="mainBody">
     <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)" />
-    <FormControls @createForm="toggleVisibility(true)" v-if="$store.state.posts == false" />
-    <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
-    <PostControls @createPost="togglePostVisibility(true)" v-if="$store.state.posts == true"/>
-    <div v-if="$store.state.posts == false">
-    <ForumCard
-      v-for="forum in formattedForums"
-      :key="forum.ForumID"
-      :forum="forum"
+    <FormControls
+      @createForm="toggleVisibility(true)"
+      v-if="$store.state.posts == false"
     />
+    <PostForm
+      v-show="visiblePostForm"
+      @cancelForm="togglePostVisibility(false)"
+    />
+    <PostControls
+      @createPost="togglePostVisibility(true)"
+      v-if="$store.state.posts == true"
+    />
+    <div v-if="$store.state.posts == false">
+      <ForumCard
+        v-for="forum in displayedFormattedForums"
+        :key="forum.ForumID"
+        :forum="forum"
+      />
     </div>
     <div v-if="$store.state.posts == true">
-    <PostCard
-      v-for="post in this.$store.state.postsList"
-      :key="post.postId"
-      :post="post"
-    />
+      <PostCard
+        v-for="post in this.$store.state.postsList"
+        :key="post.postId"
+        :post="post"
+      />
     </div>
-  
+
     <!--<ForumReply v-for="reply in replyList" :key="reply.replyId" :reply="reply"></ForumReply>-->
   </body>
 </template>
@@ -94,7 +103,7 @@ export default {
     addForums() {
       this.$store.commit("ADD_FORUMS");
     },
-     sortPostsByDate(posts) {
+    sortPostsByDate(posts) {
       return posts
         .slice()
         .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
@@ -108,8 +117,13 @@ export default {
   },
 
   computed: {
-    formattedForums() {
-      return this.$store.state.forums.map((forum) => {
+    displayedFormattedForums() {
+      const forumsToDisplay =
+        this.$store.state.filteredForums.length > 0
+          ? this.$store.state.filteredForums
+          : this.$store.state.forums;
+
+      return forumsToDisplay.map((forum) => {
         const rawCreateDate = forum.createDate;
         const formattedCreateDate = this.formatDate(rawCreateDate);
         return {

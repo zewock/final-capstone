@@ -34,26 +34,31 @@ namespace Capstone.Controllers
 
         [HttpGet("/ForumsList")]
         public ActionResult<ForumListDTO> getForums()
-        {   
+        {
+            try
+            {
                 int tokenUserId;
-            string tokenUserName;
-            string tokenUserRole;
-            
+                string tokenUserName;
+                string tokenUserRole;
 
-            try
-            {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
-                tokenUserName = userDao.GetUser(User.Identity.Name).Username;
-                tokenUserRole = userDao.GetUser(User.Identity.Name).Role;
-            }
-            catch (Exception)
-            {
-                tokenUserId = 0;
-                tokenUserName = "";
-                tokenUserRole = "";
-            }
-            try
-            {
+                try
+                {
+                    UserData userData = userDao.GetUserData(User.Identity.Name);
+                    tokenUserId = userData.UserID;
+                    tokenUserName = userData.Username;
+                    tokenUserRole = userData.Userrole;
+                    if(userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    tokenUserId = 0;
+                    tokenUserName = "";
+                    tokenUserRole = "";
+                }
+            
                 ForumListDTO forumListDTO = forumDao.getAllForums(tokenUserRole, tokenUserName, tokenUserId);
                 List<ForumModAndUsername> forumMods = forumDao.GetAllForumMods();
                 List<ForumFavoriteAndUsername> forumFavorites = forumDao.GetAllForumFavorites();
@@ -91,11 +96,10 @@ namespace Capstone.Controllers
 
                 //return Ok(json);
                 return Ok(forumListDTO);
-
             }
-            catch
+            catch (Exception)
             {
-                return StatusCode(500, "Unable to get forums");
+                return StatusCode(500, "An error occurred while getting forums");
             }
 
         }
@@ -103,67 +107,83 @@ namespace Capstone.Controllers
         [HttpPost("/CreateForum")]
         public ActionResult CreateForum(CreateForumDTO createForumDTO)
         {
-            int tokenUserId;
-            try 
-            { 
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId; 
+            try {
+                UserData userData = new UserData();
+                try 
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch(Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to create a forum");
+                }
+
+                Forum forum = new Forum();
+                forum.ownerId = userData.UserID;
+                forum.title = createForumDTO.ForumTitle;
+                forum.topic = createForumDTO.ForumTopic;
+                forum.description = createForumDTO.ForumDescription;
+                forum.isVisible = true;
+
+                int forumID = forumDao.CreateForum(forum);
+                /*
+                ForumPost forumPost = new ForumPost();
+                forumPost.Header = createForumDTO.PostHeader;
+                forumPost.PostContent = createForumDTO.PostContent;
+                forumPost.ImageURL = createForumDTO.PostImageURL;
+                forumPost.UserID = userData.UserID;
+                forumPost.ForumID = forumID;
+                forumPost.IsVisable = true;
+
+                forumDao.PostToForum(forumPost);
+                */
+                return StatusCode(200, "New Forum Created");
             }
-            catch(Exception)
+            catch (Exception)
             {
-                return StatusCode(401, "You need to be logged in to create a forum");
+                return StatusCode(500, "An error occurred while creating forum");
             }
-
-
-            Forum forum = new Forum();
-            forum.ownerId = tokenUserId;
-            forum.title = createForumDTO.ForumTitle;
-            forum.topic = createForumDTO.ForumTopic;
-            forum.description = createForumDTO.ForumDescription;
-            forum.isVisible = true;
-
-            int forumID = forumDao.CreateForum(forum);
-
-            ForumPost forumPost = new ForumPost();
-            forumPost.Header = createForumDTO.PostHeader;
-            forumPost.PostContent = createForumDTO.PostContent;
-            forumPost.ImageURL = createForumDTO.PostImageURL;
-            forumPost.UserID = tokenUserId;
-            forumPost.ForumID = forumID;
-            forumPost.IsVisable = true;
-            forumPost.ParentPostID = null;
-
-            forumDao.PostToForum(forumPost);
-
-
-            return StatusCode(200, "New Forum Created");
         }
 
         [HttpPut("/DeleteForum")]
         public ActionResult DeleteForum(DeleteForumDTO deleteForumDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to delete a forum");
+                }
+
+                int forumOwnerID = forumDao.GetForumOwnerUserID(deleteForumDTO.ForumId);
+
+                if (userData.Userrole == "admin" || forumOwnerID == userData.UserID)
+                {
+                    forumDao.DeletePost(deleteForumDTO.ForumId);
+                    return StatusCode(200, "Forum successfully deleted");
+                }
+                else
+                {
+                    return StatusCode(401, "Only admins or the post owner can delete this forum");
+                }
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged in to create a forum");
+                return StatusCode(500, "An error occurred while deleting forum");
             }
-
-            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
-            int forumOwnerID = forumDao.GetForumOwnerUserID(deleteForumDTO.ForumId);
-
-            if (tokenUserRole == "admin" || forumOwnerID == tokenUserId)
-            {
-                forumDao.DeletePost(deleteForumDTO.ForumId);
-                return StatusCode(200, "Forum successfully deleted");
-            }
-            else
-            {
-                return StatusCode(401, "Only admins or the post owner can delete this forum");
-            }
-
         }
 
         /*
