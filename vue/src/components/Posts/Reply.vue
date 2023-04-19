@@ -1,6 +1,8 @@
 <template>
   <div>
+    <section class="card-header-title post-card">{{$store.state.selectForum.description}}</section>
     <div class="post-card" :class="{ 'root-post': isRootPost }">
+      
       <button
         id="post-header"
         class="card-header button"

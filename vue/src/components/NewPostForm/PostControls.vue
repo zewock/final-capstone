@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import OptionsDropdown from '../Forums/OptionsDropdown.vue';
+import OptionsDropdown from '../OptionsDropdown.vue';
 export default {
   components: { OptionsDropdown },
   name: "PostControls",

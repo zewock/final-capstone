@@ -16,7 +16,7 @@
           <div class="dropdown-item">
             <button class="button">Mods</button>
             <button class="button">Users</button>
-            <button class="button">Delete</button>
+            <button class="button" @click="removeForum">Delete</button>
           </div>
         </div>
       </div>
@@ -25,9 +25,26 @@
 </template>
 
 <script>
+import ForumService from "../services/ForumService";
+
 export default {
     name: "OptionsDropdown",
-    formDisabled: false
+    data() {
+    return {
+         forumId: {
+           forumId : this.$store.state.selectForum.forumID
+         }
+    }
+  },
+    components: {
+   
+    },
+    methods: {
+      removeForum() {
+        console.log(this.forumId)
+        ForumService.deleteForum(this.forumId)
+      }
+    }
 };
 </script>
 
