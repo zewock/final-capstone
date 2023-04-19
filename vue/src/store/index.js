@@ -37,6 +37,7 @@ export default new Vuex.Store({
     postsList: [],
     filteredPosts: [],
     replyList: [],
+    userVotes: {},
     form: false,
     menu: false,
     selectForum: null,
@@ -148,6 +149,38 @@ export default new Vuex.Store({
         parentPostID: null,
       }
     },
+    UPVOTE_POST(state, { postId }) {
+      const post = state.postsList.find(post => post.postId === postId);
+      if (post) {
+        if (post.userVote === 'upvote') {
+          post.userVote = null;
+          post.upVotes--;
+        } else {
+          if (post.userVote === 'downvote') {
+            post.downVotes--;
+          }
+          post.userVote = 'upvote';
+          post.upVotes++;
+        }
+        
+      }
+    },
+    DOWNVOTE_POST(state, { postId }) {
+      const post = state.postsList.find(post => post.postId === postId);
+      if (post) {
+        if (post.userVote === 'downvote') {
+          post.userVote = null;
+          post.downVotes--;
+        } else {
+          if (post.userVote === 'upvote') {
+            post.upVotes--;
+          }
+          post.userVote = 'downvote';
+          post.downVotes++;
+        }
+        
+      }
+    },
     DELETION(state) {
       state.deleteForum = state.selectForum.forumID
       state.deletePost.formID = state.selectForum.forumID
@@ -167,6 +200,22 @@ export default new Vuex.Store({
     },
     savePost(context, newPost) {
       context.commit('SAVE_POST', newPost);
+    },
+    async UPVOTE_POST(context, payload) {
+      try {
+        await PostService.upvote(payload);
+        context.commit("UPVOTE_POST", payload);
+      } catch (error) {
+        console.error("Error upvoting post:", error);
+      }
+    },
+    async DOWNVOTE_POST(context, payload) {
+      try {
+        await PostService.downvote(payload);
+        context.commit("DOWNVOTE_POST", payload);
+      } catch (error) {
+        console.error("Error downvoting post:", error);
+      }
     },
   },
   getters: {

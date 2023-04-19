@@ -1,13 +1,11 @@
 <template>
   <div>
-     <section class="card-header-title post-card">{{$store.state.selectForum.description}}</section>
     <div class="post-card" :class="{ 'root-post': isRootPost }">
-      
       <button
         id="post-header"
         class="card-header button"
         @click="toggleReplies"
-      >    
+      >
         <h1 class="card-header-title">
           {{ reply.title }}
           Comments: {{ reply.replies.length }}
@@ -20,15 +18,17 @@
         <div class="content">
           <p>@{{ reply.username }}</p>
           {{ reply.content }}
+          <img v-if="reply.image" :src="reply.image" alt="Reply image" />
           <br />
           <br />
           <time>{{ formatDateTime(reply.createDate) }}</time>
         </div>
       </div>
-      <footer class="card-footer">
-        <a class="card-footer-item">Like | {{ reply.upVotes }}</a>
-        <a class="card-footer-item">Dislike | {{ reply.downVotes }}</a>
-        <a class="card-footer-item">Favorite</a>
+      <footer class="card-footer" v-if="isRootPost">
+        <a class="card-footer-item" @click="upvotePost">Like | {{ upVotes }}</a>
+        <a class="card-footer-item" @click="downvotePost"
+          >Dislike | {{ downVotes }}</a
+        >
       </footer>
     </div>
     <div v-if="showReplies" class="replies-container">
@@ -49,8 +49,8 @@ import PostForm from "../NewPostForm/PostForm.vue";
 export default {
   name: "Reply",
   components: {
-      PostControls,
-      PostForm,
+    PostControls,
+    PostForm,
   },
   props: {
     reply: Object,
@@ -58,11 +58,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    localVotes: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
       showReplies: false,
-       visiblePostForm: false,
+      visiblePostForm: false,
     };
   },
   methods: {
@@ -91,12 +95,39 @@ export default {
     retrievePosts(reply) {
       this.$store.dispatch("selectPost", reply);
     },
-     togglePostVisibility(Bool) {
+    togglePostVisibility(Bool) {
       this.visiblePostForm = Bool;
     },
+    upvotePost() {
+      this.$store.dispatch("UPVOTE_POST", {
+        postId: this.reply.postId,
+        forumId: this.reply.forumId,
+      });
+    },
+    downvotePost() {
+      this.$store.dispatch("DOWNVOTE_POST", {
+        postId: this.reply.postId,
+        forumId: this.reply.forumId,
+      });
+    },
   },
-  created(){
-  }
+  computed: {
+    upVotes() {
+      const post = this.$store.state.postsList.find(
+        (post) => post.postId === this.reply.postId
+      );
+      return post ? post.upVotes : this.reply.upVotes;
+    },
+    downVotes() {
+      const post = this.$store.state.postsList.find(
+        (post) => post.postId === this.reply.postId
+      );
+      return post ? post.downVotes : this.reply.downVotes;
+    },
+  },
+  created() {
+    console.log("Reply received:", this.reply);
+  },
 };
 </script>
 

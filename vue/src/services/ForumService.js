@@ -13,5 +13,8 @@ export default {
     },
     deleteForum(forumId) {
       return axios.put(`/DeleteForum`, forumId)
-    }
+    },
+    favorite(payload) {
+      return axios.post('/ChangeFavoriteState', payload)
+    },
   }

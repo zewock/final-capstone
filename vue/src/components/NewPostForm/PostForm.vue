@@ -32,25 +32,13 @@
     <div class="field">
       <label class="label">Image</label>
       <div class="control">
-        <textarea
-          class="textarea"
-          placeholder="Textarea"
-          v-model="newPost.image"
-        ></textarea>
+        <input type="file" accept="image/*" @change="onImageChange" />
       </div>
     </div>
 
     <div class="field is-grouped">
       <div class="control">
-        <button
-          class="button"
-          @click="
-            SavePost(newPost)
-            
-          "
-        >
-          Submit
-        </button>
+        <button class="button" @click="SavePost(newPost)">Submit</button>
       </div>
       <div class="control">
         <button class="button" @click="onPostCancel">Cancel</button>
@@ -77,14 +65,27 @@ export default {
   methods: {
     SavePost(newPost) {
       this.$store.dispatch("savePost", newPost);
-      this.onPostCancel()
+      this.onPostCancel();
     },
     onPostCancel() {
       this.$emit("cancelForm");
-      this.resetSelectPostOnCancel()
+      this.resetSelectPostOnCancel();
     },
     resetSelectPostOnCancel() {
       this.$store.commit("UPDATE_SELECT_POST");
+    },
+    onImageChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.newPost.image = e.target.result;
+          console.log("Image data:", this.newPost.image); // Log the image data
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.newPost.image = "";
+      }
     },
   },
 };
