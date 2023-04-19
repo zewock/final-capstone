@@ -25,17 +25,28 @@ namespace Capstone.Controllers
         [HttpGet("/ForumPosts/{forumId}")]
         public ActionResult<List<ForumPostWithVotesAndUserName>> GetPostsByForumId(int forumId)
         {
-            // need to pass in the user id to get information on whether the user has upvoted or downvoted posts
-            // as well as has the user favorited this forum/ as a mod of this forum
             try
             {
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    
+                }
+
                 var posts = postDao.GetPostsByForumId(forumId);
                 return Ok(posts);
             }
             catch (Exception)
             {
-
-                return StatusCode(500, new { message = "An error occurred while fetching the posts." });
+                return StatusCode(500, new { message = "An error occurred while getting the posts" });
             }
         }
 
@@ -45,13 +56,26 @@ namespace Capstone.Controllers
         {
             try
             {
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
                 var posts = postDao.GetPostsByForumId(postId);
                 return Ok(posts);
             }
             catch (Exception)
             {
-
-                return StatusCode(500, new { message = "An error occurred while fetching the posts." });
+                return StatusCode(500, new { message = "An error occurred while getting the post" });
             }
         }
 
@@ -60,255 +84,358 @@ namespace Capstone.Controllers
         {
             try
             {
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
                 var posts = postDao.SearchPostsForKeyword(keyword);
                 return Ok(posts);
             }
             catch (Exception)
             {
-                return StatusCode(500, new { message = "An error occured while fetching the posts." });
+                return StatusCode(500, new { message = "An error occured while searching through posts" });
             }
         }
 
         [HttpPost("/PostToForum")]
         public ActionResult PostToForum(PostToForumDTO postToForumDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
-            }
-            catch (Exception)
-            {
-                return StatusCode(401, "You need to be logged in to post to a forum");
-            }
-            
-            if(!postDao.DoseForumExist(postToForumDTO.ForumID))
-            {
-                return StatusCode(401, "Forum dose not exist");
-            }
-
-            if(postToForumDTO.ParentPostID != null)
-            {
-                if (!postDao.DosePostExist(postToForumDTO.ParentPostID ?? default, postToForumDTO.ForumID))
+                UserData userData = new UserData();
+                try
                 {
-                    return StatusCode(401, "Parent Post does not exist");
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
                 }
-            }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to create a post");
+                }
 
-            try
-            {
-                postDao.PostToForum(postToForumDTO, tokenUserId);
+                if (!postDao.DoseForumExist(postToForumDTO.ForumID))
+                {
+                    return StatusCode(401, "Forum dose not exist");
+                }
+
+                if (postToForumDTO.ParentPostID != null)
+                {
+                    if (!postDao.DosePostExist(postToForumDTO.ParentPostID ?? default, postToForumDTO.ForumID))
+                    {
+                        return StatusCode(401, "Parent post does not exist");
+                    }
+                }
+
+                postDao.PostToForum(postToForumDTO, userData.UserID);
                 return StatusCode(200, "Post successfully added");
             }
             catch (Exception)
             {
-                return StatusCode(500, "Post was unable to be added");
+                return StatusCode(500, new { message = "An error occured while creating post" });
             }
         }
 
         [HttpPut("/DeletePost")]
         public ActionResult DeletePost(DeletePostDTO deletePostDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to delete a post");
+                }
+
+                int postOwnerID = postDao.GetUserIDByPostID(deletePostDTO.PostID);
+                List<int> modsID = postDao.GetModsIDsByForumID(deletePostDTO.FormID);
+                int forumOwnerID = postDao.GetForumOwnerUserID(deletePostDTO.FormID);
+
+                if (postOwnerID == userData.UserID || userData.Userrole == "admin"
+                    || modsID.Contains(userData.UserID) || forumOwnerID == userData.UserID)
+                {
+                    List<int> parentPostIDsToDeleteList = new List<int>() { deletePostDTO.PostID };
+
+                    List<IDsAndParentIDsPostsInForum> idsAndParentIDsPostsInForumList = 
+                        postDao.GetIDsAndParentIDsInForm(deletePostDTO.FormID, deletePostDTO.PostID);
+
+                    for (int i = 0; i < idsAndParentIDsPostsInForumList.Count; i++)
+                    {
+                        for (int j = 0; j < parentPostIDsToDeleteList.Count; j++)
+                        {
+                            if (idsAndParentIDsPostsInForumList[i].ParentPostID == parentPostIDsToDeleteList[j])
+                            {
+                                for (int k = i + 1; k < idsAndParentIDsPostsInForumList.Count; k++)
+                                {
+                                    if(idsAndParentIDsPostsInForumList[i].PostID == idsAndParentIDsPostsInForumList[k].ParentPostID)
+                                    {
+                                        parentPostIDsToDeleteList.Add(idsAndParentIDsPostsInForumList[i].PostID);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    for(int i = 0; i < parentPostIDsToDeleteList.Count; i++)
+                    {
+                        postDao.DeletePost(parentPostIDsToDeleteList[i]);
+                    }
+
+                    //postDao.DeletePost(deletePostDTO.PostID);
+                    return StatusCode(200, "Post successfully deleted");
+                }
+                else
+                {
+                    return StatusCode(401, "Only a admins, mods, forum owner, or post owner can delete a post");
+                }
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged in to delete a post");
-            }
-
-            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
-            int postOwnerID = postDao.GetUserIDByPostID(deletePostDTO.PostID);
-            List<int> modsID = postDao.GetModsIDsByForumID(deletePostDTO.FormID);
-            int forumOwnerID = postDao.GetForumOwnerUserID(deletePostDTO.FormID);
-
-            if (postOwnerID == tokenUserId || tokenUserRole == "admin" 
-                || modsID.Contains(tokenUserId) || forumOwnerID == tokenUserId)
-            {
-                postDao.DeletePost(deletePostDTO.PostID);
-                return StatusCode(200, "Post successfully deleted");
-            }
-            else
-            {
-                return StatusCode(401, "Only a admins, mods, or the post owner can delete a post");
+                return StatusCode(500, new { message = "An error occured while deleting post" });
             }
         }
 
         [HttpPost("/AddMod")]
         public ActionResult AddMod (AddRemoveModDTO addRemoveModDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
-            }
-            catch (Exception)
-            {
-                return StatusCode(401, "You need to be logged to add a mod");
-            }
-
-            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
-            int isUserOwnerOfForum = postDao.IsUserOwnerOfForum(tokenUserId, addRemoveModDTO.formID);
-
-            if (tokenUserRole == "admin" || isUserOwnerOfForum == 1)
-            {
-                if (userDao.IsUsernameInDatabase(addRemoveModDTO.username) != 1)
+                UserData userData = new UserData();
+                try
                 {
-                    return StatusCode(401, "" + addRemoveModDTO.username + " is not in the database");
-                }
-                else
-                {
-                    if(postDao.IsUserModOfForum(addRemoveModDTO.username, addRemoveModDTO.formID) == 1)
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
                     {
-                        return StatusCode(401, "" + addRemoveModDTO.username + " is already in the database as a mod of this forum");
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to add a mod");
+                }
+
+                int forumOwnerID = postDao.GetForumOwnerUserID(addRemoveModDTO.formID);
+
+                if (userData.Userrole == "admin" || forumOwnerID == userData.UserID)
+                {
+                    if (userDao.IsUsernameInDatabase(addRemoveModDTO.username) != 1)
+                    {
+                        return StatusCode(401, "" + addRemoveModDTO.username + " is not in the database");
                     }
                     else
                     {
-                        int modUserID = userDao.GetUserIDByUsername(addRemoveModDTO.username);
-                        postDao.AddMod(modUserID, addRemoveModDTO.formID);
-                        return StatusCode(200, "Mod successfully added");
+                        if (postDao.IsUserModOfForum(addRemoveModDTO.username, addRemoveModDTO.formID) == 1)
+                        {
+                            return StatusCode(401, "" + addRemoveModDTO.username + " is already in the database as a mod of this forum");
+                        }
+                        else
+                        {
+                            int modUserID = userDao.GetUserIDByUsername(addRemoveModDTO.username);
+                            postDao.AddMod(modUserID, addRemoveModDTO.formID);
+                            return StatusCode(200, "Mod successfully added");
+                        }
                     }
                 }
+                else
+                {
+                    return StatusCode(401, "Only an admin or the owner of the forum can promote mods");
+                }
             }
-            else
+            catch (Exception)
             {
-                return StatusCode(401, "Only an admin or the owner of the forum can promote mods");
+                return StatusCode(500, new { message = "An error occured while adding mod" });
             }
-
         }
+
 
         [HttpPost("/RemoveMod")]
         public ActionResult RemoveMod(AddRemoveModDTO addRemoveModDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
-            }
-            catch (Exception)
-            {
-                return StatusCode(401, "You need to be logged to remove a mod");
-            }
 
-            string tokenUserRole = userDao.GetUserRoleById(tokenUserId);
-            int isUserOwnerOfForum = postDao.IsUserOwnerOfForum(tokenUserId, addRemoveModDTO.formID);
-
-            if (tokenUserRole == "admin" || isUserOwnerOfForum == 1)
-            {
-                if (userDao.IsUsernameInDatabase(addRemoveModDTO.username) != 1)
+                UserData userData = new UserData();
+                try
                 {
-                    return StatusCode(401, "" + addRemoveModDTO.username + " is not in the database");
-                }
-                else
-                {
-                    if (postDao.IsUserModOfForum(addRemoveModDTO.username, addRemoveModDTO.formID) <= 0)
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
                     {
-                        return StatusCode(401, "" + addRemoveModDTO.username + " is not a mod of this forum");
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to remove a mod");
+                }
+
+                int forumOwnerID = postDao.GetForumOwnerUserID(addRemoveModDTO.formID);
+
+                if (userData.Userrole == "admin" || forumOwnerID == userData.UserID)
+                {
+                    if (userDao.IsUsernameInDatabase(addRemoveModDTO.username) != 1)
+                    {
+                        return StatusCode(401, "" + addRemoveModDTO.username + " is not in the database");
                     }
                     else
                     {
-                        int modUserID = userDao.GetUserIDByUsername(addRemoveModDTO.username);
-                        postDao.RemoveMod(modUserID, addRemoveModDTO.formID);
-                        return StatusCode(200, "Mod successfully removed");
+                        if (postDao.IsUserModOfForum(addRemoveModDTO.username, addRemoveModDTO.formID) <= 0)
+                        {
+                            return StatusCode(401, "" + addRemoveModDTO.username + " is not a mod of this forum");
+                        }
+                        else
+                        {
+                            int modUserID = userDao.GetUserIDByUsername(addRemoveModDTO.username);
+                            postDao.RemoveMod(modUserID, addRemoveModDTO.formID);
+                            return StatusCode(200, "Mod successfully removed");
+                        }
                     }
                 }
+                else
+                {
+                    return StatusCode(401, "Only an admin or the owner of the forum can demote mods");
+                }
             }
-            else
+            catch (Exception)
             {
-                return StatusCode(401, "Only an admin or the owner of the forum can demote mods");
+                return StatusCode(500, new { message = "An error occured while removing mod" });
             }
         }
+
 
         [HttpPost("/ChangeFavoriteState")]
         public ActionResult ChangeFavoriteState(ChangeFavoritveForumStateDTO changeFavoritveForumStateDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged in to favorite a page");
+                }
+
+                if (!postDao.DoseForumExist(changeFavoritveForumStateDTO.ForumId))
+                {
+                    return StatusCode(401, "Forum dose not exist");
+                }
+
+                if (postDao.IsForumFavorited(userData.UserID, changeFavoritveForumStateDTO.ForumId) == 1)
+                {
+                    postDao.RemoveFavorite(userData.UserID, changeFavoritveForumStateDTO.ForumId);
+                    return StatusCode(200, "Forum successfully unfavorited");
+                }
+                else
+                {
+                    postDao.AddFavoriteForum(userData.UserID, changeFavoritveForumStateDTO.ForumId);
+                    return StatusCode(200, "Forum successfully favorited");
+                }
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged to favorite a page");
-            }
-            
-            if(!postDao.DoseForumExist(changeFavoritveForumStateDTO.ForumId))
-            {
-                return StatusCode(401, "Forum dose not exist");
-            }
-
-            if (postDao.IsForumFavorited(tokenUserId, changeFavoritveForumStateDTO.ForumId) == 1)
-            {
-                postDao.RemoveFavorite(tokenUserId, changeFavoritveForumStateDTO.ForumId);
-                return StatusCode(200, "Forum successfully unfavorited");
-            }
-            else
-            {
-                postDao.AddFavoriteForum(tokenUserId, changeFavoritveForumStateDTO.ForumId);
-                return StatusCode(200, "Forum successfully favorited");
+                return StatusCode(500, new { message = "An error occured while changing favorite state" });
             }
         }
+
 
         [HttpPut("/ChangeUpvoteState")]
         public ActionResult ChangeUpvoteState(ChangeUpvoteDownvoteStateDTO changeUpvoteDownvoteStateDTO)
         {
-            int tokenUserId;
             try
             {
-                tokenUserId = userDao.GetUser(User.Identity.Name).UserId;
+                UserData userData = new UserData();
+                try
+                {
+                    userData = userDao.GetUserData(User.Identity.Name);
+                    if (userData.RestoreBanTime > DateTime.Now)
+                    {
+                        return StatusCode(401, "" + userData.Username + " is currently banned until " + userData.RestoreBanTime);
+                    }
+                }
+                catch (Exception)
+                {
+                    return StatusCode(401, "You need to be logged to upvote or downvote");
+                }
+
+                if (!postDao.DosePostExist(changeUpvoteDownvoteStateDTO.PostID,
+                    changeUpvoteDownvoteStateDTO.ForumID))
+                {
+                    return StatusCode(401, "No such post exists");
+                }
+
+                IsUpvotedDownVoted isUpvotedDownVoted = new IsUpvotedDownVoted();
+                isUpvotedDownVoted.postID = -1;
+                isUpvotedDownVoted = postDao.GetPostsUpvotesDownvotes
+                    (userData.UserID, changeUpvoteDownvoteStateDTO.PostID, isUpvotedDownVoted);
+                if (isUpvotedDownVoted.postID == -1)
+                {
+                    //add new object
+                    PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
+                    postsUpvotesDownvotes.isDownVoted = false;
+                    postsUpvotesDownvotes.isUpVoted = true;
+                    postsUpvotesDownvotes.forumId = changeUpvoteDownvoteStateDTO.ForumID;
+                    postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
+                    postsUpvotesDownvotes.userId = userData.UserID;
+                    postDao.CreateUpvoteDownvote(postsUpvotesDownvotes);
+                    return StatusCode(200, "Post successfully upvoted");
+                }
+                else if (isUpvotedDownVoted.isUpvoted)
+                {
+                    //remove object
+                    postDao.DeleteUpvoteDownvote(userData.UserID, changeUpvoteDownvoteStateDTO.PostID);
+                    return StatusCode(200, "Post successfully deupvoted");
+                }
+                else
+                {
+                    //change states of curret object
+                    PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
+                    postsUpvotesDownvotes.isDownVoted = false;
+                    postsUpvotesDownvotes.isUpVoted = true;
+                    postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
+                    postsUpvotesDownvotes.userId = userData.UserID;
+                    postsUpvotesDownvotes.createDate = DateTime.Now;
+                    postDao.UpdateUpvoteDownvote(postsUpvotesDownvotes);
+                    return StatusCode(200, "Post successfully switched to upvoted");
+                }
             }
             catch (Exception)
             {
-                return StatusCode(401, "You need to be logged to upvote or downvote");
-            } 
-
-            if (!postDao.DosePostExist(changeUpvoteDownvoteStateDTO.PostID,
-                changeUpvoteDownvoteStateDTO.ForumID))
-            {
-                return StatusCode(401, "No such post exists");
-            }
-
-            IsUpvotedDownVoted isUpvotedDownVoted = new IsUpvotedDownVoted();
-            isUpvotedDownVoted.postID = -1;
-            isUpvotedDownVoted = postDao.GetPostsUpvotesDownvotes
-                (tokenUserId, changeUpvoteDownvoteStateDTO.PostID, isUpvotedDownVoted);
-            if(isUpvotedDownVoted.postID == -1)
-            {
-                //add new object
-                PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
-                postsUpvotesDownvotes.isDownVoted = false;
-                postsUpvotesDownvotes.isUpVoted = true;
-                postsUpvotesDownvotes.forumId = changeUpvoteDownvoteStateDTO.ForumID;
-                postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
-                postsUpvotesDownvotes.userId = tokenUserId;
-                postDao.CreateUpvoteDownvote(postsUpvotesDownvotes);
-                return StatusCode(200, "Post successfully upvoted");
-            }
-            else if (isUpvotedDownVoted.isUpvoted)
-            {
-                //remove object
-                postDao.DeleteUpvoteDownvote(tokenUserId, changeUpvoteDownvoteStateDTO.PostID);
-                return StatusCode(200, "Post successfully deupvoted");
-            }
-            else
-            {
-                //change states of curret object
-                PostsUpvotesDownvotes postsUpvotesDownvotes = new PostsUpvotesDownvotes();
-                postsUpvotesDownvotes.isDownVoted = false;
-                postsUpvotesDownvotes.isUpVoted = true;
-                postsUpvotesDownvotes.postId = changeUpvoteDownvoteStateDTO.PostID;
-                postsUpvotesDownvotes.userId = tokenUserId;
-                postsUpvotesDownvotes.createDate = DateTime.Now;
-                postDao.UpdateUpvoteDownvote(postsUpvotesDownvotes);
-                return StatusCode(200, "Post successfully switched to upvoted");
+                return StatusCode(500, new { message = "An error occured while changing upvote state" });
             }
         }
 
         [HttpPut("/ChangeDownvoteState")]
         public ActionResult ChangeDownvoteState(ChangeUpvoteDownvoteStateDTO changeUpvoteDownvoteStateDTO)
         {
+
             int tokenUserId;
             try
             {

@@ -641,7 +641,7 @@ namespace Capstone.DAO
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("select Count(*) as dosePostExist from Forum_Posts " +
-                    "where post_id = @post_id and forum_id = @forum_id;", conn);
+                    "where post_id = @post_id and forum_id = @forum_id and is_visible = 1;", conn);
                 cmd.Parameters.AddWithValue("@post_id", postID);
                 cmd.Parameters.AddWithValue("@forum_id", forumID);
 
@@ -716,6 +716,31 @@ namespace Capstone.DAO
             return forumOwnerID;
         }
 
+        public List<IDsAndParentIDsPostsInForum> GetIDsAndParentIDsInForm (int forumID, int postID)
+        {
+            List<IDsAndParentIDsPostsInForum> idsAndParentIDsPostsInForums = new List<IDsAndParentIDsPostsInForum>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select post_id, " +
+                    "SUM(CASE WHEN parent_post_id is NULL THEN 0 ELSE parent_post_id END) AS parent_post_id " +
+                    "from Forum_Posts " +
+                    "where forum_id = @forum_id and post_id > @post_id " +
+                    "group by post_id " +
+                    "order by post_id", conn);
+                cmd.Parameters.AddWithValue("@forum_id", forumID);
+                cmd.Parameters.AddWithValue("@post_id", postID);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    IDsAndParentIDsPostsInForum iDsAndParentIDsPostsInForum = new IDsAndParentIDsPostsInForum();
+                    iDsAndParentIDsPostsInForum.PostID = Convert.ToInt32(reader["post_id"]);
+                    iDsAndParentIDsPostsInForum.ParentPostID = Convert.ToInt32(reader["parent_post_id"]);
+                    idsAndParentIDsPostsInForums.Add(iDsAndParentIDsPostsInForum);
+                }
+            }
+            return idsAndParentIDsPostsInForums;
+        }
 
         public void DeletePost(int postID) 
         {
