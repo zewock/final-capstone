@@ -5,19 +5,29 @@
         id="post-header"
         class="card-header button"
         @click="toggleReplies"
-      >    
+      >
         <h1 class="card-header-title">
           {{ reply.title }}
           Comments: {{ reply.replies.length }}
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
-      <PostControls @createPost="togglePostVisibility(true); retrievePosts(reply)" v-if="$store.state.posts == true"/>
-       <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
+      <PostControls
+        @createPost="
+          togglePostVisibility(true);
+          retrievePosts(reply);
+        "
+        v-if="$store.state.posts == true"
+      />
+      <PostForm
+        v-show="visiblePostForm"
+        @cancelForm="togglePostVisibility(false)"
+      />
       <div class="card-content replies">
         <div class="content">
           <p>@{{ reply.username }}</p>
           {{ reply.content }}
+          <img v-if="reply.image" :src="reply.image" alt="Reply image" />
           <br />
           <br />
           <time>{{ formatDateTime(reply.createDate) }}</time>
@@ -46,8 +56,8 @@ import PostForm from "../NewPostForm/PostForm.vue";
 export default {
   name: "Reply",
   components: {
-      PostControls,
-      PostForm,
+    PostControls,
+    PostForm,
   },
   props: {
     reply: Object,
@@ -59,7 +69,7 @@ export default {
   data() {
     return {
       showReplies: false,
-       visiblePostForm: false,
+      visiblePostForm: false,
     };
   },
   methods: {
@@ -88,12 +98,11 @@ export default {
     retrievePosts(reply) {
       this.$store.dispatch("selectPost", reply);
     },
-     togglePostVisibility(Bool) {
+    togglePostVisibility(Bool) {
       this.visiblePostForm = Bool;
     },
   },
-  created(){
-  }
+  created() {},
 };
 </script>
 

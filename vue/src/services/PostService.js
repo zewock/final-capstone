@@ -9,5 +9,11 @@ export default {
     },
     searchPosts(keyword){
         return axios.get(`/Posts/${keyword}`)
+    },
+    upvote(){
+        return axios.put('/ChangeUpvoteState')
+    },
+    downvote(){
+        return axios.put('/ChangeDownvoteState')
     }
 }
