@@ -1,8 +1,6 @@
 <template>
   <div>
-    <section class="card-header-title post-card">{{$store.state.selectForum.description}}</section>
     <div class="post-card" :class="{ 'root-post': isRootPost }">
-      
       <button
         id="post-header"
         class="card-header button"
@@ -35,10 +33,11 @@
           <time>{{ formatDateTime(reply.createDate) }}</time>
         </div>
       </div>
-      <footer class="card-footer">
-        <a class="card-footer-item">Like | {{ reply.upVotes }}</a>
-        <a class="card-footer-item">Dislike | {{ reply.downVotes }}</a>
-        <a class="card-footer-item">Favorite</a>
+      <footer class="card-footer" v-if="isRootPost">
+        <a class="card-footer-item" @click="upvotePost">Like | {{ upVotes }}</a>
+        <a class="card-footer-item" @click="downvotePost"
+          >Dislike | {{ downVotes }}</a
+        >
       </footer>
     </div>
     <div v-if="showReplies" class="replies-container">
@@ -67,6 +66,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    localVotes: {
+      type: Object,
+      default: null,
+    }
   },
   data() {
     return {
@@ -102,6 +105,32 @@ export default {
     },
     togglePostVisibility(Bool) {
       this.visiblePostForm = Bool;
+    },
+    upvotePost() {
+      this.$store.dispatch("UPVOTE_POST", {
+        postId: this.reply.postId,
+        forumId: this.reply.forumId,
+      });
+    },
+    downvotePost() {
+      this.$store.dispatch("DOWNVOTE_POST", {
+        postId: this.reply.postId,
+        forumId: this.reply.forumId,
+      });
+    },
+  },
+  computed: {
+    upVotes() {
+      const post = this.$store.state.postsList.find(
+        (post) => post.postId === this.reply.postId
+      );
+      return post ? post.upVotes : this.reply.upVotes;
+    },
+    downVotes() {
+      const post = this.$store.state.postsList.find(
+        (post) => post.postId === this.reply.postId
+      );
+      return post ? post.downVotes : this.reply.downVotes;
     },
   },
   created() {},

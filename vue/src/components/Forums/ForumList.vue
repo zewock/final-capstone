@@ -21,6 +21,10 @@
       />
     </div>
     <div v-if="$store.state.posts == true">
+      <section class="card-header-title post-card">
+        {{ $store.state.selectForum.description }}
+        <button>Favorite</button>
+      </section>
       <PostCard
         v-for="post in displayedFormattedPosts"
         :key="post.postId"
