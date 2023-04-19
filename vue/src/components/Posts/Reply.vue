@@ -12,17 +12,8 @@
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
-      <PostControls
-        @createPost="
-          togglePostVisibility(true);
-          retrievePosts(reply);
-        "
-        v-if="$store.state.posts == true"
-      />
-      <PostForm
-        v-show="visiblePostForm"
-        @cancelForm="togglePostVisibility(false)"
-      />
+      <PostControls @createPost="togglePostVisibility(true); retrievePosts(reply)" v-if="$store.state.posts == true" :reply="reply" />
+       <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
       <div class="card-content replies">
         <div class="content">
           <p>@{{ reply.username }}</p>
@@ -41,6 +32,7 @@
       </footer>
     </div>
     <div v-if="showReplies" class="replies-container">
+     
       <Reply
         v-for="(nestedReply, index) in reply.replies"
         :key="index"

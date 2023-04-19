@@ -5,6 +5,7 @@
         class="button"
         aria-haspopup="true"
         aria-controls="dropdown-menu4"
+        
       >
         <span>Options</span>
         <span class="icon is-small">
@@ -16,7 +17,7 @@
           <div class="dropdown-item">
             <button class="button">Mods</button>
             <button class="button">Users</button>
-            <button class="button"   @click="deletion">Delete</button>
+            <button class="button" @click="deletion">Delete</button>
           </div>
         </div>
       </div>
@@ -30,33 +31,42 @@ import PostService from "../services/PostService";
 
 export default {
     name: "OptionsDropdown",
-    data() {
+  data() {
     return {
-         forumId: {
-           forumId : this.$store.state.selectForum.forumID
-         },
-         Ids: {
-           formID : this.$store.state.SelectPost.forumId,
-           postID : this.$store.state.SelectPost.postId
-         }
+      deletePost: {
+        formID: null,
+        postID: null
+      }
     }
   },
+ 
     components: {
    
     },
+     props: {
+    reply: Object
+     },
     methods: {
-      deletion() {
-        
-        this.removeForum()
+  setupForDeletion() {
+    console.log(this.reply)
+        this.deletePost.postID = this.$store.state.deletePost.postID = this.reply.postID
+        this.deletePost.formID = this.$store.state.deletePost.formID = this.reply.forumId
+       this.$store.commit('DELETION')
+  },
+      removeForum(id) {
+        console.log(id)
+        ForumService.deleteForum(id)
       },
-      removeForum() {
-        console.log(this.forumId)
-        ForumService.deleteForum(this.forumId)
+       removePost(id) {
+        console.log(id)
+        PostService.deletePost(id)
       },
-       deletePost() {
-        console.log(this.Ids)
-        PostService.deleteForum(this.Ids)
-      }
+          deletion() {
+        this.removeForum(this.$store.state.deleteForum)
+     
+        this.removePost(this.deletePost)
+      },
+
     }
 };
 </script>
