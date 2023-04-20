@@ -18,5 +18,8 @@ export default {
     },
     deletePost(Ids) {
         return axios.put(`/DeletePost`, Ids)
+    },
+    top10posts(){
+        return axios.get('/TopTenPopularPosts')
     }
 }

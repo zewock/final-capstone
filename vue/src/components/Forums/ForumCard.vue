@@ -15,6 +15,7 @@ export default {
   name: "ForumCard",
   props: {
     forum: Object,
+    formatDate: Function,
   }, 
   methods: {
       addPosts() {

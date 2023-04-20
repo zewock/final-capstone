@@ -36,7 +36,6 @@ export default new Vuex.Store({
     filteredForums: [],
     favoritedForums: [],
     postsList: [],
-    filteredPosts: [],
     replyList: [],
     userVotes: {},
     form: false,
@@ -255,11 +254,5 @@ export default new Vuex.Store({
         console.error("Error toggling favorite:", error);
       }
     },
-
-
   },
-  getters: {
-
-  }
-
 })
