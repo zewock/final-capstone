@@ -94,7 +94,7 @@ namespace Capstone.Controllers
                     forumListDTO.ForumArray[i].Forums_FavoritesArrays = indvidualForumFavoriteList.ToArray();
                 }
                 forumListDTO.UserRole = tokenUserRole;
-                forumListDTO.RandomFact = randomFactService.GetRandomFact();
+                //forumListDTO.RandomFact = randomFactService.GetRandomFact();
 
                 //return Ok(json);
                 return Ok(forumListDTO);
@@ -203,6 +203,14 @@ namespace Capstone.Controllers
                 return StatusCode(500, "An error occurred while getting top 10 posts");
             }
         }
+
+        [HttpGet("/RandomFact")]
+        public ActionResult<RandomFactModel> GetRandomFact()
+        {
+            RandomFactModel randomFactModel = new RandomFactModel(randomFactService.GetRandomFact());
+            return Ok(randomFactModel);
+        }
+
 
         /*
         [HttpPost("/ChangeFavoriteForumState")]
