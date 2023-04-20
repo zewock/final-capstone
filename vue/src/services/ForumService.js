@@ -17,4 +17,11 @@ export default {
     favorite(payload) {
       return axios.post('/ChangeFavoriteState', payload)
     },    
+    addMod(mod) {
+      return axios.post(`/AddMod`, mod)
+    },
+    removeMod(mod) {
+      return axios.post(`/RemoveMod`, mod)
+    },
+    
   }

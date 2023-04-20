@@ -1,8 +1,9 @@
 <template>
-  <div class="post-controls">
+  <div class="post-controls postControlStyle ">
     <button class="button" @click="createPost">
-      New Post
+      Post
     </button>
+    
     <options-dropdown :reply="reply"
     />
     </div>
@@ -144,5 +145,9 @@ export default {
   height: 100%;
   overflow-y: auto;
   border-radius: 10px;
+}
+.postControlStyle {
+  display: flex;
+  justify-content: left;
 }
 </style>

@@ -9,10 +9,6 @@
       v-show="visiblePostForm"
       @cancelForm="togglePostVisibility(false)"
     />
-    <PostControls
-      @createPost="togglePostVisibility(true)"
-      v-if="$store.state.posts == true"
-    />
     <div v-if="$store.state.posts == false">
       <ForumCard
         v-for="forum in displayedFormattedForums"
@@ -23,16 +19,25 @@
     <div v-if="$store.state.posts == true">
       <section class="card-header-title post-card">
         {{ $store.state.selectForum.description }}
-        <i class="far fa-star" @click="toggleFavorite"></i>
+        <input type="checkbox" @change="toggleFavorite" /> Favorite Forum
+        <div class="postControlStyle ">
+   <PostControls
+      @createPost="togglePostVisibility(true)"
+      v-if="$store.state.posts == true"
+      class="postControlStyle"
+    > 
+   </PostControls>
+   <button class="button">Mods</button>
+   <button class="button">Users</button>
+    </div>
       </section>
       <PostCard
         v-for="post in displayedFormattedPosts"
         :key="post.postId"
         :post="post"
+    
       />
     </div>
-
-    <!--<ForumReply v-for="reply in replyList" :key="reply.replyId" :reply="reply"></ForumReply>-->
   </body>
 </template>
 
@@ -295,5 +300,9 @@ export default {
   height: 100%;
   overflow-y: auto;
   border-radius: 10px;
+}
+.postControlStyle {
+  display: flex;
+  justify-content: left;
 }
 </style>
