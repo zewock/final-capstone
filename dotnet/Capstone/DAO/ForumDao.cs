@@ -207,6 +207,51 @@ namespace Capstone.DAO
             }
         }
 
+        public List<TopTenPopularPostsArray> GetTopTenPopularPost() 
+        {
+            List<TopTenPopularPostsArray> topTenPopularPostsList = new List<TopTenPopularPostsArray>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select Top 10 ((select count(*) from Post_Upvotes_Downvotes a WHERE a.post_id = Forum_Posts.post_id AND a.is_upvoted = 1 and a.create_date > DATEADD(day, -1, GETDATE())) - " +
+                    "(select count(*) from Post_Upvotes_Downvotes b WHERE b.post_id = Forum_Posts.post_id AND b.is_downvoted = 1 and b.create_date > DATEADD(day, -1, GETDATE()))) as UpvotesMinusDownVotesLast24Hours, " +
+                    "(select count(*) from Post_Upvotes_Downvotes c WHERE c.post_id = Forum_Posts.post_id AND c.is_upvoted = 1 and c.create_date > DATEADD(day, -1, GETDATE())) as Upvotes24Hours, " +
+                    "(select count(*) from Post_Upvotes_Downvotes d WHERE d.post_id = Forum_Posts.post_id AND d.is_downvoted = 1 and d.create_date > DATEADD(day, -1, GETDATE())) as Downvotes24Hours, " +
+                    "(select count(*) from Post_Upvotes_Downvotes c WHERE c.post_id = Forum_Posts.post_id AND c.is_upvoted = 1 ) as UpvotesTotal, " +
+                    "(select count(*) from Post_Upvotes_Downvotes d WHERE d.post_id = Forum_Posts.post_id AND d.is_downvoted = 1) as DownvotesTotal, " +
+                    "Forum_Posts.post_id as post_id, username, post_content as content, header, image_url, Forum_Posts.create_date as create_date, Forum_Posts.user_id as user_id, Forum_Posts.forum_id as forum_id " +
+                    "from Forum_Posts " +
+                    "join Post_Upvotes_Downvotes on Forum_Posts.post_id = Post_Upvotes_Downvotes.post_id " +
+                    "join Forums on Forums.forum_id = Forum_Posts.forum_id " +
+                    "join Users on Forum_Posts.user_id = Users.user_id " +
+                    "where forums.is_visible = 1 and Forum_Posts.is_visible = 1 " +
+                    "group by Forum_Posts.post_id, username, post_content, header, image_url, Forum_Posts.create_date, Forum_Posts.user_id, Forum_Posts.forum_id " +
+                    "order by UpvotesMinusDownVotesLast24Hours DESC", conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    TopTenPopularPostsArray topTenPopularPost = new TopTenPopularPostsArray();
+
+                    topTenPopularPost.postId = Convert.ToInt32(reader["post_id"]);
+                    topTenPopularPost.username = Convert.ToString(reader["username"]);
+                    topTenPopularPost.content = Convert.ToString(reader["content"]);
+                    topTenPopularPost.title = Convert.ToString(reader["header"]);
+                    topTenPopularPost.image = Convert.ToString(reader["image_url"]);
+                    topTenPopularPost.createDate = Convert.ToDateTime(reader["create_date"]);
+                    topTenPopularPost.userId = Convert.ToInt32(reader["user_id"]);
+                    topTenPopularPost.forumId = Convert.ToInt32(reader["forum_id"]);
+                    topTenPopularPost.upvotesLast24Hours = Convert.ToInt32(reader["Upvotes24Hours"]);
+                    topTenPopularPost.downvotesLast24Hours = Convert.ToInt32(reader["Downvotes24Hours"]);
+                    topTenPopularPost.upVotes = Convert.ToInt32(reader["UpvotesTotal"]);
+                    topTenPopularPost.downVotes = Convert.ToInt32(reader["DownvotesTotal"]);
+                    
+                    topTenPopularPostsList.Add(topTenPopularPost);
+                }
+            }
+                return topTenPopularPostsList;
+        }
+
 
         /* //GetFavoritedForumsByUserId(int userId) - Retrieves favorited forums for a specific user by ID.
          public List<Forum> getFavoritedForumsByUserId(int userID)

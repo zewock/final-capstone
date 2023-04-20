@@ -120,7 +120,14 @@ export default {
     createPost() {
       this.$store.commit("ADD_POSTS");
     },
-    toggleFavorite() {
+    toggleFavorite(event) {
+      if (event.target.classList.contains("far")) {
+        event.target.classList.remove("far");
+        event.target.classList.add("fas");
+      } else {
+        event.target.classList.remove("fas");
+        event.target.classList.add("far");
+      }
       this.$store.dispatch("TOGGLE_FAVORITE", {
         forumId: this.$store.state.selectForum.ForumID,
       });
@@ -166,6 +173,14 @@ export default {
 </script>
 
 <style scoped>
+.far {
+  cursor: pointer;
+  color: #1a4d2e;
+}
+.fas {
+  cursor: pointer;
+  color: #1a4d2e;
+}
 .mainBody {
   grid-area: mainBody;
   position: sticky;

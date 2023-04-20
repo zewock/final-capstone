@@ -186,7 +186,8 @@ export default new Vuex.Store({
       state.deletePost.formID = state.selectForum.forumID
       state.deletePost.postID = state.selectPost.postID
     },
-    TOGGLE_FAVORITE(state, { forumId }) {
+    TOGGLE_FAVORITE(state) {
+      const forumId = state.selectForum.forumID;
       const forum = state.forums.find(forum => forum.ForumID === forumId);
       if (forum) {
         forum.isFavorite = !forum.isFavorite;
@@ -222,14 +223,16 @@ export default new Vuex.Store({
         console.error("Error downvoting post:", error);
       }
     },
-    async TOGGLE_FAVORITE(context, payload) {
+    async TOGGLE_FAVORITE(context) {
+      const forumId = context.state.selectForum.forumID;
       try {
-        await ForumService.favorite(payload);
-        context.commit("TOGGLE_FAVORITE", payload);
+        await ForumService.favorite({ forumId });
+        context.commit("TOGGLE_FAVORITE");
       } catch (error) {
         console.error("Error toggling favorite:", error);
       }
     },
+
 
   },
   getters: {
