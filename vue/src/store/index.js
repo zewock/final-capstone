@@ -34,11 +34,13 @@ export default new Vuex.Store({
     topic: '',
     forums: [],
     filteredForums: [],
+    favoritedForums: [],
     postsList: [],
     replyList: [],
     userVotes: {},
     form: false,
     menu: false,
+    favoriteForums: false,
     selectForum: null,
     selectPost: {
       image: "",
@@ -60,12 +62,13 @@ export default new Vuex.Store({
       title: "",
       description: "",
     },
-    deleteForum: {
-      forumId: null
-    },
     deletePost: {
       formID: null,
       postID: null
+    },
+    addMod: {
+      formID: null,
+      username: ""
     },
 
     posts: false,
@@ -135,10 +138,10 @@ export default new Vuex.Store({
         }
       })
     },
-    SEARCH_ALL_POSTS(state, posts) {
+    /*SEARCH_ALL_POSTS(state, posts) {
       this.postsList = posts;
 
-    },
+    },*/
     UPDATE_SELECT_POST(state) {
       state.selectPost = {
         image: "",
@@ -192,7 +195,27 @@ export default new Vuex.Store({
         forum.isFavorite = !forum.isFavorite;
       }
     },
+    SAVE_CREATOR(state) {
+      state.addMod.formID = state.selectForum.forumID
+      state.addMod.username = state.user.username
+      ForumService.addMod(state.addMod)
+      PostService.getPost(state.selectForum.forumID).then((response) => {
+        state.postsList = response.data;
+      });
+    },
+    SAVE_MOD(state, username) {
+      state.addMod.formID = state.selectForum.forumID
+      state.addMod.username = username
+      ForumService.addMod(state.addMod)
+    },
+    FLIP_FAVORITE_TRUE(state) {
+      state.favoriteForums = true;
+    },
+    FLIP_FAVORITE_FALSE(state) {
+      state.favoriteForums = false;
+    },
   },
+ 
   actions: {
     selectForum(context, forum) {
       context.commit('SELECT_FORUM', forum)

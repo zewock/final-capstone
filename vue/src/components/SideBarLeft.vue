@@ -4,19 +4,11 @@
       <strong>Feeds</strong>
     </p>
     <ul class="menu-list">
-      <li><router-link v-bind:to="{ name: 'forum' }" @click.native="refreshForum">Forums</router-link></li>
-      <li><a>Popular</a></li>
+      <li><router-link v-bind:to="{ name: 'forum' }" v-on:click="$store.commit('FLIP_FAVORITE_FALSE')"  >Forums</router-link></li>
+      <li><router-link v-bind:to="{ name: 'forum' }" v-on:click="$store.commit('FLIP_FAVORITE_TRUE')"  >Favorite Forums</router-link></li>
     </ul>
-    <p class="menu-label">
-      <strong>Topics</strong>
-    </p>
-    <ul class="menu-list">
-      <li><a>Gaming</a></li>
-      <li><a>Sports</a></li>
-      <li><a>Tech</a></li>
-      <li><a>Television</a></li>
-      <li><a>Spongebob</a></li>
-    </ul>
+ 
+   
     <button class="button" v-if="$store.state.token != ''">
       Private Messages
     </button>
@@ -25,6 +17,7 @@
 
 
 <script>
+
 export default {
   name: "sidebarLeft",
   data() {
@@ -35,7 +28,8 @@ export default {
       this.$nextTick(() => {
         this.$router.go();
       });
-    }
+    },
+  
   }
 };
 </script>
@@ -71,5 +65,13 @@ export default {
 .menu-list li a:hover {
   background-color: #1a4d2e;
   color: #ff9f29;
+}
+.mainBody {
+  position: sticky;
+  overflow: auto;
+  height: 87vh;
+  background-color: #faf3e3;
+  padding: 15px;
+  border-radius: 10px;
 }
 </style>
