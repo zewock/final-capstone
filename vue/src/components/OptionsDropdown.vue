@@ -1,28 +1,17 @@
 <template>
-  <div class="dropdown is-hoverable">
-    <div class="dropdown-trigger">
+  <div class="form-controls is-hoverable">
+    <div class="dropdown-trigger" v-if="reply.content">
       <button
         class="button"
         aria-haspopup="true"
         aria-controls="dropdown-menu4"
         @mouseover="setupForDeletion"
+        @click="deletion"
       >
-        <span>Options</span>
-        <span class="icon is-small">
-          <i class="fas fa-angle-down" aria-hidden="true"></i>
-        </span>
+      Delete
       </button>
-      <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-        <div class="dropdown-content">
-          <div class="dropdown-item">
-            <button class="button">Mods</button>
-            <button class="button">Users</button>
-            <button class="button" @click="deletion">Delete</button>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -37,9 +26,6 @@ export default {
         formID: null,
         postID: null
       },
-      deleteForum: {
-        forumID: null
-      }
     }
     
   },
@@ -55,7 +41,6 @@ export default {
     console.log(this.deleteForum)
         this.deletePost.postID = this.reply.postId
         this.deletePost.formID = this.reply.forumId
-        this.deleteForum.forumID = this.$store.state.selectForum.forumID
        this.$store.commit('DELETION')
   },
       removeForum(id) {
@@ -67,7 +52,6 @@ export default {
         PostService.deletePost(id)
       },
           deletion() {
-        this.removeForum(this.deleteForum)
         if(this.deletePost.postID != null) {
             this.removePost(this.deletePost)
         }
