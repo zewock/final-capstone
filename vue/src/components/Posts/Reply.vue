@@ -8,7 +8,7 @@
       >
         <h1 class="card-header-title">
           {{ reply.title }}
-          Comments: {{ reply.replies.length }}
+          <div v-if="reply.replies" >Comments: {{ reply.replies.length }}</div>
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
