@@ -1,14 +1,23 @@
 <template>
   <body class="mainBody">
     <div class="body-container" v-if="postList.length === 0">
-      <!-- <div class="card" v-for="forum in forums" :key="forum.forumID"></div> -->
+      Active Forums
+<ForumCard
+  v-for="forum in topActiveForums"
+  :key="forum.forumID"
+  :forum="forum"
+  :format-date="formatDate"
+/>
+
+
+      <h1>Popular Posts</h1>
       <PostCard
-        class="card"
         v-for="post in topPosts"
         :key="post.postId"
         :post="post"
       />
     </div>
+
     <div v-if="$store.state.keyword != null">
       <PostCard v-for="post in postList" :key="post.postId" :post="post" />
     </div>
@@ -19,13 +28,15 @@
 import ForumService from "../services/ForumService";
 import PostService from "../services/PostService";
 import PostCard from "../components/Posts/PostCard.vue";
+import ForumCard from "../components/Forums/ForumCard.vue";
 export default {
-  components: { PostCard },
+  components: { PostCard, ForumCard },
   name: "mainBody",
   data() {
     return {
       forums: [],
       topPosts: [],
+      topActiveForums: [],
     };
   },
   computed: {
@@ -53,25 +64,32 @@ export default {
     },
     Top10Posts() {
       PostService.top10posts().then((response) => {
-        console.log(
-          "This is what we're looking at " +
-            response.data.topTenPopularPostsArray
-        );
         this.topPosts = response.data.topTenPopularPostsArray;
-        console.log("Top Posts: " + this.topPosts);
       });
     },
-    upvotePost() {
-      this.$store.dispatch("UPVOTE_POST", {
-        postId: this.reply.postId,
-        forumId: this.reply.forumId,
-      });
+    getTopActiveForums() {
+      this.topActiveForums = this.forums
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(b.mostRecentPostDate) - new Date(a.mostRecentPostDate)
+        )
+        .slice(0, 5);
     },
-    downvotePost() {
-      this.$store.dispatch("DOWNVOTE_POST", {
-        postId: this.reply.postId,
-        forumId: this.reply.forumId,
-      });
+    formatDate(dateString) {
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+          throw new Error("Invalid date");
+        }
+        const year = date.getFullYear();
+        const month = ("0" + (date.getMonth() + 1)).slice(-2);
+        const day = ("0" + date.getDate()).slice(-2);
+        return `${month}-${day}-${year}`;
+      } catch (error) {
+        console.error(`Error formatting date: ${error.message}`);
+        return "Invalid date";
+      }
     },
   },
   created() {
@@ -80,6 +98,7 @@ export default {
       this.forums.forEach((forum) => {
         this.RetrievePosts(forum);
       });
+      this.getTopActiveForums();
     });
     this.Top10Posts();
   },
