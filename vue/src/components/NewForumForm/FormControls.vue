@@ -3,18 +3,15 @@
     <button class="button" @click="createForm">
       New Forum
     </button>
-    <template>
-    <options-dropdown
-    
-    />
-</template>
   </div>
 </template>
 
 <script>
-import OptionsDropdown from '../OptionsDropdown.vue';
+
 export default {
-  components: { OptionsDropdown },
+  components: {
+
+  },
   name: "FormControls",
   methods: {
     createForm() {

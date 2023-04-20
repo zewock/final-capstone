@@ -12,8 +12,10 @@
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
+      <div>
       <PostControls @createPost="togglePostVisibility(true); retrievePosts(reply)" v-if="$store.state.posts == true" :reply="reply" />
-       <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
+      <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
+      </div>
       <div class="card-content replies">
         <div class="content">
           <p>@{{ reply.username }}</p>
