@@ -1,46 +1,36 @@
 <template>
   <div class="card">
-    <header
-      class="card-header"
-      @click="
-        retrievePosts(forum);
-        togglePosts();
-      "
-    >
-      <section class="card-header-title input">
-        <h1>{{ forum.title }}</h1>
-        <p>
-          Topic: {{ forum.topic }}
-          <span
-            ><time>{{ formatDate(forum.createDate) }}</time></span
-          >
-        </p>
-      </section>
-    </header>
+  <header class="card-header"  @click="retrievePosts(forum);togglePosts()" > 
+       <section class="card-header-title input" >
+       <h1>{{ forum.title }}</h1>
+       <p>Topic: {{forum.topic}} <span><time>{{ forum.FormattedCreateDate }} </time></span></p>
+    </section>
+  </header>
   </div>
 </template>
+
 
 <script>
 export default {
   name: "ForumCard",
   props: {
     forum: Object,
-    formatDate: Function, // Add this line to accept the formatDate prop
-  },
+    formatDate: Function,
+  }, 
   methods: {
-    addPosts() {
+      addPosts() {
       this.$store.commit("ADD_POSTS_BY_FORUMID");
     },
 
-    togglePosts() {
+       togglePosts() {
       this.$store.commit("TOGGLE_SOME_POSTS");
     },
-
-    retrievePosts(forum) {
-      this.$store.dispatch("selectForum", forum);
-      this.addPosts();
-    },
-  },
+    
+  retrievePosts(forum) {
+        this.$store.dispatch('selectForum', forum)
+        this.addPosts();
+    }
+  }
 };
 </script>
 

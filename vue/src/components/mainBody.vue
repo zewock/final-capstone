@@ -8,8 +8,6 @@
   :forum="forum"
   :format-date="formatDate"
 />
-
-
       <h1>Popular Posts</h1>
       <PostCard
         v-for="post in topPosts"
@@ -75,21 +73,6 @@ export default {
             new Date(b.mostRecentPostDate) - new Date(a.mostRecentPostDate)
         )
         .slice(0, 5);
-    },
-    formatDate(dateString) {
-      try {
-        const date = new Date(dateString);
-        if (isNaN(date)) {
-          throw new Error("Invalid date");
-        }
-        const year = date.getFullYear();
-        const month = ("0" + (date.getMonth() + 1)).slice(-2);
-        const day = ("0" + date.getDate()).slice(-2);
-        return `${month}-${day}-${year}`;
-      } catch (error) {
-        console.error(`Error formatting date: ${error.message}`);
-        return "Invalid date";
-      }
     },
   },
   created() {

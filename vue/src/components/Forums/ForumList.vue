@@ -28,7 +28,11 @@
           >
           </PostControls>
           <button class="button" @click="toggleSortOrder">
-            {{ sortByPopularity ? "Sorted by: Most Popular" : "Sorted by: Most Recent" }}
+            {{
+              sortByPopularity
+                ? "Sorted by: Most Popular"
+                : "Sorted by: Most Recent"
+            }}
           </button>
           <button class="button">Mods</button>
           <button class="button">Users</button>
@@ -161,6 +165,7 @@ export default {
   computed: {
     displayedFormattedForums() {
       const forumsToDisplay =
+        this.$store.state.filteredForums &&
         this.$store.state.filteredForums.length > 0
           ? this.$store.state.filteredForums
           : this.$store.state.forums;
@@ -179,6 +184,7 @@ export default {
     displayedFormattedPosts: {
       get() {
         const postsToDisplay =
+          this.$store.state.filteredPosts &&
           this.$store.state.filteredPosts.length > 0
             ? this.$store.state.filteredPosts
             : this.$store.state.postsList;
