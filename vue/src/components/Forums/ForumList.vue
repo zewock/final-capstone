@@ -20,22 +20,28 @@
       <section class="card-header-title post-card">
         {{ $store.state.selectForum.description }}
         <input type="checkbox" @change="toggleFavorite" /> Favorite Forum
-        <div class="postControlStyle ">
-   <PostControls
-      @createPost="togglePostVisibility(true)"
-      v-if="$store.state.posts == true"
-      class="postControlStyle"
-    > 
-   </PostControls>
-   <button class="button">Mods</button>
-   <button class="button">Users</button>
-    </div>
+        <div class="postControlStyle">
+          <PostControls
+            @createPost="togglePostVisibility(true)"
+            v-if="$store.state.posts == true"
+            class="postControlStyle"
+          >
+          </PostControls>
+          <button class="button" @click="toggleSortOrder">
+            {{
+              sortByPopularity
+                ? "Sorted by: Most Popular"
+                : "Sorted by: Most Recent"
+            }}
+          </button>
+          <button class="button">Mods</button>
+          <button class="button">Users</button>
+        </div>
       </section>
       <PostCard
         v-for="post in displayedFormattedPosts"
         :key="post.postId"
         :post="post"
-    
       />
     </div>
   </body>
@@ -65,6 +71,7 @@ export default {
       posts: [],
       visible: false,
       visiblePostForm: false,
+      sortByPopularity: false,
     };
   },
   methods: {
@@ -117,6 +124,11 @@ export default {
         .slice()
         .sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
     },
+    sortPostsByPopularity(posts) {
+      return posts
+        .slice()
+        .sort((a, b) => b.upVotes - b.downVotes - (a.upVotes - a.downVotes));
+    },
     createPost() {
       this.$store.commit("ADD_POSTS");
     },
@@ -132,6 +144,19 @@ export default {
         forumId: this.$store.state.selectForum.ForumID,
       });
     },
+    toggleSortOrder() {
+      if (this.sortByPopularity) {
+        this.sortByPopularity = false;
+        this.displayedFormattedPosts = this.sortPostsByDate(
+          this.displayedFormattedPosts.slice()
+        );
+      } else {
+        this.sortByPopularity = true;
+        this.displayedFormattedPosts = this.sortPostsByPopularity(
+          this.displayedFormattedPosts.slice()
+        );
+      }
+    },
   },
   created() {
     this.addForums();
@@ -140,33 +165,50 @@ export default {
   computed: {
     displayedFormattedForums() {
       const forumsToDisplay =
+        this.$store.state.filteredForums &&
         this.$store.state.filteredForums.length > 0
           ? this.$store.state.filteredForums
           : this.$store.state.forums;
 
-      return forumsToDisplay.map((forum) => {
-        const rawCreateDate = forum.createDate;
-        const formattedCreateDate = this.formatDate(rawCreateDate);
-        return {
-          ...forum,
-          FormattedCreateDate: formattedCreateDate,
-        };
-      });
+      return forumsToDisplay
+        .slice()
+        .sort((a, b) => new Date(b.createDate) - new Date(a.createDate))
+        .map((forum) => {
+          const formattedCreateDate = this.formatDate(forum.createDate);
+          return {
+            ...forum,
+            FormattedCreateDate: formattedCreateDate,
+          };
+        });
     },
-    displayedFormattedPosts() {
-      const postsToDisplay =
-        this.$store.state.filteredPosts.length > 0
-          ? this.$store.state.filteredPosts
-          : this.$store.state.postsList;
+    displayedFormattedPosts: {
+      get() {
+        const postsToDisplay =
+          this.$store.state.filteredPosts &&
+          this.$store.state.filteredPosts.length > 0
+            ? this.$store.state.filteredPosts
+            : this.$store.state.postsList;
 
-      return postsToDisplay.map((post) => {
-        const rawCreateDate = post.createDate;
-        const formattedCreateDate = this.formatDateTime(rawCreateDate);
-        return {
-          ...post,
-          FormattedCreateDate: formattedCreateDate,
-        };
-      });
+        if (this.sortByPopularity) {
+          return this.sortPostsByPopularity(postsToDisplay).map((post) => {
+            const formattedCreateDate = this.formatDateTime(post.createDate);
+            return {
+              ...post,
+              FormattedCreateDate: formattedCreateDate,
+            };
+          });
+        } else {
+          return this.sortPostsByDate(postsToDisplay).map((post) => {
+            const formattedCreateDate = this.formatDateTime(post.createDate);
+            return {
+              ...post,
+              FormattedCreateDate: formattedCreateDate,
+            };
+          });
+        }
+      },
+      // Add an empty setter to satisfy Vue's reactivity system
+      set() {},
     },
   },
 };
