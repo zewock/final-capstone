@@ -23,7 +23,7 @@
     <div v-if="$store.state.posts == true">
       <section class="card-header-title post-card">
         {{ $store.state.selectForum.description }}
-        <i class="far fa-star" @click="toggleFavorite"></i>
+        <input type="checkbox" @change="toggleFavorite" /> Favorite
       </section>
       <PostCard
         v-for="post in displayedFormattedPosts"
@@ -115,14 +115,7 @@ export default {
     createPost() {
       this.$store.commit("ADD_POSTS");
     },
-    toggleFavorite(event) {
-      if (event.target.classList.contains("far")) {
-        event.target.classList.remove("far");
-        event.target.classList.add("fas");
-      } else {
-        event.target.classList.remove("fas");
-        event.target.classList.add("far");
-      }
+    toggleFavorite() {
       this.$store.dispatch("TOGGLE_FAVORITE", {
         forumId: this.$store.state.selectForum.ForumID,
       });
@@ -168,14 +161,6 @@ export default {
 </script>
 
 <style scoped>
-.far {
-  cursor: pointer;
-  color: #1a4d2e;
-}
-.fas {
-  cursor: pointer;
-  color: #1a4d2e;
-}
 .mainBody {
   grid-area: mainBody;
   position: sticky;
