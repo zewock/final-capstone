@@ -8,6 +8,8 @@ namespace Capstone.Models.OutgoingDTOs
         
         public string UserRole { get; set; }
 
+        public string RandomFact { get; set; } = "";
+
         public ForumListDTO()
         {
 

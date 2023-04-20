@@ -11,7 +11,7 @@ using Capstone.Security;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using Capstone.DAO;
-
+using Capstone.Services;
 
 namespace Capstone
 {
@@ -69,7 +69,7 @@ namespace Capstone
             services.AddTransient<IForumDao>(sp => new ForumDao(connectionString));
             services.AddTransient<IPostDao>(sp => new PostDao(connectionString));
             services.AddTransient<IPrivateMessageDao>(sp => new PrivateMessageDao(connectionString));
-
+            services.AddTransient<IRandomFactService>(m => new RandomFactService());
 
 
             services.AddSwaggerGen(s => {
