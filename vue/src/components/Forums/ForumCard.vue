@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-  <header class="card-header"  @click="retrievePosts(forum);togglePosts()" > 
+  <header class="card-header"  @click="retrievePosts(forum);togglePosts();saveForumCreator();" > 
        <section class="card-header-title input" >
        <h1>{{ forum.title }}</h1>
        <p>Topic: {{forum.topic}} <span><time>{{ forum.FormattedCreateDate }} </time></span></p>
@@ -28,8 +28,15 @@ export default {
   retrievePosts(forum) {
         this.$store.dispatch('selectForum', forum)
         this.addPosts();
-    }
-  }
+    },
+    saveForumCreator() {
+      if(this.$store.state.user.userId == this.$store.state.selectForum.ownerID) {
+        this.$store.commit("SAVE_CREATOR")
+      }
+    
+    },
+  },
+    
 };
 </script>
 

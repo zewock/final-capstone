@@ -9,7 +9,15 @@
       v-show="visiblePostForm"
       @cancelForm="togglePostVisibility(false)"
     />
-    <div v-if="$store.state.posts == false">
+    <div v-if="$store.state.posts == false && $store.state.favoriteForums == false">
+      <ForumCard
+        v-for="forum in displayedFormattedForums"
+        :key="forum.ForumID"
+        :forum="forum"
+      />
+    </div>
+    <div v-if="$store.state.posts == false && $store.state.favoriteForums == true" >
+    
       <ForumCard
         v-for="forum in displayedFormattedForums"
         :key="forum.ForumID"
@@ -27,8 +35,8 @@
       class="postControlStyle"
     > 
    </PostControls>
-   <button class="button">Mods</button>
-   <button class="button">Users</button>
+   
+   <input class="input is-rounded" type="search" placeholder="+ Mods by Username" v-model="keyword" @search="addModByModsandAdmin(keyword)"  >
     </div>
       </section>
       <PostCard
@@ -65,6 +73,7 @@ export default {
       posts: [],
       visible: false,
       visiblePostForm: false,
+      keyword: ""
     };
   },
   methods: {
@@ -132,13 +141,21 @@ export default {
         forumId: this.$store.state.selectForum.ForumID,
       });
     },
+    addModByModsandAdmin(username) {
+      this.$store.state.selectForum.forums_ModsArrays.forEach(element => {
+        if(element.userID == this.$store.state.user.userId || this.$store.state.user.role == "admin") {
+           this.$store.commit("SAVE_MOD", username)
+        }
+
+      });
+    }
   },
   created() {
     this.addForums();
   },
 
   computed: {
-    displayedFormattedForums() {
+   displayedFormattedForums() {
       const forumsToDisplay =
         this.$store.state.filteredForums.length > 0
           ? this.$store.state.filteredForums
@@ -153,6 +170,41 @@ export default {
         };
       });
     },
+/*displayedFormattedForums() {
+  const currentUser = this.$store.state.user;
+  const forumsToDisplay = this.$store.state.filteredForums.length > 0
+    ? this.$store.state.filteredForums
+    : this.$store.state.forums;
+
+  let filteredForums = forumsToDisplay;
+
+  if (this.$store.state.favoriteForums == true) {
+    filteredForums = forumsToDisplay.filter(forum => {
+      return forum.forums_FavoritesArrays.filter(favorite => favorite.userID === currentUser.userId);
+    });
+  }
+
+  if (this.$store.state.favoriteForums == false) {
+    return filteredForums.map(forum => {
+      const rawCreateDate = forum.createDate;
+      const formattedCreateDate = this.formatDate(rawCreateDate);
+      return {
+        ...forum,
+        FormattedCreateDate: formattedCreateDate,
+      };
+    });
+  }
+
+  return filteredForums.map(forum => {
+    const rawCreateDate = forum.createDate;
+    const formattedCreateDate = this.formatDate(rawCreateDate);
+    return {
+      ...forum,
+      FormattedCreateDate: formattedCreateDate,
+    };
+  });
+},*/
+
     displayedFormattedPosts() {
       const postsToDisplay =
         this.$store.state.filteredPosts.length > 0

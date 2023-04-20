@@ -86,13 +86,13 @@ data() {
       console.log(this.newForum)
     ForumService.create(this.newForum).then((response) => {
       if (response.status === 200) {
-        console.log();("Forum Created");
         this.$store.commit('SAVE_FORUM', response.data);
         this.onFormCancel()
         this.refreshForum()
         }
       })
     },
+  
       refreshForum() {
       this.$nextTick(() => {
       this.$router.go();
