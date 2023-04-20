@@ -225,7 +225,7 @@ namespace Capstone.DAO
                     "join Post_Upvotes_Downvotes on Forum_Posts.post_id = Post_Upvotes_Downvotes.post_id " +
                     "join Forums on Forums.forum_id = Forum_Posts.forum_id " +
                     "join Users on Forum_Posts.user_id = Users.user_id " +
-                    "where forums.is_visible = 1 and Forum_Posts.post_id = 1 " +
+                    "where forums.is_visible = 1 and Forum_Posts.is_visible = 1 " +
                     "group by Forum_Posts.post_id, username, post_content, header, image_url, Forum_Posts.create_date, Forum_Posts.user_id, Forum_Posts.forum_id " +
                     "order by UpvotesMinusDownVotesLast24Hours DESC", conn);
                 SqlDataReader reader = cmd.ExecuteReader();
