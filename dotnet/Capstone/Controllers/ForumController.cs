@@ -211,6 +211,7 @@ namespace Capstone.Controllers
             return Ok(randomFactModel);
         }
 
+        //Comment
 
         /*
         [HttpPost("/ChangeFavoriteForumState")]
