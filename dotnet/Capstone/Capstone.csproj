@@ -11,6 +11,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Connections" Version="1.1.0" />
+  <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="1.1.0" />
+  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
+  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+  <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
+
   </ItemGroup>
 
 </Project>
