@@ -186,6 +186,22 @@ namespace Capstone.Controllers
             }
         }
 
+        [HttpGet("/TopTenPopularPosts")]
+        public ActionResult<ForumListDTO> GetTopTenPopularPosts()
+        {
+            try
+            {
+                TopTenPopularPostsDTO topTenPopularPostsDTO = new TopTenPopularPostsDTO();
+                List<TopTenPopularPostsArray> topTenPopularPostsArray = forumDao.GetTopTenPopularPost();
+                topTenPopularPostsDTO.TopTenPopularPostsArray = topTenPopularPostsArray.ToArray();
+                return Ok(topTenPopularPostsDTO);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while getting top 10 posts");
+            }
+        }
+
         /*
         [HttpPost("/ChangeFavoriteForumState")]
 

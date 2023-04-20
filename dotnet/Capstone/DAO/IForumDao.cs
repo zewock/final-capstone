@@ -16,6 +16,7 @@ namespace Capstone.DAO
         public void PostToForum(ForumPost forumPost);
         public int GetForumOwnerUserID(int forumID);
         public void DeletePost(int forumID);
+        public List<TopTenPopularPostsArray> GetTopTenPopularPost();
 
 
     }
