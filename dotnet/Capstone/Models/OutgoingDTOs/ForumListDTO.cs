@@ -8,6 +8,7 @@ namespace Capstone.Models.OutgoingDTOs
         
         public string UserRole { get; set; }
 
+
         public ForumListDTO()
         {
 

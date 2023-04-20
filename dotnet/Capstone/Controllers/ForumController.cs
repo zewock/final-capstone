@@ -15,6 +15,7 @@ using System.Net;
 using Capstone.Models.OutgoingDTOs;
 using Newtonsoft.Json;
 using Capstone.Models.IntermediaryModles;
+using Capstone.Services;
 
 namespace Capstone.Controllers
 {
@@ -24,12 +25,13 @@ namespace Capstone.Controllers
     { 
         private readonly IUserDao userDao;
         private readonly IForumDao forumDao;
+        private readonly IRandomFactService randomFactService;
 
-
-        public ForumController(IForumDao _forumDao, IUserDao _userDoa)
+        public ForumController(IForumDao _forumDao, IUserDao _userDoa, IRandomFactService _randomFactService)
         {
             forumDao = _forumDao;
             userDao = _userDoa;
+            randomFactService = _randomFactService;
         }
 
         [HttpGet("/ForumsList")]
@@ -92,7 +94,7 @@ namespace Capstone.Controllers
                     forumListDTO.ForumArray[i].Forums_FavoritesArrays = indvidualForumFavoriteList.ToArray();
                 }
                 forumListDTO.UserRole = tokenUserRole;
-
+                //forumListDTO.RandomFact = randomFactService.GetRandomFact();
 
                 //return Ok(json);
                 return Ok(forumListDTO);
@@ -201,6 +203,14 @@ namespace Capstone.Controllers
                 return StatusCode(500, "An error occurred while getting top 10 posts");
             }
         }
+
+        [HttpGet("/RandomFact")]
+        public ActionResult<RandomFactModel> GetRandomFact()
+        {
+            RandomFactModel randomFactModel = new RandomFactModel(randomFactService.GetRandomFact());
+            return Ok(randomFactModel);
+        }
+
 
         /*
         [HttpPost("/ChangeFavoriteForumState")]
