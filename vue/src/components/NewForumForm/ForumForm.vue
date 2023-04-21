@@ -1,37 +1,24 @@
 <template>
   <section class="box">
-      <h1 style="">New Forum Form</h1>
       <div class="field">
         <label class="label">Forum Name</label>
         <div class="control has-icons-left has-icons-right">
           <input
             class="input is-success"
             type="text"
-            placeholder="Text input"
             value="bulma"
             v-model="newForum.forumTitle"
           />
-          <span class="icon is-small is-left">
-            <i class="fas fa-font"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-check"></i>
-          </span>
         </div>
       </div>
       <div class="field">
         <label class="label">Topic</label>
-        <div class="control">
-          <div class="select">
-            <select v-model="newForum.forumTopic">
-              <option>Gaming</option>
-              <option>Sports</option>
-              <option>Tech</option>
-              <option>Television</option>
-              <option>Spongebob</option>
-            </select>
-          </div>
-        </div>
+        <input
+            class="input is-success"
+            type="text"
+            value="bulma"
+            v-model="newForum.forumTopic"
+          />
       </div>
 
       <div class="field">
@@ -39,7 +26,6 @@
         <div class="control">
           <textarea
             class="textarea"
-            placeholder="Textarea"
             v-model="newForum.forumDescription"
           ></textarea>
         </div>
