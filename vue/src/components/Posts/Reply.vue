@@ -12,7 +12,7 @@
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
       </button>
-      <div>
+      <div v-if="$store.state.token != ''">
       <PostControls @createPost="togglePostVisibility(true); retrievePosts(reply)" v-if="$store.state.posts == true" :reply="reply" />
       <PostForm v-show="visiblePostForm" @cancelForm="togglePostVisibility(false)" />
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="post-controls postControlStyle ">
+  <div class="post-controls postControlStyle "  v-if="$store.state.token != ''">
     <button class="button" @click="createPost">
       Post
     </button>

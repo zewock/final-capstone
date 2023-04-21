@@ -1,6 +1,5 @@
 <template>
   <section class="box">
-    <h1 style="">New Post Form</h1>
     <div class="field">
       <label class="label">Post Name</label>
       <div class="control has-icons-left has-icons-right">

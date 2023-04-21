@@ -6,7 +6,7 @@
     <ul class="menu-list">
       <button class="fav" @mouseover="$store.commit('FLIP_FAVORITE_FALSE')"><li><router-link v-bind:to="{ name: 'forum' }"  >Forums</router-link></li></button>
       <br/>
-      <button class="fav" @mouseover="$store.commit('FLIP_FAVORITE_TRUE')"> <li><router-link v-bind:to="{ name: 'forum' }"  >Favorite Forums</router-link></li></button>
+      <button class="fav" @mouseover="$store.commit('FLIP_FAVORITE_TRUE')"> <li v-if="$store.state.token != ''"><router-link v-bind:to="{ name: 'forum' }"  >Favorite Forums</router-link></li></button>
     </ul>
   </aside>
 </template>
