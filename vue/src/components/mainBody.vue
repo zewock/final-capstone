@@ -1,7 +1,8 @@
 <template>
   <body class="mainBody">
     <div class="body-container" v-if="postList.length === 0">
-      Active Forums AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+      <div>Fun Fact: {{randomFact.text}}</div>
+      Active Forums
 <ForumCard
   v-for="forum in topActiveForums"
   :key="forum.forumID"
@@ -35,6 +36,7 @@ export default {
       forums: [],
       topPosts: [],
       topActiveForums: [],
+      randomFact:{},
     };
   },
   computed: {
@@ -74,6 +76,12 @@ export default {
         )
         .slice(0, 5);
     },
+    getRandomFact(){
+      PostService.randomFact().then((response) =>
+        this.randomFact = response.data,
+        console.log(this.randomFact)
+      )
+    }
   },
   created() {
     ForumService.getForums().then((response) => {
@@ -84,6 +92,7 @@ export default {
       this.getTopActiveForums();
     });
     this.Top10Posts();
+    this.getRandomFact()
   },
 };
 </script>
