@@ -21,5 +21,8 @@ export default {
     },
     top10posts(){
         return axios.get('/TopTenPopularPosts')
+    },
+    randomFact(){
+        return axios.get('/RandomFact')
     }
 }
