@@ -1,7 +1,7 @@
 <template>
   <body class="mainBody">
     <div class="body-container" v-if="postList.length === 0">
-      Active Forums AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+      Active Forums
 <ForumCard
   v-for="forum in topActiveForums"
   :key="forum.forumID"
@@ -10,9 +10,9 @@
 />
       <h1>Popular Posts</h1>
       <PostCard
-        v-for="post in topPosts"
-        :key="post.postId"
-        :post="post"
+        v-for="posts in topPosts"
+        :key="posts.postId"
+        :post="posts"
       />
     </div>
 

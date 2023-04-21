@@ -4,8 +4,9 @@
       <strong>Feeds</strong>
     </p>
     <ul class="menu-list">
-      <li><router-link v-bind:to="{ name: 'forum' }" v-on:click="$store.commit('FLIP_FAVORITE_FALSE')"  >Forums</router-link></li>
-      <li><router-link v-bind:to="{ name: 'forum' }" v-on:click="$store.commit('FLIP_FAVORITE_TRUE')"  >Favorite Forums</router-link></li>
+      <button class="fav" @mouseover="$store.commit('FLIP_FAVORITE_FALSE')"><li><router-link v-bind:to="{ name: 'forum' }"  >Forums</router-link></li></button>
+      
+      <button class="fav" @mouseover="$store.commit('FLIP_FAVORITE_TRUE')"> <li><router-link v-bind:to="{ name: 'forum' }"  >Favorite Forums</router-link></li></button>
     </ul>
  
    
@@ -61,6 +62,10 @@ export default {
   color: #faf3e3;
   background-color: #ff9f29;
   border-color: #faf3e3;
+}
+.fav{
+  background-color: transparent;
+  border-color: transparent;
 }
 .menu-list li a:hover {
   background-color: #1a4d2e;
