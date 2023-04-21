@@ -64,6 +64,7 @@
             ><select
               class="button"
               id="favorite-select"
+              v-if="$store.state.token != ''"
               @change="toggleFavorite"
             >
               <option value="not-favorite">Not Favorite</option>
@@ -71,7 +72,7 @@
             </select>
             <button class="button" @click="refreshForum">Back</button>
           </div>
-          <div class="search-container">
+          <div class="search-container" v-if="$store.state.token != ''">
             <input
               class="input is-rounded"
               type="search"
