@@ -40,7 +40,7 @@ export default new Vuex.Store({
     userVotes: {},
     form: false,
     menu: false,
-    favoriteForums: false,
+    myFavoriteForums: false,
     selectForum: null,
     selectPost: {
       image: "",
@@ -209,10 +209,10 @@ export default new Vuex.Store({
       ForumService.addMod(state.addMod)
     },
     FLIP_FAVORITE_TRUE(state) {
-      state.favoriteForums = true;
+      state.myFavoriteForums = true;
     },
     FLIP_FAVORITE_FALSE(state) {
-      state.favoriteForums = false;
+      state.myFavoriteForums = false;
     },
   },
  

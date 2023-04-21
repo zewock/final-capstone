@@ -11,9 +11,9 @@
 />
       <h1>Popular Posts</h1>
       <PostCard
-        v-for="post in topPosts"
-        :key="post.postId"
-        :post="post"
+        v-for="posts in topPosts"
+        :key="posts.postId"
+        :post="posts"
       />
     </div>
 
