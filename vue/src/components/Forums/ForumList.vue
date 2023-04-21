@@ -1,49 +1,85 @@
 <template>
   <body class="mainBody">
-    <ForumForm v-show="visible" @cancelForm="toggleVisibility(false)" />
+    <div class="forumTop">
+      <div>
+        <ForumForm
+          class="newForumButton"
+          v-show="visible"
+          @cancelForm="toggleVisibility(false)"
+        />
+      </div>
+    </div>
+
     <FormControls
       @createForm="toggleVisibility(true)"
       v-if="$store.state.posts == false"
     />
+    <br />
     <PostForm
       v-show="visiblePostForm"
       @cancelForm="togglePostVisibility(false)"
     />
-    <div v-if="$store.state.posts == false && $store.state.myFavoriteForums == false">
+    <div
+      v-if="
+        $store.state.posts == false && $store.state.myFavoriteForums == false
+      "
+    >
       <ForumCard
         v-for="forum in displayedFormattedForums"
         :key="forum.ForumID"
         :forum="forum"
       />
     </div>
-    <div v-if="$store.state.posts == false && $store.state.myFavoriteForums == true" >
-    <ForumCard
+    <div
+      v-if="
+        $store.state.posts == false && $store.state.myFavoriteForums == true
+      "
+    >
+      <ForumCard
         v-for="forum in displayedFormattedForumsFavorites"
         :key="forum.ForumID"
         :forum="forum"
       />
-      
     </div>
     <div v-if="$store.state.posts == true">
       <section class="card-header-title post-card">
-        {{ $store.state.selectForum.description }}
-        <input type="checkbox" @change="toggleFavorite" /> Favorite Forum
+        <span>{{ $store.state.selectForum.title }}</span
+        ><br />
+        <br />
+        <h1>{{ $store.state.selectForum.description }}</h1>
         <div class="postControlStyle">
-          <PostControls
-            @createPost="togglePostVisibility(true)"
-            v-if="$store.state.posts == true"
-            class="postControlStyle"
-          >
-          </PostControls>
-          <button class="button" @click="toggleSortOrder">
-            {{
-              sortByPopularity
-                ? "Sorted by: Most Popular"
-                : "Sorted by: Most Recent"
-            }}
-          </button>
-          <button class="button" @click="refreshForum">Back</button>
-           <input class="input is-rounded" type="search" placeholder="+ Mods by Username" v-model="keyword" @search="addModByModsandAdmin(keyword)"  >
+          <div class="button-container">
+            <PostControls
+              @createPost="togglePostVisibility(true)"
+              v-if="$store.state.posts == true"
+              class="postControlStyle"
+            >
+            </PostControls>
+            <button class="button" @click="toggleSortOrder">
+              {{
+                sortByPopularity
+                  ? "Sorted by: Most Popular"
+                  : "Sorted by: Most Recent"
+              }}</button
+            ><select
+              class="button"
+              id="favorite-select"
+              @change="toggleFavorite"
+            >
+              <option value="not-favorite">Not Favorite</option>
+              <option value="favorite">Favorite</option>
+            </select>
+            <button class="button" @click="refreshForum">Back</button>
+          </div>
+          <div class="search-container">
+            <input
+              class="input is-rounded"
+              type="search"
+              placeholder="+ Mods by Username"
+              v-model="keyword"
+              @search="addModByModsandAdmin(keyword)"
+            />
+          </div>
         </div>
       </section>
       <PostCard
@@ -141,24 +177,20 @@ export default {
     createPost() {
       this.$store.commit("ADD_POSTS");
     },
-    toggleFavorite(event) {
-      if (event.target.classList.contains("far")) {
-        event.target.classList.remove("far");
-        event.target.classList.add("fas");
-      } else {
-        event.target.classList.remove("fas");
-        event.target.classList.add("far");
-      }
+    toggleFavorite() {
+      alert("Added " + this.$store.state.selectForum.title + " to favorites!");
       this.$store.dispatch("TOGGLE_FAVORITE", {
         forumId: this.$store.state.selectForum.ForumID,
       });
     },
     addModByModsandAdmin(username) {
-      this.$store.state.selectForum.forums_ModsArrays.forEach(element => {
-        if(element.userID == this.$store.state.user.userId || this.$store.state.user.role == "admin") {
-           this.$store.commit("SAVE_MOD", username)
+      this.$store.state.selectForum.forums_ModsArrays.forEach((element) => {
+        if (
+          element.userID == this.$store.state.user.userId ||
+          this.$store.state.user.role == "admin"
+        ) {
+          this.$store.commit("SAVE_MOD", username);
         }
-
       });
     },
     toggleSortOrder() {
@@ -185,8 +217,7 @@ export default {
   },
 
   computed: {
-
-   displayedFormattedForums() {
+    displayedFormattedForums() {
       const forumsToDisplay =
         this.$store.state.filteredForums &&
         this.$store.state.filteredForums.length > 0
@@ -205,26 +236,29 @@ export default {
         });
     },
 
-displayedFormattedForumsFavorites() {
-const currentUser = this.$store.state.user;
-  const forumsToDisplay = this.$store.state.filteredForums.length > 0
-    ? this.$store.state.filteredForums
-    : this.$store.state.forums;
+    displayedFormattedForumsFavorites() {
+      const currentUser = this.$store.state.user;
+      const forumsToDisplay =
+        this.$store.state.filteredForums.length > 0
+          ? this.$store.state.filteredForums
+          : this.$store.state.forums;
 
-  let filteredForums = forumsToDisplay;
+      let filteredForums = forumsToDisplay;
 
-    filteredForums = forumsToDisplay.filter(forum => {
-      return forum.forums_FavoritesArrays.some(favorite => favorite.userID === currentUser.userId);
-    });
-    return filteredForums.map(forum => {
-      const rawCreateDate = forum.createDate;
-      const formattedCreateDate = this.formatDate(rawCreateDate);
-      return {
-        ...forum,
-        FormattedCreateDate: formattedCreateDate,
-      };
-    });
-},
+      filteredForums = forumsToDisplay.filter((forum) => {
+        return forum.forums_FavoritesArrays.some(
+          (favorite) => favorite.userID === currentUser.userId
+        );
+      });
+      return filteredForums.map((forum) => {
+        const rawCreateDate = forum.createDate;
+        const formattedCreateDate = this.formatDate(rawCreateDate);
+        return {
+          ...forum,
+          FormattedCreateDate: formattedCreateDate,
+        };
+      });
+    },
 
     displayedFormattedPosts: {
       get() {
@@ -309,7 +343,7 @@ const currentUser = this.$store.state.user;
   background-color: #ff9f29;
   margin-bottom: 10px;
   border-radius: 10px;
-  border-color: transparent;
+  border-color: #1a4d2e;
   padding-left: 0;
   height: auto;
 }
@@ -326,14 +360,15 @@ const currentUser = this.$store.state.user;
   border-bottom-right-radius: 10px;
 }
 .card-content {
-  background-color: #faf3e3;
+  background-color: #ff9f29;
+  border: #ff9f29;
   color: #1a4d2e;
 }
 .card-header-title {
   color: #1a4d2e;
-  justify-content: space-between;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .post-card {
   background-color: #ff9f29;
@@ -341,7 +376,7 @@ const currentUser = this.$store.state.user;
   margin-bottom: 10px;
 }
 .card {
-  background-color: #1a4d2e;
+  background-color: #ff9f29;
   padding: 15px;
   margin-bottom: 10px;
   color: #000000;
@@ -387,9 +422,22 @@ const currentUser = this.$store.state.user;
   height: 100%;
   overflow-y: auto;
   border-radius: 10px;
+  background-color: #1a4d2e;
 }
 .postControlStyle {
   display: flex;
   justify-content: left;
+}
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.postControlStyle {
+  display: flex;
+  flex-direction: column;
+}
+.search-container {
+  margin-bottom: 10px;
 }
 </style>

@@ -1,11 +1,23 @@
 <template>
   <div class="card">
-  <header class="card-header"  @click="retrievePosts(forum);togglePosts();saveForumCreator();" > 
-       <section class="card-header-title input" >
-       <h1>{{ forum.title }}</h1>
-       <p>Topic: {{forum.topic}} <span><time>{{ forum.FormattedCreateDate }} </time></span></p>
-    </section>
-  </header>
+    <header
+      class="card-header"
+      @click="
+        retrievePosts(forum);
+        togglePosts();
+        saveForumCreator();
+      "
+    >
+      <section class="card-header-title input">
+        <p>{{ forum.title }}</p>
+        <h1 class="right">
+          Topic: {{ forum.topic }}
+          <span
+            ><br /><time>{{ forum.FormattedCreateDate }} </time></span
+          >
+        </h1>
+      </section>
+    </header>
   </div>
 </template>
 
@@ -16,28 +28,28 @@ export default {
   props: {
     forum: Object,
     formatDate: Function,
-  }, 
+  },
   methods: {
-      addPosts() {
+    addPosts() {
       this.$store.commit("ADD_POSTS_BY_FORUMID");
     },
 
-       togglePosts() {
+    togglePosts() {
       this.$store.commit("TOGGLE_SOME_POSTS");
     },
-    
-  retrievePosts(forum) {
-        this.$store.dispatch('selectForum', forum)
-        this.addPosts();
+
+    retrievePosts(forum) {
+      this.$store.dispatch("selectForum", forum);
+      this.addPosts();
     },
     saveForumCreator() {
-      if(this.$store.state.user.userId == this.$store.state.selectForum.ownerID) {
-        this.$store.commit("SAVE_CREATOR")
+      if (
+        this.$store.state.user.userId == this.$store.state.selectForum.ownerID
+      ) {
+        this.$store.commit("SAVE_CREATOR");
       }
-    
     },
   },
-    
 };
 </script>
 
@@ -46,18 +58,23 @@ export default {
   /* Add your card styles here */
   margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .card-header {
   /* Add your card header styles here */
   background-color: #f5f5f5;
-  padding: 10px;
+  padding: 5px;
+  border-color: #ff9f29;
+  border-radius: 10px;
 }
 
 .card-header-title {
   /* Add your card header title styles here */
   font-weight: bold;
+  background-color: #faf3e3;
+  border-color: transparent;
+  border-radius: 10px;
 }
 
 #in-forum-title #forum-title {
@@ -75,6 +92,9 @@ export default {
 .replies {
   color: #1a4d2e;
 }
+.right{
+  text-align: right;
+}
 #in-forum-title .card-header h1 {
   display: inline-flex;
   color: #1a4d2e;
@@ -89,11 +109,10 @@ export default {
 }
 
 .card-header {
-  background-color: #ff9f29;
+  background-color: #1a4d2e;
   margin-bottom: 10px;
   border-radius: 10px;
   border-color: transparent;
-  padding-left: 0;
   height: auto;
 }
 .card-footer a {
@@ -117,6 +136,8 @@ export default {
   justify-content: space-between;
   display: flex;
   align-items: center;
+  padding: 10px;
+  height: 70px;
 }
 .post-card {
   background-color: #ff9f29;

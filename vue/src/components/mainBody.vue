@@ -1,20 +1,19 @@
 <template>
   <body class="mainBody">
     <div class="body-container" v-if="postList.length === 0">
-      <div>Fun Fact: {{randomFact.text}}</div>
-      Active Forums
-<ForumCard
-  v-for="forum in topActiveForums"
-  :key="forum.forumID"
-  :forum="forum"
-  :format-date="formatDate"
-/>
-      <h1>Popular Posts</h1>
-      <PostCard
-        v-for="posts in topPosts"
-        :key="posts.postId"
-        :post="posts"
+      <div id="fun" class="card">
+        <h1 class="card-header-title">Fun Fact:</h1>
+        <span>{{ randomFact.text }}</span>
+      </div>
+      <div class="card-header-title">Active Forums</div>
+      <ForumCard
+        v-for="forum in topActiveForums"
+        :key="forum.forumID"
+        :forum="forum"
+        :format-date="formatDate"
       />
+      <h1 class="card-header-title">Popular Posts</h1>
+      <PostCard v-for="posts in topPosts" :key="posts.postId" :post="posts" />
     </div>
 
     <div v-if="$store.state.keyword != null">
@@ -36,7 +35,7 @@ export default {
       forums: [],
       topPosts: [],
       topActiveForums: [],
-      randomFact:{},
+      randomFact: {},
     };
   },
   computed: {
@@ -76,12 +75,12 @@ export default {
         )
         .slice(0, 5);
     },
-    getRandomFact(){
-      PostService.randomFact().then((response) =>
-        this.randomFact = response.data,
+    getRandomFact() {
+      PostService.randomFact().then(
+        (response) => (this.randomFact = response.data),
         console.log(this.randomFact)
-      )
-    }
+      );
+    },
   },
   created() {
     ForumService.getForums().then((response) => {
@@ -92,7 +91,7 @@ export default {
       this.getTopActiveForums();
     });
     this.Top10Posts();
-    this.getRandomFact()
+    this.getRandomFact();
   },
 };
 </script>
@@ -110,11 +109,39 @@ export default {
 .card-header-title {
   color: #1a4d2e;
 }
+.card #fun {
+  display: inline-flex;
+  justify-content: center;
+  border: 10px solid #1a4d2e; /* Add this line to add a border */
+}
+#fun.card{
+  border: 5px solid #1a4d2e; /* Add this line to add a border */
+}
+.card-header-title h1 {
+  display: flex;
+  justify-content: center;
+}
+.fact-text {
+  display: block;
+  margin-top: -20px;
+  text-align: center;
+}
 .card {
   background-color: #ff9f29;
   padding: 15px;
   margin-bottom: 10px;
+  border-radius: 10px;
   color: #000000;
+}
+span{
+  display: flex;
+  justify-content: center;
+}
+.card h1 {
+  font-weight: 700;
+  color: #1a4d2e;
+  display: flex;
+  justify-content: center;
 }
 .body-container::-webkit-scrollbar {
   width: 0px; /* width of the entire scrollbar */

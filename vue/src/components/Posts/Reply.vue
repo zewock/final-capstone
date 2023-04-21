@@ -7,7 +7,7 @@
         @click="toggleReplies"
       >
         <h1 class="card-header-title">
-          {{ reply.title }}
+          <div>{{ reply.title }}</div>
           <div v-if="reply.replies"> Comments: {{ reply.replies.length }}</div>
         </h1>
         <p class="replies" v-if="!isRootPost"></p>
@@ -19,10 +19,12 @@
       <div class="card-content replies">
         <div class="content">
           <p>@{{ reply.username }}</p>
-          {{ reply.content }}
+          
           <img v-if="reply.image" :src="reply.image" alt="Reply image" />
           <br />
-          <br />
+          {{ reply.content }}
+          <br/>
+          <br/>
           <time>{{ formatDateTime(reply.createDate) }}</time>
         </div>
       </div>
@@ -137,7 +139,20 @@ export default {
 .root-post {
   margin-bottom: 10px;
 }
-
+.card-header{
+  width: 100%;
+  border-radius: 10px;
+  border-width: 0;
+}
+.card-header-title{
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+}
+.card-header button{
+  display: flex;
+  justify-content: space-between;
+}
 .media {
   background-color: #e0e0e0;
   padding: 10px;
@@ -149,6 +164,7 @@ export default {
 }
 .post-card {
   background-color: #ff9f29;
+  border:2px,#ff9f29;
   border-radius: 10px;
   margin-bottom: 10px;
 }
@@ -164,8 +180,9 @@ export default {
 .card-footer a:last-child:hover {
   border-bottom-right-radius: 10px;
 }
-.card-content {
+.card-content{
   background-color: #faf3e3;
   color: #1a4d2e;
+  border: #ff9f29;
 }
 </style>

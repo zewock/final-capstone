@@ -5,14 +5,9 @@
     </p>
     <ul class="menu-list">
       <button class="fav" @mouseover="$store.commit('FLIP_FAVORITE_FALSE')"><li><router-link v-bind:to="{ name: 'forum' }"  >Forums</router-link></li></button>
-      
+      <br/>
       <button class="fav" @mouseover="$store.commit('FLIP_FAVORITE_TRUE')"> <li><router-link v-bind:to="{ name: 'forum' }"  >Favorite Forums</router-link></li></button>
     </ul>
- 
-   
-    <button class="button" v-if="$store.state.token != ''">
-      Private Messages
-    </button>
   </aside>
 </template>
 
@@ -44,6 +39,7 @@ export default {
   overflow-y: visible;
   top: 150px;
   position: fixed;
+  padding-top: 50px;
   padding-left: 10px;
   min-width: 15%;
 }
@@ -55,6 +51,7 @@ export default {
 }
 .menu-list li a {
   color: #faf3e3;
+  font-size: larger;
 }
 
 .button {
