@@ -9,20 +9,20 @@
       v-show="visiblePostForm"
       @cancelForm="togglePostVisibility(false)"
     />
-    <div v-if="$store.state.posts == false && $store.state.favoriteForums == false">
+    <div v-if="$store.state.posts == false && $store.state.myFavoriteForums == false">
       <ForumCard
         v-for="forum in displayedFormattedForums"
         :key="forum.ForumID"
         :forum="forum"
       />
     </div>
-    <div v-if="$store.state.posts == false && $store.state.favoriteForums == true" >
-    
-      <ForumCard
-        v-for="forum in displayedFormattedForums"
+    <div v-if="$store.state.posts == false && $store.state.myFavoriteForums == true" >
+    <ForumCard
+        v-for="forum in displayedFormattedForumsFavorites"
         :key="forum.ForumID"
         :forum="forum"
       />
+      
     </div>
     <div v-if="$store.state.posts == true">
       <section class="card-header-title post-card">
@@ -42,6 +42,7 @@
                 : "Sorted by: Most Recent"
             }}
           </button>
+          <button class="button" @click="refreshForum">Back</button>
            <input class="input is-rounded" type="search" placeholder="+ Mods by Username" v-model="keyword" @search="addModByModsandAdmin(keyword)"  >
         </div>
       </section>
@@ -173,12 +174,18 @@ export default {
         );
       }
     },
+    refreshForum() {
+      this.$nextTick(() => {
+        this.$router.go();
+      });
+    },
   },
   created() {
     this.addForums();
   },
 
   computed: {
+
    displayedFormattedForums() {
       const forumsToDisplay =
         this.$store.state.filteredForums &&
@@ -197,21 +204,18 @@ export default {
           };
         });
     },
-/*displayedFormattedForums() {
-  const currentUser = this.$store.state.user;
+
+displayedFormattedForumsFavorites() {
+const currentUser = this.$store.state.user;
   const forumsToDisplay = this.$store.state.filteredForums.length > 0
     ? this.$store.state.filteredForums
     : this.$store.state.forums;
 
   let filteredForums = forumsToDisplay;
 
-  if (this.$store.state.favoriteForums == true) {
     filteredForums = forumsToDisplay.filter(forum => {
-      return forum.forums_FavoritesArrays.filter(favorite => favorite.userID === currentUser.userId);
+      return forum.forums_FavoritesArrays.some(favorite => favorite.userID === currentUser.userId);
     });
-  }
-
-  if (this.$store.state.favoriteForums == false) {
     return filteredForums.map(forum => {
       const rawCreateDate = forum.createDate;
       const formattedCreateDate = this.formatDate(rawCreateDate);
@@ -220,17 +224,7 @@ export default {
         FormattedCreateDate: formattedCreateDate,
       };
     });
-  }
-
-  return filteredForums.map(forum => {
-    const rawCreateDate = forum.createDate;
-    const formattedCreateDate = this.formatDate(rawCreateDate);
-    return {
-      ...forum,
-      FormattedCreateDate: formattedCreateDate,
-    };
-  });
-},*/
+},
 
     displayedFormattedPosts: {
       get() {
